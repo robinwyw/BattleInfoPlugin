@@ -115,6 +115,7 @@ namespace BattleInfoPlugin.Models
             get { return this._NowHP; }
             set
             {
+	            value = Math.Max(0, value);
                 if (this._NowHP == value)
                     return;
                 this._NowHP = value;

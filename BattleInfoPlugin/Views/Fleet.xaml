@@ -115,31 +115,22 @@
 
                                 <Grid Grid.Row="0">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition SharedSizeGroup="Curent"/>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition SharedSizeGroup="Maximum"/>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="HP:"
+                                               VerticalAlignment="Bottom"
                                                Style="{DynamicResource DefaultTextStyleKey}"
                                                Margin="0,2,0,0"
                                                Grid.Column="0"/>
 
-                                    <TextBlock Text="{Binding HP.Current, Mode=OneWay}"
-                                               HorizontalAlignment="Right"
-                                               Style="{DynamicResource EmphaticTextStyleKey}"
-                                               Grid.Column="1"/>
-
-                                    <TextBlock Text="/"
-                                               Style="{DynamicResource DefaultTextStyleKey}"
-                                               Margin="0,1,0,0"
-                                               Grid.Column="2"/>
-
-                                    <TextBlock Text="{Binding HP.Maximum, Mode=OneWay}"
-                                               HorizontalAlignment="Right"
+                                    <TextBlock HorizontalAlignment="Right"
                                                Margin="0,3,0,0"
                                                Style="{DynamicResource DefaultTextStyleKey}"
-                                               Grid.Column="3"/>
+                                               Grid.Column="1">
+                                        <Run Text="{Binding HP.Current, Mode=OneWay}"
+											 Style="{DynamicResource EmphaticTextElementStyleKey}" /><Run Text="/" /><Run Text="{Binding HP.Maximum, Mode=OneWay}" />
+                                    </TextBlock>
                                 </Grid>
 
                                 <controls:ColorIndicator Grid.Row="1"
