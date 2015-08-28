@@ -19,6 +19,8 @@ namespace BattleInfoPlugin.ViewModels.Enemies
 {
     public class EnemyMapViewModel : TabItemViewModel
     {
+        public EnemyWindowViewModel WindowViewModel { get; set; }
+
         public MapInfo Info { get; set; }
 
         public List<MapCellData> CellDatas { get; set; }
@@ -38,6 +40,8 @@ namespace BattleInfoPlugin.ViewModels.Enemies
                 {
                     val.ParentMap = this;
                 }
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(this.EnemyShips));
             }
         }
 
@@ -70,7 +74,8 @@ namespace BattleInfoPlugin.ViewModels.Enemies
         private int GetCellColorNo(int idInEachMapInfo)
         {
             var data = this.CellDatas.SingleOrDefault(x => x.No == idInEachMapInfo);
-            if (data != default(MapCellData)) return data.EventId;
+            if (data != default(MapCellData) && data.EventId == 6)
+                return 1;  // 気のせいマスは何もなかったことに
             return Master.Current.MapCells
                 .Select(c => c.Value)
                 .Single(c => c.IdInEachMapInfo == idInEachMapInfo && c.MapInfoId == this.Info.Id)
