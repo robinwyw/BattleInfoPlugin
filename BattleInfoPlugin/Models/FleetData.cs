@@ -148,7 +148,9 @@ namespace BattleInfoPlugin.Models
         {
             foreach (var damage in damages)
             {
-                fleet.Ships.SetValues(damage.ToArray(), (s, d) => s.NowHP -= d);
+                var damageArr = damage.ToArray();
+                fleet.Ships.SetValues(damageArr, (s, d) => s.DamageReceived += d);
+                fleet.Ships.SetValues(damageArr, (s, d) => s.NowHP -= d);
 
                 // ダメコンによる回復処理。同一戦闘で2度目が発生する事はないという前提……
                 var dameconState = fleet.Ships.Select(x => new { HasDamecon = x.HasDamecon(), HasMegami = x.HasMegami() });

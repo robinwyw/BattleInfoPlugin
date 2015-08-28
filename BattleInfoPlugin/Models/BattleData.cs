@@ -559,11 +559,11 @@ namespace BattleInfoPlugin.Models
 
         private void UpdateNowHP(int[] api_nowhps, int[] api_nowhps_combined = null)
         {
-            this.FirstFleet.Ships.SetValues(api_nowhps.GetFriendData(), (s, v) => s.NowHP = v);
-            this.Enemies.Ships.SetValues(api_nowhps.GetEnemyData(), (s, v) => s.NowHP = v);
+            this.FirstFleet.Ships.SetValues(api_nowhps.GetFriendData(), (s, v) => s.ResetNowHP(v));
+            this.Enemies.Ships.SetValues(api_nowhps.GetEnemyData(), (s, v) => s.ResetNowHP(v));
 
             if (api_nowhps_combined == null) return;
-            this.SecondFleet.Ships.SetValues(api_nowhps_combined.GetFriendData(), (s, v) => s.NowHP = v);
+            this.SecondFleet.Ships.SetValues(api_nowhps_combined.GetFriendData(), (s, v) => s.ResetNowHP(v));
         }
 
         private void Clear()

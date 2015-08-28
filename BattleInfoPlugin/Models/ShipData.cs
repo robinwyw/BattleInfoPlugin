@@ -124,6 +124,33 @@ namespace BattleInfoPlugin.Models
         }
         #endregion
 
+        private int _OriginalHp;
+
+        public int OriginalHP
+        {
+            get { return this._OriginalHp; }
+            internal set
+            {
+                if (this._OriginalHp != value)
+                {
+                    this._OriginalHp = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        private int _DamageReceived;
+
+        public int DamageReceived
+        {
+            get { return this._DamageReceived; }
+            internal set
+            {
+                this._DamageReceived = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
         #region Firepower 変更通知プロパティ
 
         private int _Firepower;
@@ -264,7 +291,7 @@ namespace BattleInfoPlugin.Models
         public bool DamageControlled
         {
             get { return this._DamageControlled; }
-            set
+            internal set
             {
                 if (this._DamageControlled != value)
                 {
@@ -315,6 +342,13 @@ namespace BattleInfoPlugin.Models
             this._TypeName = "？？？";
             this._Situation = ShipSituation.None;
             this._Slots = new ShipSlotData[0];
+        }
+
+        internal void ResetNowHP(int HP)
+        {
+            this.NowHP = HP;
+            this.OriginalHP = HP;
+            this.DamageReceived = 0;
         }
     }
 
@@ -372,7 +406,7 @@ namespace BattleInfoPlugin.Models
             this.TypeName = this.Source.Info.ShipType.Name;
             this.Level = this.Source.Level;
             this.Situation = this.Source.Situation;
-            this.NowHP = this.Source.HP.Current;
+            this.ResetNowHP(this.Source.HP.Current);
             this.MaxHP = this.Source.HP.Maximum;
             this.Slots = this.Source.Slots
                 .Where(s => s!= null)
