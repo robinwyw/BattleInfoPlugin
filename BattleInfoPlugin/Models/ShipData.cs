@@ -384,6 +384,8 @@ namespace BattleInfoPlugin.Models
             this.AA = this.Source.AA.Current;
             this.Armer = this.Source.Armer.Current;
             this.Luck = this.Source.Luck.Current;
+
+            this.DamageControlled = Situation.HasFlag(ShipSituation.DamageControlled);
         }
     }
 
