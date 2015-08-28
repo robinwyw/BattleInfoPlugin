@@ -115,7 +115,6 @@ namespace BattleInfoPlugin.Models
             get { return this._NowHP; }
             set
             {
-	            value = Math.Max(0, value);
                 if (this._NowHP == value)
                     return;
                 this._NowHP = value;
@@ -254,7 +253,7 @@ namespace BattleInfoPlugin.Models
         public int SumAA => 0 < this.AA ? this.AA + this.SlotsAA : this.AA;
         public int SumArmer => 0 < this.Armer ? this.Armer + this.SlotsArmer : this.Armer;
 
-        public LimitedValue HP => new LimitedValue(this.NowHP, this.MaxHP, 0);
+        public LimitedValue HP => new LimitedValue(Math.Max(0, this.NowHP), this.MaxHP, 0);
 
         public AttackType DayAttackType
             => this.HasScout() && this.Count(Type2.主砲) == 2 && this.Count(Type2.徹甲弾) == 1 ? AttackType.カットイン主主

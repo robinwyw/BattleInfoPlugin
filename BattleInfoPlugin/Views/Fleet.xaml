@@ -126,14 +126,6 @@
                                                 <Setter Property="Visibility"
                                                         Value="Visible" />
                                             </MultiDataTrigger>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding Situation, Converter={StaticResource HasFlagConverter}, ConverterParameter=DamageControlled}"
-                                                           Value="False"/>
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter Property="Visibility"
-                                                        Value="Collapsed" />
-                                            </MultiDataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </kcvc:SlotItemIcon.Style>
