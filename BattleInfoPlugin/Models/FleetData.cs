@@ -154,6 +154,8 @@ namespace BattleInfoPlugin.Models
                 var dameconState = fleet.Ships.Select(x => new { HasDamecon = x.HasDamecon(), HasMegami = x.HasMegami() });
                 fleet.Ships.SetValues(dameconState, (s, d) =>
                 {
+	                s.DamageControlled = d.HasDamecon || d.HasMegami;
+
                     if (0 < s.NowHP) return;
                     s.IsUsedDamecon = d.HasDamecon || d.HasMegami;
                     if (d.HasDamecon)   // クライアント表示ロジック上は女神よりダメコンを優先して使用するようになってる

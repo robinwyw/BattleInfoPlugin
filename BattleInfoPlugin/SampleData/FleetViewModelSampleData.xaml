@@ -26,7 +26,7 @@
     <viewModels:FleetViewModel.Fleet>
         <models:FleetData Formation="戦闘陣形" FleetType="Enemy">
             <models:FleetData.Ships>
-                <models:MembersShipData MaxHP="15" NowHP="83" Name="戦艦水鬼" Situation="Tow" TypeName="つよい">
+                <models:MembersShipData MaxHP="15" NowHP="83" Name="戦艦水鬼" Situation="Tow" TypeName="つよい" DamageControlled="True">
                     <models:MembersShipData.HP>
                         <wrapper:LimitedValue Current="6" Maximum="9" Minimum="0"/>
                     </models:MembersShipData.HP>
@@ -36,7 +36,7 @@
                         <wrapper:LimitedValue Current="71" Maximum="85" Minimum="0"/>
                     </models:MembersShipData.HP>
                 </models:MembersShipData>
-                <models:MembersShipData MaxHP="40" NowHP="62" Name="駆逐ロ級後期型" Situation="HeavilyDamaged" TypeName="きもい" AdditionalName="flagship" IsUsedDamecon="True">
+                <models:MembersShipData MaxHP="40" NowHP="62" Name="駆逐ロ級後期型" Situation="HeavilyDamaged" TypeName="きもい" AdditionalName="flagship" IsUsedDamecon="True" DamageControlled="True">
                     <models:MembersShipData.HP>
                         <wrapper:LimitedValue Current="77" Maximum="25" Minimum="0"/>
                     </models:MembersShipData.HP>

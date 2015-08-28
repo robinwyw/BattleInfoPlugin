@@ -272,8 +272,6 @@
                                 <ColumnDefinition Width="Auto"
                                                   SharedSizeGroup="Name" />
                                 <ColumnDefinition Width="Auto"
-                                                  SharedSizeGroup="DamageControl" />
-                                <ColumnDefinition Width="Auto"
                                                   SharedSizeGroup="HP" />
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
@@ -288,31 +286,8 @@
                                     FontSize="11" />
                             </TextBlock>
 
-                            <kcvc:SlotItemIcon Grid.Column="1"
-                                               Margin="0,-3,0,0"
-                                               Width="16"
-                                               VerticalAlignment="Top"
-                                               Type ="DamageControl">
-                                <kcvc:SlotItemIcon.Style>
-                                    <Style TargetType="{x:Type kcvc:SlotItemIcon}">
-                                        <Setter Property="Visibility"
-                                                Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding Situation, Converter={StaticResource HasFlagConverter}, ConverterParameter=DamageControlled}"
-                                                           Value="True"/>
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter Property="Visibility"
-                                                        Value="Visible" />
-                                            </MultiDataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </kcvc:SlotItemIcon.Style>
-                            </kcvc:SlotItemIcon>
-
                             <Grid x:Name="HPIndicator"
-                                      Grid.Column="2"
+                                      Grid.Column="1"
                                       Margin="5,1,5,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -348,7 +323,7 @@
                             </Grid>
 
                             <Grid x:Name="EvacuationIndicator"
-                                  Grid.Column="2"
+                                  Grid.Column="1"
                                   Visibility="Collapsed"
                                   Margin="3,2,3,0">
                                 <Border Background="{DynamicResource FleetRepairingBrushKey}"
@@ -359,7 +334,7 @@
                             </Grid>
 
                             <Grid x:Name="TowIndicator"
-                                  Grid.Column="2"
+                                  Grid.Column="1"
                                   Visibility="Collapsed"
                                   Margin="3,2,3,0">
                                 <Border Background="{DynamicResource FleetRepairingBrushKey}"
@@ -373,7 +348,7 @@
                                         Grid.Column="2">
                                 <controls:SlotItemIcon Type="DamageControl"
                                                        Width="14"
-                                                       Visibility="{Binding IsUsedDamecon, Converter={StaticResource TrueToVisibleConverter}}"
+                                                       Visibility="{Binding DamageControlled, Converter={StaticResource TrueToVisibleConverter}}"
                                                        Margin="0,0,3,0"/>
                                 <TextBlock Text="使用"
                                            Style="{DynamicResource EmphaticTextStyleKey}"

@@ -138,12 +138,12 @@
             <viewModels:FleetViewModel.Fleet>
                 <models:FleetData FleetType="Second">
                     <models:FleetData.Ships>
-                        <models:MembersShipData MaxHP="76" NowHP="63" Name="夕立改二" Situation="HeavilyDamaged" TypeName="ぽいぬ" IsUsedDamecon="True">
+                        <models:MembersShipData MaxHP="76" NowHP="63" Name="夕立改二" Situation="HeavilyDamaged" TypeName="ぽいぬ" IsUsedDamecon="True" DamageControlled="True">
                             <models:MembersShipData.HP>
                                 <wrapper:LimitedValue Current="28" Maximum="99" Minimum="0"/>
                             </models:MembersShipData.HP>
                         </models:MembersShipData>
-                        <models:MembersShipData MaxHP="15" NowHP="93" Name="Верный" Situation="Tow" TypeName="駆逐艦">
+                        <models:MembersShipData MaxHP="15" NowHP="93" Name="Верный" Situation="Tow" TypeName="駆逐艦" DamageControlled="True">
                             <models:MembersShipData.HP>
                                 <wrapper:LimitedValue Current="29" Maximum="85" Minimum="0"/>
                             </models:MembersShipData.HP>

@@ -259,6 +259,21 @@ namespace BattleInfoPlugin.Models
 
         #endregion
 
+        private bool _DamageControlled;
+
+        public bool DamageControlled
+        {
+            get { return this._DamageControlled; }
+            set
+            {
+                if (this._DamageControlled != value)
+                {
+                    this._DamageControlled = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
         public int SlotsFirepower => this.Slots.Sum(x => x.Firepower);
         public int SlotsTorpedo => this.Slots.Sum(x => x.Torpedo);
         public int SlotsAA => this.Slots.Sum(x => x.AA);
