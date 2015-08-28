@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BattleInfoPlugin.Models;
 using BattleInfoPlugin.Models.Notifiers;
 using Livet;
@@ -30,6 +31,13 @@ namespace BattleInfoPlugin.ViewModels
             => this.BattleData != null && this.BattleData.FriendAirSupremacy != AirSupremacy.航空戦なし
                 ? this.BattleData.FriendAirSupremacy.ToString()
                 : "";
+
+        public string DropShipName
+            => this.BattleData?.DropShipName;
+
+        public AirCombatResult[] AirCombatResults
+            => this.BattleData?.AirCombatResults ?? new AirCombatResult[0];
+        
 
         #region FirstFleet変更通知プロパティ
         private FleetViewModel _FirstFleet;
@@ -126,6 +134,20 @@ namespace BattleInfoPlugin.ViewModels
                 {
                     () => this.BattleData.FriendAirSupremacy,
                     (_, __) => this.RaisePropertyChanged(() => this.FriendAirSupremacy)
+                },
+                {
+                    () => this.BattleData.AirCombatResults,
+                    (_, __) =>
+                    {
+                        this.RaisePropertyChanged(() => this.AirCombatResults);
+                        this.FirstFleet.AirCombatResults = this.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.First)).ToArray();
+                        this.SecondFleet.AirCombatResults = this.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.Second)).ToArray();
+                        this.Enemies.AirCombatResults = this.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.Enemy)).ToArray();
+                    }
+                },
+                {
+                    () => this.BattleData.DropShipName,
+                    (_, __) => this.RaisePropertyChanged(() => this.DropShipName)
                 },
                 {
                     () => this.BattleData.FirstFleet,
