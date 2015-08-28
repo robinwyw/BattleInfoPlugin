@@ -286,20 +286,7 @@ namespace BattleInfoPlugin.Models
 
         #endregion
 
-        private bool _DamageControlled;
-
-        public bool DamageControlled
-        {
-            get { return this._DamageControlled; }
-            internal set
-            {
-                if (this._DamageControlled != value)
-                {
-                    this._DamageControlled = value;
-                    this.RaisePropertyChanged();
-                }
-            }
-        }
+        public virtual bool DamageControlled => this.Situation.HasFlag(ShipSituation.DamageControlled);
 
         public int SlotsFirepower => this.Slots.Sum(x => x.Firepower);
         public int SlotsTorpedo => this.Slots.Sum(x => x.Torpedo);
@@ -418,8 +405,6 @@ namespace BattleInfoPlugin.Models
             this.AA = this.Source.AA.Current;
             this.Armer = this.Source.Armer.Current;
             this.Luck = this.Source.Luck.Current;
-
-            this.DamageControlled = Situation.HasFlag(ShipSituation.DamageControlled);
         }
     }
 
