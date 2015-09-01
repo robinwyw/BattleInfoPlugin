@@ -88,6 +88,12 @@
                                      Style="{DynamicResource EmphaticTextElementStyleKey}"/>
                             </TextBlock>
                             <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
+                                <Run Text="戦闘結果:" />
+                                <Run Text="{Binding BattleResult, Mode=OneWay}"
+                                     FontSize="12"
+                                     Style="{DynamicResource EmphaticTextElementStyleKey}"/>
+                            </TextBlock>
+                            <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
                                 <Run Text="ドロップ:"/>
                                 <Run Text="{Binding DropShipName, Mode=OneWay}"
                                      FontSize="12"

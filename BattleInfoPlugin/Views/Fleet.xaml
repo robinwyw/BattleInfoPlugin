@@ -303,7 +303,8 @@
 
                                 <Grid Grid.Row="0"
                                       ToolTipService.ShowDuration="60000"
-                                      ToolTipService.Placement="Relative">
+                                      ToolTipService.Placement="Relative"
+                                      ToolTipService.HorizontalOffset="-1">
 
                                     <Grid.ToolTip>
                                         <TextBlock>

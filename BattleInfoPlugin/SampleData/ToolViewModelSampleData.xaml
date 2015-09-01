@@ -9,6 +9,7 @@
                           BattleSituation="T字有利"
                           FriendAirSupremacy="制空権確保"
                           BattleName="連合艦隊 - 水上部隊 - 昼戦"
+                          BattleResult="完全勝利S"
                           DropShipName="ほっぽ">
 
     <viewModels:ToolViewModel.AirCombatResults>

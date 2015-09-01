@@ -132,6 +132,7 @@ namespace BattleInfoPlugin.Models
             get { return this._NowHP; }
             set
             {
+                value = Math.Max(0, value);
                 if (this._NowHP == value)
                     return;
                 this._NowHP = value;
@@ -141,16 +142,16 @@ namespace BattleInfoPlugin.Models
         }
         #endregion
 
-        private int _OriginalHp;
+        private int _OriginalHP;
 
         public int OriginalHP
         {
-            get { return this._OriginalHp; }
+            get { return this._OriginalHP; }
             internal set
             {
-                if (this._OriginalHp != value)
+                if (this._OriginalHP != value)
                 {
-                    this._OriginalHp = value;
+                    this._OriginalHP = value;
                     this.RaisePropertyChanged();
                 }
             }
@@ -303,7 +304,7 @@ namespace BattleInfoPlugin.Models
 
         #endregion
 
-        public virtual bool DamageControlled => this.Situation.HasFlag(ShipSituation.DamageControlled);
+        public bool DamageControlled => this.Situation.HasFlag(ShipSituation.DamageControlled);
 
         public int SlotsFirepower => this.Slots.Sum(x => x.Firepower);
         public int SlotsTorpedo => this.Slots.Sum(x => x.Torpedo);
@@ -318,7 +319,7 @@ namespace BattleInfoPlugin.Models
         public int SumAA => 0 < this.AA ? this.AA + this.SlotsAA : this.AA;
         public int SumArmer => 0 < this.Armer ? this.Armer + this.SlotsArmer : this.Armer;
 
-        public LimitedValue HP => new LimitedValue(Math.Max(0, this.NowHP), this.MaxHP, 0);
+        public LimitedValue HP => new LimitedValue(NowHP, this.MaxHP, 0);
 
         public AttackType DayAttackType
             => this.HasScout() && this.Count(Type2.主砲) == 2 && this.Count(Type2.徹甲弾) == 1 ? AttackType.カットイン主主
@@ -348,7 +349,7 @@ namespace BattleInfoPlugin.Models
             this._Slots = new ShipSlotData[0];
         }
 
-        internal void ResetNowHP(int HP)
+        internal void InitializeNowHP(int HP)
         {
             this.NowHP = HP;
             this.OriginalHP = HP;
@@ -411,7 +412,7 @@ namespace BattleInfoPlugin.Models
             this.TypeName = this.Source.Info.ShipType.Name;
             this.Level = this.Source.Level;
             this.Situation = this.Source.Situation;
-            this.ResetNowHP(this.Source.HP.Current);
+            this.InitializeNowHP(this.Source.HP.Current);
             this.MaxHP = this.Source.HP.Maximum;
             this.Slots = this.Source.Slots.Concat(new[] {this.Source.ExSlot})   //とりあえずくっつける
                 .Where(s => s != null)

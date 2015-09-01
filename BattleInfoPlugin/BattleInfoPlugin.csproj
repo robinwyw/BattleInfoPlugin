@@ -150,6 +150,8 @@
     <Compile Include="Models\AirSupremacy.cs" />
     <Compile Include="Models\AttackType.cs" />
     <Compile Include="Models\BattleData.cs" />
+    <Compile Include="Models\BattleResult.cs" />
+    <Compile Include="Models\BattleResultProvider.cs" />
     <Compile Include="Models\BattleSituation.cs" />
     <Compile Include="Models\CellType.cs" />
     <Compile Include="Models\FleetDamages.cs" />

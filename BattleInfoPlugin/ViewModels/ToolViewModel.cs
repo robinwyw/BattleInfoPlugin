@@ -14,6 +14,11 @@ namespace BattleInfoPlugin.ViewModels
 
         private BattleData BattleData { get; } = new BattleData();
 
+        public string BattleResult
+            => this.BattleData.BattleResult != Models.BattleResult.なし
+                ? this.BattleData.BattleResult.ToString()
+                : "";
+
         public string BattleName
             => this.BattleData?.Name ?? "";
 
@@ -119,6 +124,10 @@ namespace BattleInfoPlugin.ViewModels
 
             this.CompositeDisposable.Add(new PropertyChangedEventListener(this.BattleData)
             {
+                {
+                  () => this.BattleData.BattleResult,
+                  (_, __) => this.RaisePropertyChanged(() => this.BattleResult)  
+                },
                 {
                     () => this.BattleData.Name,
                     (_, __) => this.RaisePropertyChanged(() => this.BattleName)
