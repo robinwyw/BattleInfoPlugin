@@ -269,8 +269,7 @@ namespace BattleInfoPlugin.Models
             this.IsInBattle = true;
 
             this.Name = "通常 - 夜戦";
-
-            this.UpdateFleets(data.api_deck_id, data);
+            
             this.UpdateMaxHP(data.api_maxhps);
             this.UpdateNowHP(data.api_nowhps);
 
@@ -419,8 +418,7 @@ namespace BattleInfoPlugin.Models
             this.IsInBattle = true;
 
             this.Name = "連合艦隊 - 夜戦";
-
-            this.UpdateFleets(data.api_deck_id, data);
+           
             this.UpdateMaxHP(data.api_maxhps, data.api_maxhps_combined);
             this.UpdateNowHP(data.api_nowhps, data.api_nowhps_combined);
 
@@ -488,8 +486,7 @@ namespace BattleInfoPlugin.Models
             this.IsInBattle = true;
 
             this.Name = "演習 - 夜戦";
-
-            this.UpdateFleets(data.api_deck_id, data);
+            
             this.UpdateMaxHP(data.api_maxhps);
             this.UpdateNowHP(data.api_nowhps);
 
