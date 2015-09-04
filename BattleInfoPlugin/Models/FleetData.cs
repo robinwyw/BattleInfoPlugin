@@ -168,11 +168,13 @@ namespace BattleInfoPlugin.Models
 
         public static bool HasDamecon(this ShipData ship)
         {
+            if (ship is MastersShipData) return false;
             return ship?.Slots.Any(x => x?.Source.Id == 42) ?? false;
         }
 
         public static bool HasMegami(this ShipData ship)
         {
+            if (ship is MastersShipData) return false;
             return ship?.Slots.Any(x => x?.Source.Id == 43) ?? false;
         }
     }
