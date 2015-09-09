@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Windows;
-using BattleInfoPlugin.Properties;
-using Grabacr07.KanColleViewer;
+using BattleInfoPlugin.Models.Settings;
 using Grabacr07.KanColleViewer.Composition;
 using Grabacr07.KanColleWrapper;
 using Livet;
@@ -11,21 +10,18 @@ namespace BattleInfoPlugin.Models.Notifiers
 {
     public class BattleEndNotifier : NotificationObject
     {
-        private static readonly Settings settings = Settings.Default;
-
         private readonly Plugin plugin;
 
         #region IsEnabled変更通知プロパティ
 
         public bool IsEnabled
         {
-            get { return settings.IsEnabledBattleEndNotify; }
+            get { return NotifierSettings.IsEnabled; }
             set
             {
-                if (settings.IsEnabledBattleEndNotify == value)
+                if (NotifierSettings.IsEnabled == value)
                     return;
-                settings.IsEnabledBattleEndNotify = value;
-                settings.Save();
+                NotifierSettings.IsEnabled.Value = value;
                 this.RaisePropertyChanged();
             }
         }
@@ -36,8 +32,6 @@ namespace BattleInfoPlugin.Models.Notifiers
         public BattleEndNotifier(Plugin plugin)
         {
             this.plugin = plugin;
-
-            settings.Reload();
 
             var proxy = KanColleClient.Current.Proxy;
             proxy.api_req_combined_battle_battleresult

@@ -11,6 +11,8 @@ namespace BattleInfoPlugin.Models
 {
     public class BattleData : NotificationObject
     {
+        public static BattleData Current { get; } = new BattleData();
+
 
         private bool _IsInBattle;
 
@@ -209,7 +211,7 @@ namespace BattleInfoPlugin.Models
 
         private int CurrentDeckId { get; set; }
 
-        public BattleData()
+        private BattleData()
         {
             var proxy = KanColleClient.Current.Proxy;
 

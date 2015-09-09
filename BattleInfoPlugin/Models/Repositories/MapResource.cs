@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using BattleInfoPlugin.Models.Settings;
 using DDW.Swf;
 
 namespace BattleInfoPlugin.Models.Repositories
@@ -95,7 +96,7 @@ namespace BattleInfoPlugin.Models.Repositories
 
     static class MapResourceExtensions
     {
-        private static readonly string mapDir = Properties.Settings.Default.CacheDirPath + "\\kcs\\resources\\swf\\map\\";
+        private static readonly string mapDir = PathSettings.CacheDirPath + "\\kcs\\resources\\swf\\map\\";
 
         public static bool HasMapSwf(this MapInfo map)
         {

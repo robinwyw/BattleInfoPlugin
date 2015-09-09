@@ -166,6 +166,10 @@
     <Compile Include="Models\Notifiers\BattleEndNotifier.cs" />
     <Compile Include="Models\Raw\ICommonBattleMembers.cs" />
     <Compile Include="Models\Repositories\EnemyData.cs" />
+    <Compile Include="Models\Settings\BattleWindowSettings.cs" />
+    <Compile Include="Models\Settings\NotifierSettings.cs" />
+    <Compile Include="Models\Settings\PathSettings.cs" />
+    <Compile Include="Models\Settings\SettingsProvider.cs" />
     <Compile Include="NotificationType.cs" />
     <Compile Include="Models\Raw\battle_midnight_battle.cs" />
     <Compile Include="Models\Raw\battle_midnight_sp_midnight.cs" />
@@ -189,8 +193,15 @@
     <Compile Include="Models\ShipData.cs" />
     <Compile Include="Models\ShipSlotData.cs" />
     <Compile Include="Models\Type2.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="SortieDataListener.cs" />
     <Compile Include="ViewModels\AirCombatResultViewModel.cs" />
+    <Compile Include="ViewModels\BattleViewModel.cs" />
+    <Compile Include="ViewModels\BattleWindowViewModel.cs" />
     <Compile Include="ViewModels\Enemies\EnemyFleetViewModel.cs" />
     <Compile Include="ViewModels\Enemies\EnemyMapViewModel.cs" />
     <Compile Include="ViewModels\Enemies\EnemyCellViewModel.cs" />
@@ -200,6 +211,12 @@
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\TabItemViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModel.cs" />
+    <Compile Include="Views\BattleView.xaml.cs">
+      <DependentUpon>BattleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BattleWindow.xaml.cs">
+      <DependentUpon>BattleWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Behaviors\ScrollToCellBehavior.cs" />
     <Compile Include="Views\Controls\Cell.cs" />
     <Compile Include="Views\Converters\AddDoubleValueConverter.cs" />
@@ -217,6 +234,9 @@
     <Compile Include="Views\ToolView.xaml.cs">
       <DependentUpon>ToolView.xaml</DependentUpon>
     </Compile>
+    <DesignData Include="SampleData\BattleViewModelSampleData.xaml">
+      <SubType>Designer</SubType>
+    </DesignData>
     <Page Include="Styles\Cell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -226,6 +246,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Plugin.cs" />
+    <Page Include="Views\BattleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BattleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\EnemyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -248,22 +276,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
     <None Include="packages.config" />
+    <AppDesigner Include="Properties\" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DependentAssemblies\ICSharpCode.SharpZipLib.dll" />
@@ -271,7 +293,6 @@
   </ItemGroup>
   <ItemGroup>
     <DesignData Include="SampleData\FleetViewModelSampleData.xaml" />
-    <DesignData Include="SampleData\ToolViewModelSampleData.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\KanColleViewer.PluginAnalyzer.1.0.1.0\analyzers\KanColleViewer.Composition.dll" />

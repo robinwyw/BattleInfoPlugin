@@ -6,9 +6,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Grabacr07.KanColleWrapper.Models.Raw;
-using BattleInfoPlugin.Properties;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using BattleInfoPlugin.Models.Settings;
 
 namespace BattleInfoPlugin.Models.Repositories
 {
@@ -99,7 +99,7 @@ namespace BattleInfoPlugin.Models.Repositories
         private void Reload()
         {
             //deserialize
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Settings.Default.MasterDataFilePath);
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, PathSettings.MasterDataFilePath);
             lock (saveLoadLock)
             {
                 if (!File.Exists(path)) return;
@@ -123,14 +123,14 @@ namespace BattleInfoPlugin.Models.Repositories
                 string tempPath;
                 do
                 {
-                    tempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"_{i++}_{Settings.Default.MasterDataFilePath}");
+                    tempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"_{i++}_{PathSettings.MasterDataFilePath}");
                 } while (File.Exists(tempPath));
                 using (var stream = Stream.Synchronized(new FileStream(tempPath, FileMode.Create, FileAccess.Write)))
                 {
                     serializer.WriteObject(stream, this);
                 }
 
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Settings.Default.MasterDataFilePath);
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, PathSettings.MasterDataFilePath);
                 if (File.Exists(path))
                     File.Delete(path);
                 File.Move(tempPath, path);

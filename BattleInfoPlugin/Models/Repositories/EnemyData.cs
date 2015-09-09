@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
-using BattleInfoPlugin.Properties;
+using BattleInfoPlugin.Models.Settings;
 
 namespace BattleInfoPlugin.Models.Repositories
 {
@@ -120,7 +120,7 @@ namespace BattleInfoPlugin.Models.Repositories
         {
             Debug.WriteLine("Start Reload");
             //deserialize
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Settings.Default.EnemyDataFilePath);
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, PathSettings.EnemyDataFilePath);
             lock (saveLoadLock)
             {
                 if (!File.Exists(path)) return;
@@ -158,14 +158,14 @@ namespace BattleInfoPlugin.Models.Repositories
                 string tempPath;
                 do
                 {
-                    tempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"_{i++}_{Settings.Default.EnemyDataFilePath}");
+                    tempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"_{i++}_{PathSettings.EnemyDataFilePath}");
                 } while (File.Exists(tempPath));
                 using (var stream = Stream.Synchronized(new FileStream(tempPath, FileMode.Create, FileAccess.Write)))
                 {
                     serializer.WriteObject(stream, this);
                 }
 
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Settings.Default.EnemyDataFilePath);
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, PathSettings.EnemyDataFilePath);
                 if (File.Exists(path))
                     File.Delete(path);
                 File.Move(tempPath, path);

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BattleInfoPlugin.Models.Repositories;
 using System.IO;
+using BattleInfoPlugin.Models.Settings;
 using BattleInfoPlugin.Properties;
 
 namespace BattleInfoPlugin.Models
@@ -71,11 +72,11 @@ namespace BattleInfoPlugin.Models
                 };
 
                 var info = new FileInfo(filePath);
-                if (info.Name == Settings.Default.EnemyDataFilePath)
+                if (info.Name == PathSettings.EnemyDataFilePath)
                 {
                     this.EnemyData.Merge(filePath)
                         .ContinueWith(continuationAction, TaskScheduler.FromCurrentSynchronizationContext());
-                }else if (info.Name == Settings.Default.MasterDataFilePath)
+                }else if (info.Name == PathSettings.MasterDataFilePath)
                 {
                     Master.Current.Merge(filePath)
                         .ContinueWith(continuationAction, TaskScheduler.FromCurrentSynchronizationContext());

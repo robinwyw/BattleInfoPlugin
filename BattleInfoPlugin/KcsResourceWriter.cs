@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using BattleInfoPlugin.Models.Settings;
 using Nekoxy;
 using Grabacr07.KanColleWrapper;
 
@@ -22,7 +23,7 @@ namespace BattleInfoPlugin
     {
         public static string GetSaveFilePath(this Session session)
         {
-            return Properties.Settings.Default.CacheDirPath
+            return PathSettings.CacheDirPath
                    + session.Request.PathAndQuery.Split('?').First();
         }
 

@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="BattleInfoPlugin.Views.ToolView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:BattleInfoPlugin.Views"
              xmlns:converters="clr-namespace:BattleInfoPlugin.Views.Converters"
@@ -9,17 +9,18 @@
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:models="clr-namespace:BattleInfoPlugin.Models"
+             xmlns:viewModels="clr-namespace:BattleInfoPlugin.ViewModels"
              Background="{DynamicResource ThemeBrushKey}"
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="530"
              d:DesignWidth="640"
-             d:DataContext="{d:DesignData /SampleData/ToolViewModelSampleData.xaml}">
+             d:DataContext="{d:DesignInstance viewModels:ToolViewModel}">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Styles/PluginStyle.xaml"/>
+                <ResourceDictionary Source="../Styles/PluginStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -31,6 +32,12 @@
                                                   WindowType="views:EnemyWindow"
                                                   IsOwned="False" />
         </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger Messenger="{Binding Messenger}"
+                                     MessageKey="Show/BattleWindow">
+            <l:TransitionInteractionMessageAction Mode="NewOrActive"
+                                                  WindowType="views:BattleWindow"
+                                                  IsOwned="False" />
+        </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto"
@@ -38,106 +45,50 @@
                   PanningMode="Both">
         <Grid Margin="8,4">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
+
             <DockPanel Grid.Row="0">
                 <TextBlock Text="戦闘情報"
                            VerticalAlignment="Top"
                            Style="{DynamicResource HeaderTextStyleKey}"
-                           Margin="0,0,10,0"/>
-                <StackPanel>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="190"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="1"
-                                    Margin="0,0,10,0">
-                            <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                                <Run Text="戦闘種別:"/>
-                                <Run Text="{Binding BattleName, Mode=OneWay}"
-                                     FontSize="12"
-                                     Style="{DynamicResource EmphaticTextElementStyleKey}"/>
-                            </TextBlock>
-                            <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                                <Run Text="交戦形態:"/>
-                                <Run Text="{Binding BattleSituation, Mode=OneWay}"
-                                     FontSize="12"
-                                     Style="{DynamicResource EmphaticTextElementStyleKey}"/>
-                            </TextBlock>
-                            <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                                <Run Text="制空結果:"/>
-                                <Run Text="{Binding FriendAirSupremacy, Mode=OneWay}"
-                                     FontSize="12"
-                                     Style="{DynamicResource EmphaticTextElementStyleKey}"/>
-                            </TextBlock>
-                        </StackPanel>
-
-
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                                <Run Text="更新日時:"/>
-                                <Run Text="{Binding UpdatedTime, Mode=OneWay}"
-                                     FontSize="12"
-                                     Style="{DynamicResource EmphaticTextElementStyleKey}"/>
-                            </TextBlock>
-                            <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                                <Run Text="戦闘結果:" />
-                                <Run Text="{Binding BattleResult, Mode=OneWay}"
-                                     FontSize="12"
-                                     Style="{DynamicResource EmphaticTextElementStyleKey}"/>
-                            </TextBlock>
-                            <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                                <Run Text="ドロップ:"/>
-                                <Run Text="{Binding DropShipName, Mode=OneWay}"
-                                     FontSize="12"
-                                     Style="{DynamicResource EmphaticTextElementStyleKey}"/>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <Button Grid.Column="3"
-                                Content="既知の敵一覧"
-                                VerticalAlignment="Stretch"
-                                HorizontalAlignment="Right"
-                                Margin="0,3,4,0">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Click">
-                                    <ei:CallMethodAction TargetObject="{Binding}"
-                                                         MethodName="OpenEnemyWindow"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Button>
-                    </Grid>
-                    
-                    <Rectangle Height="1"
-                               Margin="3, 4"
-                               Style="{DynamicResource SeparatorRectangleStyleKey}" />
-                </StackPanel>
+                           Margin="0,5,10,0"/>
+                <Button Content="既知の敵一覧"
+                        DockPanel.Dock="Right"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Right"
+                        Margin="4,3">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <ei:CallMethodAction TargetObject="{Binding}"
+                                                 MethodName="OpenEnemyWindow" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="在新窗口中显示"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Stretch"
+                        Margin="7,3">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <ei:CallMethodAction TargetObject="{Binding}"
+                                                 MethodName="OpenBattleWindow" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
             </DockPanel>
 
-            <StackPanel Orientation="Horizontal"
-                        Grid.Row="1">
-                <views:Fleet Margin="0,6,0,0"
-                             DataContext="{Binding FirstFleet}"/>
-
-                <views:Fleet Margin="0,6,0,0"
-                             DataContext="{Binding SecondFleet}"/>
-
-                <views:Fleet Margin="0,6,0,0"
-                             DataContext="{Binding Enemies}"/>
-            </StackPanel>
+            <views:BattleView Grid.Row="1"
+                              DataContext="{Binding Battle}"
+                              d:DataContext="{d:DesignData /SampleData/BattleViewModelSampleData.xaml}" />
 
             <CheckBox Grid.Row="2"
                       HorizontalAlignment="Right"
                       Content="戦闘終了通知"
                       IsChecked="{Binding IsNotifierEnabled}"
-                      Margin="10, 0"/>
+                      Margin="10, 0" />
         </Grid>
     </ScrollViewer>
 </UserControl>
