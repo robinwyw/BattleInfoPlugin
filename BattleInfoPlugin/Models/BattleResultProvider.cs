@@ -32,13 +32,13 @@ namespace BattleInfoPlugin.Models
             var isEnemyFlagshipSunk = enemyShips.First().NowHP <= 0;
 
             //SS or S
-            if (enemyGuageRate == 1)
+            if (enemyLostCount == enemyCount)
                 if (friendGuageRate <= 0) return BattleResult.完全勝利S;
                 else if (friendLostCount == 0) return BattleResult.勝利S;
             
 
             // A
-            if (enemyLostCount >= enemyCount * 2 / 3 && friendLostCount == 0) return BattleResult.勝利A;
+            if (enemyLostCount >= Math.Max(enemyCount * 2 / 3, 1) && friendLostCount == 0) return BattleResult.勝利A;
 
 
             // B
