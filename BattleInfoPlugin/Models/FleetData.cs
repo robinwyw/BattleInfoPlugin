@@ -146,35 +146,30 @@ namespace BattleInfoPlugin.Models
         /// <param name="damages">適用ダメージリスト</param>
         public static void CalcDamages(this FleetData fleet, params FleetDamages[] damages)
         {
-            foreach (var damage in damages)
-            {
-                var damageArr = damage.ToArray();
-                fleet.Ships.SetValues(damageArr, (s, d) => s.DamageReceived += d);
-                fleet.Ships.SetValues(damageArr, (s, d) => s.NowHP -= d);
+            fleet.Ships.SetValues(damages.Merge(), (s, d) => s.ReceiveDamage(d));
 
-                // ダメコンによる回復処理。同一戦闘で2度目が発生する事はないという前提……
-                var dameconState = fleet.Ships.Select(x => new { HasDamecon = x.HasDamecon(), HasMegami = x.HasMegami() });
-                fleet.Ships.SetValues(dameconState, (s, d) =>
-                {
-                    if (0 < s.NowHP) return;
-                    s.IsUsedDamecon = d.HasDamecon || d.HasMegami;
-                    if (d.HasDamecon)   // クライアント表示ロジック上は女神よりダメコンを優先して使用するようになってる
-                        s.NowHP = (int)Math.Floor(s.MaxHP * 0.2);
-                    else if (d.HasMegami)
-                        s.NowHP = s.MaxHP;
-                });
-            }
+            if (fleet.FleetType == FleetType.Enemy) return;
+
+            // ダメコンによる回復処理。同一戦闘で2度目が発生する事はないという前提……
+            var dameconState = fleet.Ships.Select(x => new {HasDamecon = x.HasDamecon(), HasMegami = x.HasMegami()});
+            fleet.Ships.SetValues(dameconState, (s, d) =>
+            {
+                if (0 < s.NowHP) return;
+                s.IsUsedDamecon = d.HasDamecon || d.HasMegami;
+                if (d.HasDamecon) // クライアント表示ロジック上は女神よりダメコンを優先して使用するようになってる
+                    s.NowHP = (int) Math.Floor(s.MaxHP*0.2);
+                else if (d.HasMegami)
+                    s.NowHP = s.MaxHP;
+            });
         }
 
         public static bool HasDamecon(this ShipData ship)
         {
-            if (ship is MastersShipData) return false;
             return ship?.Slots.Any(x => x?.Source.Id == 42) ?? false;
         }
 
         public static bool HasMegami(this ShipData ship)
         {
-            if (ship is MastersShipData) return false;
             return ship?.Slots.Any(x => x?.Source.Id == 43) ?? false;
         }
     }

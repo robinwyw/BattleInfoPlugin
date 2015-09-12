@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,26 +8,18 @@ namespace BattleInfoPlugin.Models
     /// <summary>
     /// 1艦隊分のダメージ一覧
     /// </summary>
-    public class FleetDamages
+    public class FleetDamages : IEnumerable<int>
     {
-        public int Ship1 { get; set; }
-        public int Ship2 { get; set; }
-        public int Ship3 { get; set; }
-        public int Ship4 { get; set; }
-        public int Ship5 { get; set; }
-        public int Ship6 { get; set; }
+        public int[] Ships { get; }
 
         public int[] ToArray()
         {
-            return new[]
-            {
-                this.Ship1,
-                this.Ship2,
-                this.Ship3,
-                this.Ship4,
-                this.Ship5,
-                this.Ship6,
-            };
+            return this.Ships;
+        }
+
+        public FleetDamages(int[] damages = null)
+        {
+            this.Ships = damages ?? new int[6];
         }
 
         public static FleetDamages Parse(IEnumerable<int> damages)
@@ -34,16 +27,12 @@ namespace BattleInfoPlugin.Models
             if (damages == null) throw new ArgumentNullException();
             var arr = damages.ToArray();
             if (arr.Length != 6) throw new ArgumentException("艦隊ダメージ配列の長さは6である必要があります。");
-            return new FleetDamages
-            {
-                Ship1 = arr[0],
-                Ship2 = arr[1],
-                Ship3 = arr[2],
-                Ship4 = arr[3],
-                Ship5 = arr[4],
-                Ship6 = arr[5],
-            };
+            return new FleetDamages(arr);
         }
+
+        public IEnumerator<int> GetEnumerator() => ((IEnumerable<int>) this.Ships).GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     public static class FleetDamagesExtensions
@@ -51,6 +40,15 @@ namespace BattleInfoPlugin.Models
         public static FleetDamages ToFleetDamages(this IEnumerable<int> damages)
         {
             return FleetDamages.Parse(damages);
+        }
+
+        public static FleetDamages Merge(this FleetDamages[] damages)
+        {
+            var merged = new FleetDamages();
+            for (var i = 0; i < 6; i++)
+                merged.Ships[i] = damages.Select(d => d.Ships[i]).Sum();
+
+            return merged;
         }
     }
 }

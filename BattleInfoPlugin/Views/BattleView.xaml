@@ -43,19 +43,30 @@
             <StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition MinWidth="190"
+                                          MaxWidth="220" />
                         <ColumnDefinition />
-                        <ColumnDefinition Width="190" />
+                        <ColumnDefinition Width="140" />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="1"
-                                Margin="0,0,10,0">
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
+                            <Run Text="更新日時:" />
+                            <Run Text="{Binding UpdatedTime, Mode=OneWay}"
+                                 FontSize="12"
+                                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
+                        </TextBlock>
                         <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
                             <Run Text="戦闘種別:" />
                             <Run Text="{Binding BattleName, Mode=OneWay}"
                                  FontSize="12"
                                  Style="{DynamicResource EmphaticTextElementStyleKey}" />
                         </TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1"
+                                Width="120"
+                                HorizontalAlignment="Center">
                         <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
                             <Run Text="交戦形態:" />
                             <Run Text="{Binding BattleSituation, Mode=OneWay}"
@@ -72,12 +83,6 @@
 
 
                     <StackPanel Grid.Column="2">
-                        <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                            <Run Text="更新日時:" />
-                            <Run Text="{Binding UpdatedTime, Mode=OneWay}"
-                                 FontSize="12"
-                                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
-                        </TextBlock>
                         <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
                             <Run Text="戦闘結果:" />
                             <Run Text="{Binding BattleResult, Mode=OneWay}"

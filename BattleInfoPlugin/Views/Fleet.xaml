@@ -375,6 +375,17 @@
                                            HorizontalAlignment="Center" />
                             </Grid>
 
+                            <Grid x:Name="SinkIndicator"
+                                  Grid.Column="1"
+                                  Visibility="Collapsed"
+                                  Margin="3,2,3,0">
+                                <Border Background="#A00000"
+                                        Opacity=".4"/>
+                                <TextBlock Text="撃沈"
+                                           Style="{DynamicResource EmphaticTextStyleKey}"
+                                           HorizontalAlignment="Center" />
+                            </Grid>
+
                             <StackPanel Orientation="Horizontal"
                                         Grid.Column="2">
                                 <controls:SlotItemIcon Type="DamageControl"
@@ -410,6 +421,15 @@
                                     Property="Opacity"
                                     Value=".2" />
                             <Setter TargetName="TowIndicator"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding NowHP}"
+                                     Value="0">
+                            <Setter TargetName="HPIndicator"
+                                    Property="Opacity"
+                                    Value=".2" />
+                            <Setter TargetName="SinkIndicator"
                                     Property="Visibility"
                                     Value="Visible" />
                         </DataTrigger>

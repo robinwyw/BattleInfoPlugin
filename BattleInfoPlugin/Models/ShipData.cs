@@ -304,7 +304,7 @@ namespace BattleInfoPlugin.Models
 
         #endregion
 
-        public bool DamageControlled => this.Situation.HasFlag(ShipSituation.DamageControlled);
+        public virtual bool DamageControlled => this.Situation.HasFlag(ShipSituation.DamageControlled);
 
         public int SlotsFirepower => this.Slots.Sum(x => x.Firepower);
         public int SlotsTorpedo => this.Slots.Sum(x => x.Torpedo);
@@ -354,6 +354,12 @@ namespace BattleInfoPlugin.Models
             this.NowHP = HP;
             this.OriginalHP = HP;
             this.DamageReceived = 0;
+        }
+
+        internal void ReceiveDamage(int damage)
+        {
+            this.NowHP -= damage;
+            this.DamageReceived += damage;
         }
     }
 
@@ -448,6 +454,7 @@ namespace BattleInfoPlugin.Models
         }
         #endregion
 
+        public override bool DamageControlled => false;
 
         public MastersShipData()
         {
