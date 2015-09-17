@@ -13,6 +13,9 @@ namespace BattleInfoPlugin.Models.Settings
         public static SerializableProperty<bool> IsEnabled { get; }
             = new SerializableProperty<bool>(GetKey(), SettingsProvider.Local, true) { AutoSave = true };
 
+        public static SerializableProperty<bool> IsEnabledOnlyWhenInactive { get; }
+            = new SerializableProperty<bool>(GetKey(), SettingsProvider.Local, true) { AutoSave = true };
+
         public static string GetKey([CallerMemberName] string caller = "")
             => nameof(NotifierSettings) + "." + caller;
     }

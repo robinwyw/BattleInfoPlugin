@@ -84,11 +84,16 @@
                               DataContext="{Binding Battle}"
                               d:DataContext="{d:DesignData /SampleData/BattleViewModelSampleData.xaml}" />
 
-            <CheckBox Grid.Row="2"
-                      HorizontalAlignment="Right"
-                      Content="戦闘終了通知"
-                      IsChecked="{Binding IsNotifierEnabled}"
-                      Margin="10, 0" />
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <CheckBox Content="戦闘終了通知"
+                          IsChecked="{Binding IsNotifierEnabled}"
+                          Margin="0,0,10,0"/>
+                <CheckBox Content="非アクティブ時のみ通知"
+                          IsChecked="{Binding IsNotifyOnlyWhenInactive}"
+                          Margin="0,0,10,0"/>
+            </StackPanel>
         </Grid>
     </ScrollViewer>
 </UserControl>

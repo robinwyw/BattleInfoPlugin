@@ -28,6 +28,21 @@ namespace BattleInfoPlugin.Models.Notifiers
 
         #endregion
 
+        #region IsNotifyOnlyWhenInactive変更通知プロパティ
+
+        public bool IsNotifyOnlyWhenInactive
+        {
+            get { return NotifierSettings.IsEnabledOnlyWhenInactive; }
+            set
+            {
+                if (NotifierSettings.IsEnabledOnlyWhenInactive == value)
+                    return;
+                NotifierSettings.IsEnabledOnlyWhenInactive.Value = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        #endregion
 
         public BattleEndNotifier(Plugin plugin)
         {
@@ -45,7 +60,7 @@ namespace BattleInfoPlugin.Models.Notifiers
         private void Notify()
         {
             var isActive = DispatcherHelper.UIDispatcher.Invoke(() => Application.Current.MainWindow.IsActive);
-            if (this.IsEnabled && !isActive)
+            if (this.IsEnabled && (!isActive || !this.IsNotifyOnlyWhenInactive))
                 this.plugin.InvokeNotifyRequested(new NotifyEventArgs(NotificationType.BattleEnd, "戦闘終了", "戦闘が終了しました。")
                 {
                     Activated = () =>
