@@ -158,7 +158,7 @@
     <Compile Include="Models\FleetData.cs" />
     <Compile Include="Models\FleetType.cs" />
     <Compile Include="Models\Formation.cs" />
-    <Compile Include="Models\Raw\IPracticeDayBattleMembers.cs" />
+    <Compile Include="Models\Raw\IPracticeData.cs" />
     <Compile Include="Models\MapArea.cs" />
     <Compile Include="Models\MapCell.cs" />
     <Compile Include="Models\MapCellData.cs" />
