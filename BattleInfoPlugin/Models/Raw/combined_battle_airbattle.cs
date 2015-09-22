@@ -3,7 +3,7 @@
     /// <summary>
     /// 連合艦隊-航空戦
     /// </summary>
-    public class combined_battle_airbattle : ICommonBattleMembers
+    public class combined_battle_airbattle : ICombinedBattleMembers, IBattleFormationInfo, IAirBattleMembers, IFleetBattleInfo
     {
         public int api_deck_id { get; set; }
         public int[] api_ship_ke { get; set; }
@@ -26,5 +26,9 @@
         public Api_Support_Info api_support_info { get; set; }
         public int[] api_stage_flag2 { get; set; }
         public Api_Kouku api_kouku2 { get; set; }
+
+        public FleetDamages FirstFleetDamages => this.GetFirstFleetDamages();
+        public FleetDamages SecondFleetDamages => this.GetSecondFleetDamages();
+        public FleetDamages EnemyDamages => this.GetEnemyDamages();
     }
 }

@@ -3,8 +3,13 @@
     /// <summary>
     /// 昼戦
     /// </summary>
-    public class sortie_battle: ICommonBattleMembers
+    public class sortie_battle: ICommonBattleMembers, IBattleFormationInfo, IDayBattleMembers, IFleetBattleInfo
     {
+        public int api_deck_id
+        {
+            get { return this.api_dock_id; }
+            set { }
+        }
         public int api_dock_id { get; set; }
         public int[] api_ship_ke { get; set; }
         public int[] api_ship_lv { get; set; }
@@ -28,5 +33,9 @@
         public Hougeki api_hougeki2 { get; set; }
         public Hougeki api_hougeki3 { get; set; }
         public Raigeki api_raigeki { get; set; }
+
+        FleetDamages IFleetBattleInfo.FirstFleetDamages => this.GetFriendDamages();
+        FleetDamages IFleetBattleInfo.SecondFleetDamages => null;
+        public FleetDamages EnemyDamages => this.GetEnemyDamages();
     }
 }

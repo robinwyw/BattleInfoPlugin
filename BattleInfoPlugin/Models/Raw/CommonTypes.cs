@@ -12,7 +12,15 @@
         public Api_Stage3_Combined api_stage3_combined { get; set; }
     }
 
-    public class Api_Stage1
+    public interface Api_Stage_Combat
+    {
+        int api_f_count { get; set; }
+        int api_f_lostcount { get; set; }
+        int api_e_count { get; set; }
+        int api_e_lostcount { get; set; }
+    }
+
+    public class Api_Stage1 : Api_Stage_Combat
     {
         public int api_f_count { get; set; }
         public int api_f_lostcount { get; set; }
@@ -22,7 +30,7 @@
         public int[] api_touch_plane { get; set; }
     }
 
-    public class Api_Stage2
+    public class Api_Stage2 : Api_Stage_Combat
     {
         public int api_f_count { get; set; }
         public int api_f_lostcount { get; set; }

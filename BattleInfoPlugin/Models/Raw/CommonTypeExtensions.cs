@@ -55,12 +55,17 @@ namespace BattleInfoPlugin.Models.Raw
             => kouku?.api_stage3?.api_edam?.GetDamages()
                ?? defaultValue;
 
+        public static bool IsEnabled(this Api_Kouku kouku)
+            => kouku?.api_plane_from.Any(arr => arr.Any(n => n != -1)) ?? false;
+
         public static AirSupremacy GetAirSupremacy(this Api_Kouku kouku)
-            => (AirSupremacy)(kouku?.api_stage1?.api_disp_seiku ?? (int)AirSupremacy.航空戦なし);
+            => kouku.IsEnabled()
+            ? (AirSupremacy)(kouku.api_stage1?.api_disp_seiku ?? (int)AirSupremacy.航空戦なし)
+            : AirSupremacy.航空戦なし;
 
         public static AirCombatResult[] ToResult(this Api_Kouku kouku, string prefixName = "")
         {
-            return kouku != null
+            return kouku.IsEnabled()
                 ? new []
                 {
                     kouku.api_stage1.ToResult($"{prefixName}空対空"),
@@ -69,14 +74,10 @@ namespace BattleInfoPlugin.Models.Raw
                 : new AirCombatResult[0];
         }
 
-        public static AirCombatResult ToResult(this Api_Stage1 stage1, string name)
-            => stage1 == null ? new AirCombatResult(name)
-            : new AirCombatResult(name, stage1.api_f_count, stage1.api_f_lostcount, stage1.api_e_count, stage1.api_e_lostcount);
-
-        public static AirCombatResult ToResult(this Api_Stage2 stage2, string name)
-            => stage2 == null ? new AirCombatResult(name)
-            : new AirCombatResult(name, stage2.api_f_count, stage2.api_f_lostcount, stage2.api_e_count, stage2.api_e_lostcount);
-
+        public static AirCombatResult ToResult(this Api_Stage_Combat stage, string name)
+            => stage == null ? new AirCombatResult(name)
+            : new AirCombatResult(name, stage.api_f_count, stage.api_f_lostcount, stage.api_e_count, stage.api_e_lostcount);
+        
         #endregion
 
         #region 雷撃戦

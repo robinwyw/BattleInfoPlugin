@@ -3,8 +3,13 @@
     /// <summary>
     /// 演習-昼戦
     /// </summary>
-    public class practice_battle : ICommonBattleMembers
+    public class practice_battle : ICommonBattleMembers, IBattleFormationInfo, IDayBattleMembers, IPracticeData, IFleetBattleInfo
     {
+        public int api_deck_id
+        {
+            get { return this.api_dock_id; }
+            set { }
+        }
         public int api_dock_id { get; set; }
         public int[] api_ship_ke { get; set; }
         public int[] api_ship_lv { get; set; }
@@ -19,6 +24,8 @@
         public int[] api_formation { get; set; }
         public int[] api_stage_flag { get; set; }
         public Api_Kouku api_kouku { get; set; }
+        public int api_support_flag { get; set; }
+        public Api_Support_Info api_support_info { get; set; }
         public int api_opening_flag { get; set; }
         public Raigeki api_opening_atack { get; set; }
         public int[] api_hourai_flag { get; set; }
@@ -26,5 +33,9 @@
         public Hougeki api_hougeki2 { get; set; }
         public Hougeki api_hougeki3 { get; set; }
         public Raigeki api_raigeki { get; set; }
+
+        FleetDamages IFleetBattleInfo.FirstFleetDamages => this.GetFriendDamages();
+        FleetDamages IFleetBattleInfo.SecondFleetDamages => null;
+        public FleetDamages EnemyDamages => this.GetEnemyDamages();
     }
 }

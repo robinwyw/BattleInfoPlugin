@@ -3,7 +3,7 @@
     /// <summary>
     /// 演習-夜戦
     /// </summary>
-    public class practice_midnight_battle : ICommonBattleMembers
+    public class practice_midnight_battle : ICommonBattleMembers, IMidnightBattleMembers, IPracticeData, IFleetBattleInfo
     {
         public int api_deck_id { get; set; }
         public int[] api_nowhps { get; set; }
@@ -17,5 +17,9 @@
         public int[] api_touch_plane { get; set; }
         public int[] api_flare_pos { get; set; }
         public Midnight_Hougeki api_hougeki { get; set; }
+
+        public FleetDamages FirstFleetDamages => this.GetFriendDamages();
+        public FleetDamages SecondFleetDamages => null;
+        public FleetDamages EnemyDamages => this.GetEnemyDamages();
     }
 }

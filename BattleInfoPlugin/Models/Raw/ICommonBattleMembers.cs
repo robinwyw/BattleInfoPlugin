@@ -5,6 +5,7 @@ namespace BattleInfoPlugin.Models.Raw
 {
     public interface ICommonBattleMembers
     {
+        int api_deck_id { get; set; }
         int[] api_ship_ke { get; set; }
         int[] api_ship_lv { get; set; }
         int[] api_nowhps { get; set; }

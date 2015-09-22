@@ -3,7 +3,7 @@
     /// <summary>
     /// 連合艦隊-特殊夜戦
     /// </summary>
-    public class combined_battle_sp_midnight : ICommonBattleMembers
+    public class combined_battle_sp_midnight : ICombinedBattleMembers, IBattleFormationInfo, IMidnightBattleMembers, IFleetBattleInfo
     {
         public int api_deck_id { get; set; }
         public int[] api_ship_ke { get; set; }
@@ -21,5 +21,9 @@
         public int[] api_touch_plane { get; set; }
         public int[] api_flare_pos { get; set; }
         public Midnight_Hougeki api_hougeki { get; set; }
+
+        public FleetDamages FirstFleetDamages => null;
+        public FleetDamages SecondFleetDamages => this.GetFriendDamages();
+        public FleetDamages EnemyDamages => this.GetEnemyDamages();
     }
 }

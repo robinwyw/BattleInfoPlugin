@@ -6,7 +6,7 @@ using Livet;
 
 namespace BattleInfoPlugin.Models
 {
-    public class ShipData : NotificationObject
+    public abstract class ShipData : NotificationObject
     {
 
         #region Id変更通知プロパティ
@@ -144,18 +144,7 @@ namespace BattleInfoPlugin.Models
 
         private int _OriginalHP;
 
-        public int OriginalHP
-        {
-            get { return this._OriginalHP; }
-            internal set
-            {
-                if (this._OriginalHP != value)
-                {
-                    this._OriginalHP = value;
-                    this.RaisePropertyChanged();
-                }
-            }
-        }
+        public abstract int OriginalHP { get; }
 
         private int _DamageReceived;
 
@@ -366,13 +355,6 @@ namespace BattleInfoPlugin.Models
             this._Slots = new ShipSlotData[0];
         }
 
-        internal void InitializeNowHP(int HP)
-        {
-            this.NowHP = HP;
-            this.OriginalHP = HP;
-            this.DamageReceived = 0;
-        }
-
         internal void ReceiveDamage(int damage)
         {
             this.NowHP -= damage;
@@ -417,6 +399,8 @@ namespace BattleInfoPlugin.Models
         }
         #endregion
 
+        public override int OriginalHP => this.Source?.HP.Current ?? 0;
+
 
         public MembersShipData()
         {
@@ -435,7 +419,7 @@ namespace BattleInfoPlugin.Models
             this.TypeName = this.Source.Info.ShipType.Name;
             this.Level = this.Source.Level;
             this.Situation = this.Source.Situation;
-            this.InitializeNowHP(this.Source.HP.Current);
+            this.NowHP = this.Source.HP.Current;
             this.MaxHP = this.Source.HP.Maximum;
             this.Slots = this.Source.Slots
                 .Where(s => s != null)
@@ -471,6 +455,8 @@ namespace BattleInfoPlugin.Models
             }
         }
         #endregion
+
+        public override int OriginalHP => this.MaxHP;
 
         public override bool DamageControlled => false;
 

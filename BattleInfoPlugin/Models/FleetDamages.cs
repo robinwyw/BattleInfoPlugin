@@ -30,7 +30,7 @@ namespace BattleInfoPlugin.Models
             return new FleetDamages(arr);
         }
 
-        public IEnumerator<int> GetEnumerator() => ((IEnumerable<int>) this.Ships).GetEnumerator();
+        public IEnumerator<int> GetEnumerator() => ((IEnumerable<int>)this.Ships).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
@@ -46,7 +46,7 @@ namespace BattleInfoPlugin.Models
         {
             var merged = new FleetDamages();
             for (var i = 0; i < 6; i++)
-                merged.Ships[i] = damages.Select(d => d.Ships[i]).Sum();
+                merged.Ships[i] = damages.Where(d => d != null).Select(d => d.Ships[i]).Sum();
 
             return merged;
         }

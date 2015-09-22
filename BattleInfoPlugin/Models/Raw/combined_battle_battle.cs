@@ -3,7 +3,7 @@
     /// <summary>
     /// 連合艦隊-機動部隊
     /// </summary>
-    public class combined_battle_battle : ICommonBattleMembers
+    public class combined_battle_battle : ICombinedBattleMembers, IBattleFormationInfo, IDayBattleMembers, IFleetBattleInfo
     {
         public int api_deck_id { get; set; }
         public int[] api_ship_ke { get; set; }
@@ -31,5 +31,22 @@
         public Raigeki api_raigeki { get; set; }
         public Hougeki api_hougeki2 { get; set; }
         public Hougeki api_hougeki3 { get; set; }
+
+        FleetDamages IFleetBattleInfo.FirstFleetDamages => new[]
+        {
+            this.api_kouku.GetFirstFleetDamages(),
+            this.api_hougeki2.GetFriendDamages(),
+            this.api_hougeki3.GetFriendDamages()
+        }.Merge();
+
+        FleetDamages IFleetBattleInfo.SecondFleetDamages => new[]
+        {
+            this.api_kouku.GetSecondFleetDamages(),
+            this.api_opening_atack.GetFriendDamages(),
+            this.api_hougeki1.GetFriendDamages(),
+            this.api_raigeki.GetFriendDamages()
+        }.Merge();
+
+        public FleetDamages EnemyDamages => this.GetEnemyDamages();
     }
 }
