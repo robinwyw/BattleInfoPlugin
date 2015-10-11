@@ -95,6 +95,21 @@ namespace BattleInfoPlugin.ViewModels
         }
         #endregion
 
+        private NextPointInfoViewModel _NextPointInfo = new NextPointInfoViewModel { IsInSortie = false };
+
+        public NextPointInfoViewModel NextPointInfo
+        {
+            get { return this._NextPointInfo; }
+            set
+            {
+                if (this._NextPointInfo != value)
+                {
+                    this._NextPointInfo = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
         public BattleViewModel()
         {
             this._FirstFleet = new FleetViewModel("自艦隊");
@@ -149,6 +164,23 @@ namespace BattleInfoPlugin.ViewModels
                     () => this.BattleData.Enemies,
                     (_, __) => this.Enemies.Fleet = this.BattleData.Enemies
                 },
+                {
+                    () => this.BattleData.NextCell,
+                    (_, __) =>
+                    {
+                        this.NextPointInfo = new NextPointInfoViewModel
+                        {
+                            MapId = this.BattleData.NextCell.MapId.ToString(),
+                            Id = this.BattleData.NextCell.Id,
+                            CellType = this.BattleData.NextCell.Type,
+                            IsInSortie = true,
+                        };
+                    }
+                },
+                {
+                    () => this.BattleData.State,
+                    (_, __) => this.NextPointInfo = new NextPointInfoViewModel { IsInSortie = false }
+                }
             });
         }
     }

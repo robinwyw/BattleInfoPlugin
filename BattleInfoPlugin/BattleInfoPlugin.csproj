@@ -158,6 +158,7 @@
     <Compile Include="Models\FleetData.cs" />
     <Compile Include="Models\FleetType.cs" />
     <Compile Include="Models\Formation.cs" />
+    <Compile Include="Models\MapPoint.cs" />
     <Compile Include="Models\Raw\IPracticeData.cs" />
     <Compile Include="Models\MapArea.cs" />
     <Compile Include="Models\MapCell.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Models\Settings\NotifierSettings.cs" />
     <Compile Include="Models\Settings\PathSettings.cs" />
     <Compile Include="Models\Settings\SettingsProvider.cs" />
+    <Compile Include="Models\BattleState.cs" />
     <Compile Include="NotificationType.cs" />
     <Compile Include="Models\Raw\battle_midnight_battle.cs" />
     <Compile Include="Models\Raw\battle_midnight_sp_midnight.cs" />
@@ -210,6 +212,7 @@
     <Compile Include="ViewModels\AirCombatResultViewModel.cs" />
     <Compile Include="ViewModels\BattleViewModel.cs" />
     <Compile Include="ViewModels\BattleWindowViewModel.cs" />
+    <Compile Include="ViewModels\CellTypeViewModel.cs" />
     <Compile Include="ViewModels\Enemies\EnemyFleetViewModel.cs" />
     <Compile Include="ViewModels\Enemies\EnemyMapViewModel.cs" />
     <Compile Include="ViewModels\Enemies\EnemyCellViewModel.cs" />
@@ -217,6 +220,7 @@
     <Compile Include="ViewModels\EnemyWindowViewModel.cs" />
     <Compile Include="ViewModels\FleetViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
+    <Compile Include="ViewModels\NextPointInfoViewModel.cs" />
     <Compile Include="ViewModels\TabItemViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModel.cs" />
     <Compile Include="Views\BattleView.xaml.cs">
@@ -226,6 +230,9 @@
       <DependentUpon>BattleWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Behaviors\ScrollToCellBehavior.cs" />
+    <Compile Include="Views\CellTypeView.xaml.cs">
+      <DependentUpon>CellTypeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Cell.cs" />
     <Compile Include="Views\Converters\AddDoubleValueConverter.cs" />
     <Compile Include="Views\Converters\AdditionalNameColorConverter.cs" />
@@ -238,6 +245,9 @@
     </Compile>
     <Compile Include="Views\Fleet.xaml.cs">
       <DependentUpon>Fleet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NextPointInfoView.xaml.cs">
+      <DependentUpon>NextPointInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToolView.xaml.cs">
       <DependentUpon>ToolView.xaml</DependentUpon>
@@ -262,6 +272,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CellTypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\EnemyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -269,6 +283,10 @@
     <Page Include="Views\Fleet.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\NextPointInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ToolView.xaml">
       <Generator>MSBuild:Compile</Generator>

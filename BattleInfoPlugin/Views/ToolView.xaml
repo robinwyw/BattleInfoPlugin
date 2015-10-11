@@ -55,6 +55,9 @@
                            VerticalAlignment="Top"
                            Style="{DynamicResource HeaderTextStyleKey}"
                            Margin="0,5,10,0"/>
+
+                <views:NextPointInfoView DataContext="{Binding Battle.NextPointInfo}" />
+
                 <Button Content="既知の敵一覧"
                         DockPanel.Dock="Right"
                         VerticalAlignment="Stretch"

@@ -13,6 +13,20 @@ namespace BattleInfoPlugin.Models
     {
         public static BattleData Current { get; } = new BattleData();
 
+        private BattleState _State;
+
+        public BattleState State
+        {
+            get { return this._State; }
+            set
+            {
+                if (this._State != value)
+                {
+                    this.State = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
 
         private bool _IsInBattle;
 
@@ -44,8 +58,23 @@ namespace BattleInfoPlugin.Models
             }
         }
 
+        private MapPoint _NextCell;
+
+        public MapPoint NextCell
+        {
+            get { return this._NextCell; }
+            set
+            {
+                if (this._NextCell != value)
+                {
+                    this._NextCell = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
         //FIXME 敵の開幕雷撃&連合艦隊がまだ不明(とりあえず第二艦隊が受けるようにしてる)
-        
+
         #region Name変更通知プロパティ
         private string _Name;
 
@@ -378,6 +407,8 @@ namespace BattleInfoPlugin.Models
             if (this.CurrentDeckId < 1) return;
 
             this.UpdateFriendFleets(this.CurrentDeckId);
+
+            this.NextCell = new MapPoint(startNext);
         }
 
 
@@ -403,6 +434,10 @@ namespace BattleInfoPlugin.Models
         {
             this.IsInBattle = true;
             this.UpdatedTime = DateTimeOffset.Now;
+
+            this.State = data is IPracticeData
+                ? BattleState.Practice
+                : BattleState.InSortie;
 
             var formation = data as IBattleFormationInfo;
             if (formation != null)
@@ -448,6 +483,7 @@ namespace BattleInfoPlugin.Models
             if (combined != null)
                 this.SecondFleet.UpdateHPs(combined.api_maxhps_combined, combined.api_nowhps_combined);
         }
+
         private void UpdatePracticeDamages(IFleetBattleInfo data)
         {
             this.FirstFleet.CalcPracticeDamages(data.FirstFleetDamages);

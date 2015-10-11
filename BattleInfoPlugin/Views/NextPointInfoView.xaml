@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="BattleInfoPlugin.Views.NextPointInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:BattleInfoPlugin.Views"
+             xmlns:viewModels="clr-namespace:BattleInfoPlugin.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="20" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance viewModels:NextPointInfoViewModel}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/PluginStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal"
+                Margin="10,0">
+
+        <StackPanel.Style>
+            <Style TargetType="StackPanel">
+                <Setter Property="Visibility"
+                        Value="Collapsed" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsInSortie}"
+                                 Value="True">
+                        <Setter Property="Visibility"
+                                Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </StackPanel.Style>
+
+        <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
+            <Run Text="Map:" />
+            <Run Text="{Binding MapId}"
+                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
+            <Run Text=" ID:" />
+            <Run Text="{Binding Id}"
+                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
+            <Run Text=" Type:" />
+        </TextBlock>
+
+        <local:CellTypeView DataContext="{Binding CellType}"
+                            Margin="5,0"
+                            VerticalAlignment="Center" />
+    </StackPanel>
+</UserControl>
