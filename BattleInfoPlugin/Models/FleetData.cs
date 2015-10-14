@@ -177,10 +177,7 @@ namespace BattleInfoPlugin.Models
         /// <param name="damages">適用ダメージリスト</param>
         public static void CalcPracticeDamages(this FleetData fleet, params FleetDamages[] damages)
         {
-            foreach (var damage in damages)
-            {
-                fleet.Ships.SetValues(damage.ToArray(), (s, d) => s.NowHP -= d);
-            }
+            fleet.Ships.SetValues(damages.Merge(), (s, d) => s.NowHP -= d);
         }
 
         private static bool HasDamecon(this ShipData ship)

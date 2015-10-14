@@ -21,7 +21,10 @@
     <Grid MinWidth="50">
         <Grid.Resources>
             <Style TargetType="{x:Type TextBlock}"
-                   BasedOn="{StaticResource DefaultTextStyleKey}" />
+                   BasedOn="{StaticResource DefaultTextStyleKey}">
+                <Setter Property="Foreground"
+                        Value="White" />
+            </Style>
         </Grid.Resources>
 
         <Border Background="#CF0000">

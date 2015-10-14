@@ -22,7 +22,7 @@ namespace BattleInfoPlugin.Models
             {
                 if (this._State != value)
                 {
-                    this.State = value;
+                    this._State = value;
                     this.RaisePropertyChanged();
                 }
             }
