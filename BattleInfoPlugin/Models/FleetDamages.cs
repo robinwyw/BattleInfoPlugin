@@ -12,22 +12,16 @@ namespace BattleInfoPlugin.Models
     {
         public int[] Ships { get; }
 
-        public int[] ToArray()
+        public FleetDamages(IEnumerable<int> damages = null)
         {
-            return this.Ships;
-        }
-
-        public FleetDamages(int[] damages = null)
-        {
-            this.Ships = damages ?? new int[6];
+            this.Ships = damages?.ToArray() ?? new int[6];
+            if (this.Ships.Length != 6) throw new ArgumentException("艦隊ダメージ配列の長さは6である必要があります。");
         }
 
         public static FleetDamages Parse(IEnumerable<int> damages)
         {
             if (damages == null) throw new ArgumentNullException();
-            var arr = damages.ToArray();
-            if (arr.Length != 6) throw new ArgumentException("艦隊ダメージ配列の長さは6である必要があります。");
-            return new FleetDamages(arr);
+            return new FleetDamages(damages);
         }
 
         public IEnumerator<int> GetEnumerator() => ((IEnumerable<int>)this.Ships).GetEnumerator();
@@ -44,11 +38,12 @@ namespace BattleInfoPlugin.Models
 
         public static FleetDamages Merge(this FleetDamages[] damages)
         {
-            var merged = new FleetDamages();
+            var damage = new int[6];
+            var damagesWithoutNull = damages.Where(d => d != null).ToArray();
             for (var i = 0; i < 6; i++)
-                merged.Ships[i] = damages.Where(d => d != null).Select(d => d.Ships[i]).Sum();
+                damage[i] = damagesWithoutNull.Select(d => d.Ships[i]).Sum();
 
-            return merged;
+            return new FleetDamages(damage);
         }
     }
 }
