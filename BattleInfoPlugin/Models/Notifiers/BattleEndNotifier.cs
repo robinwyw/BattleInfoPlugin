@@ -73,7 +73,7 @@ namespace BattleInfoPlugin.Models.Notifiers
         {
             var isActive = DispatcherHelper.UIDispatcher.Invoke(() => Application.Current.MainWindow.IsActive);
             if (this.IsEnabled && (!isActive || !this.IsNotifyOnlyWhenInactive))
-                this.plugin.InvokeNotifyRequested(new NotifyEventArgs(type, title, message)
+                this.plugin.InvokeNotifyRequested(new NotifyEventArgs(type, $"{title} ({BattleData.Current.BattleResult})", message)
                 {
                     Activated = () =>
                     {

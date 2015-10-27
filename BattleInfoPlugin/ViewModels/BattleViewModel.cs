@@ -171,7 +171,7 @@ namespace BattleInfoPlugin.ViewModels
                         this.NextPointInfo = new NextPointInfoViewModel
                         {
                             MapId = this.BattleData.NextCell.MapId.ToString(),
-                            Id = this.BattleData.NextCell.Id,
+                            Id = ((char) (this.BattleData.NextCell.Id - 1 + 'A')).ToString(),
                             CellType = this.BattleData.NextCell.Type,
                             IsInSortie = true,
                         };

@@ -12,7 +12,7 @@ namespace BattleInfoPlugin.ViewModels
     {
         public string MapId { get; set; }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public CellTypeViewModel CellType { get; set; }
 
