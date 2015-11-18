@@ -139,7 +139,7 @@ namespace BattleInfoPlugin.Models
                 .ForEach(x => setter(x.s, x.v));
         }
 
-        internal static void UpdateHPs(this FleetData fleet, int[] maxhps, int[] nowhps)
+        internal static void UpdateHPs(this FleetData fleet, IEnumerable<int> maxhps, IEnumerable<int> nowhps)
         {
             fleet.Ships.SetValues(maxhps, (s, v) => s.MaxHP = v);
             fleet.Ships.SetValues(nowhps, (s, v) => s.NowHP = v);

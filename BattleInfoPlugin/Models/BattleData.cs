@@ -476,12 +476,12 @@ namespace BattleInfoPlugin.Models
 
         private void UpdateFleetsHPs(ICommonBattleMembers data)
         {
-            this.FirstFleet.UpdateHPs(data.api_maxhps.GetFriendData().ToArray(), data.api_nowhps.GetFriendData().ToArray());
-            this.Enemies.UpdateHPs(data.api_maxhps.GetEnemyData().ToArray(), data.api_nowhps.GetEnemyData().ToArray());
+            this.FirstFleet.UpdateHPs(data.api_maxhps.GetFriendData(), data.api_nowhps.GetFriendData());
+            this.Enemies.UpdateHPs(data.api_maxhps.GetEnemyData(), data.api_nowhps.GetEnemyData());
 
             var combined = data as ICombinedBattleMembers;
             if (combined != null)
-                this.SecondFleet.UpdateHPs(combined.api_maxhps_combined, combined.api_nowhps_combined);
+                this.SecondFleet.UpdateHPs(combined.api_maxhps_combined.GetFriendData(), combined.api_nowhps_combined.GetFriendData());
         }
 
         private void UpdatePracticeDamages(IFleetBattleInfo data)
