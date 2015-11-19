@@ -37,6 +37,11 @@ namespace BattleInfoPlugin.Models
             this.InfoIdInArea = infoIdInArea;
         }
 
-        public override string ToString() => this.AreaId + "-" + this.InfoIdInArea;
+        public override string ToString()
+        {
+            return this.AreaId >= 22
+                ? "E-" + this.InfoIdInArea
+                : this.AreaId + "-" + this.InfoIdInArea;
+        }
     }
 }
