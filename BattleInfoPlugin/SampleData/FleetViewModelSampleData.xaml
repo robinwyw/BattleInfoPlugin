@@ -41,6 +41,11 @@
                         <wrapper:LimitedValue Current="0" Maximum="25" Minimum="0"/>
                     </models:MembersShipData.HP>
                 </models:MembersShipData>
+                <models:MembersShipData MaxHP="40" NowHP="1" Name="戦艦レ級後期型改" TypeName="こわい" AdditionalName="flagship" DamageReceived="10">
+                    <models:MembersShipData.HP>
+                        <wrapper:LimitedValue Current="1" Maximum="1" Minimum="0"/>
+                    </models:MembersShipData.HP>
+                </models:MembersShipData>
             </models:FleetData.Ships>
         </models:FleetData>
     </viewModels:FleetViewModel.Fleet>

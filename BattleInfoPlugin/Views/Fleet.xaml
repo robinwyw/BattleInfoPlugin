@@ -341,8 +341,22 @@
                                                Margin="0,3,0,0"
                                                Style="{DynamicResource DefaultTextStyleKey}"
                                                Grid.Column="1">
-                                        <Run Text="{Binding HP.Current, Mode=OneWay}"
-                                             Style="{DynamicResource EmphaticTextElementStyleKey}" /><Run Text="/" /><Run Text="{Binding HP.Maximum, Mode=OneWay}" />
+                                        <Run Text="{Binding HP.Current, Mode=OneWay}">
+                                            <Run.Style>
+                                                <Style BasedOn="{StaticResource EmphaticTextElementStyleKey}"
+                                                       TargetType="{x:Type Run}">
+                                                    <Setter Property="Foreground"
+                                                            Value="#FFB0B0" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding DamageReceived}"
+                                                                     Value="0">
+                                                            <Setter Property="Foreground"
+                                                                    Value="White" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Run.Style>
+                                        </Run><Run Text="/" /><Run Text="{Binding HP.Maximum, Mode=OneWay}" />
                                     </TextBlock>
                                 </Grid>
 
