@@ -20,23 +20,7 @@ namespace BattleInfoPlugin.Models
         {
             this.MapId = new MapId(data.api_maparea_id, data.api_mapinfo_no);
             this.Id = data.api_no;
-            this.Type = data.api_event_id.ToCellType();
-
-            if (data.api_event_kind == 2)
-            {
-                if (data.api_event_id == 6)
-                {
-                    this.Type = CellType.能動分岐;
-                }
-                else
-                {
-                    this.Type |= CellType.夜戦;
-                }
-            }
-            else if (data.api_event_id == 7 && data.api_event_kind == 0)
-            {
-                this.Type = CellType.航空偵察;
-            }
+            this.Type = data.ToCellType();
         }
     }
 

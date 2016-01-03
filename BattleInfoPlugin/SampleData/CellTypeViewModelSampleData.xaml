@@ -1,0 +1,7 @@
+﻿<viewModels:CellTypeViewModel xmlns:viewModels="clr-namespace:BattleInfoPlugin.ViewModels"
+                   CellType="ボス,夜戦">
+    <viewModels:CellTypeViewModel.SigleCellTypes>
+        <viewModels:CellTypeViewModel CellType="ボス" />
+        <viewModels:CellTypeViewModel CellType="夜戦" />
+    </viewModels:CellTypeViewModel.SigleCellTypes>
+</viewModels:CellTypeViewModel>

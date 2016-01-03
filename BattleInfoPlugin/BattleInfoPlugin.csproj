@@ -178,6 +178,7 @@
     <Compile Include="Models\Raw\IMidnightBattleMembers.cs" />
     <Compile Include="Models\Repositories\EnemyData.cs" />
     <Compile Include="Models\Settings\BattleWindowSettings.cs" />
+    <Compile Include="Models\CellTypeConverter.cs" />
     <Compile Include="Models\Settings\NotifierSettings.cs" />
     <Compile Include="Models\Settings\PathSettings.cs" />
     <Compile Include="Models\Settings\SettingsProvider.cs" />
@@ -262,6 +263,9 @@
     <Compile Include="Win32\IServiceProvider.cs" />
     <Compile Include="Win32\IViewObject.cs" />
     <Compile Include="Win32\RECT.cs" />
+    <DesignData Include="SampleData\CellTypeViewModelSampleData.xaml">
+      <SubType>Designer</SubType>
+    </DesignData>
     <Page Include="Styles\Cell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

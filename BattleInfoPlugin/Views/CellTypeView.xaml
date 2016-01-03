@@ -7,8 +7,8 @@
              xmlns:viewModels="clr-namespace:BattleInfoPlugin.ViewModels"
              mc:Ignorable="d"
              d:DesignHeight="20"
-             d:DesignWidth="100"
-             d:DataContext="{d:DesignInstance viewModels:CellTypeViewModel}">
+             d:DesignWidth="120"
+             d:DataContext="{d:DesignData /SampleData/CellTypeViewModelSampleData.xaml}">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -18,162 +18,74 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid MinWidth="50">
-        <Grid.Resources>
-            <Style TargetType="{x:Type TextBlock}"
-                   BasedOn="{StaticResource DefaultTextStyleKey}">
-                <Setter Property="Foreground"
-                        Value="White" />
-            </Style>
-        </Grid.Resources>
-
-        <Border Background="#CF0000">
-            <Border.Style>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding CellType, Converter={StaticResource HasFlagConverter}, ConverterParameter=戦闘}"
-                                     Value="True">
-                            <Setter Property="Visibility"
-                                    Value="Visible" />
-                        </DataTrigger>
-
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <TextBlock Text="戦闘"
-                       Margin="9,2"
-                       HorizontalAlignment="Center" />
-        </Border>
-
-        <Border Background="DarkRed">
-            <Border.Style>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding CellType, Converter={StaticResource HasFlagConverter}, ConverterParameter=ボス}"
-                                     Value="True">
-                            <Setter Property="Visibility"
-                                    Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <TextBlock Text="BOSS"
-                       Margin="9,2"
-                       HorizontalAlignment="Center" />
-        </Border>
-
-        <Border Background="DarkGreen">
-            <Border.Style>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding CellType, Converter={StaticResource HasFlagConverter}, ConverterParameter=航空戦}"
-                                     Value="True">
-                            <Setter Property="Visibility"
-                                    Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <TextBlock Text="航空戦"
-                       Margin="9,2"
-                       HorizontalAlignment="Center" />
-        </Border>
-
-        <Border Background="#433390">
-            <Border.Style>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding CellType, Converter={StaticResource HasFlagConverter}, ConverterParameter=夜戦}"
-                                     Value="True">
-                            <Setter Property="Visibility"
-                                    Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <TextBlock Text="夜戦"
-                       Margin="9,2"
-                       HorizontalAlignment="Center" />
-        </Border>
-
-        <Border Background="#20C020">
-            <Border.Style>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding CellType, Converter={StaticResource HasFlagConverter}, ConverterParameter=補給}"
-                                     Value="True">
-                            <Setter Property="Visibility"
-                                    Value="Visible" />
-                        </DataTrigger>
-
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <TextBlock Text="補給"
-                       Margin="9,2"
-                       HorizontalAlignment="Center" />
-        </Border>
-
-        <Border Background="Green">
-            <Border.Style>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding CellType, Converter={StaticResource HasFlagConverter}, ConverterParameter=航空偵察}"
-                                     Value="True">
-                            <Setter Property="Visibility"
-                                    Value="Visible" />
-                        </DataTrigger>
-
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <TextBlock Text="航空偵察"
-                       Margin="9,2"
-                       HorizontalAlignment="Center" />
-        </Border>
-
-        <Border Background="#0080C0">
-            <Border.Style>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding CellType, Converter={StaticResource HasFlagConverter}, ConverterParameter=気のせい}"
-                                     Value="True">
-                            <Setter Property="Visibility"
-                                    Value="Visible" />
-                        </DataTrigger>
-
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <TextBlock Text="気のせい"
-                       Margin="9,2"
-                       HorizontalAlignment="Center" />
-        </Border>
-
-        <Border Background="Purple">
-            <Border.Style>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding CellType, Converter={StaticResource HasFlagConverter}, ConverterParameter=渦潮}"
-                                     Value="True">
-                            <Setter Property="Visibility"
-                                    Value="Visible" />
-                        </DataTrigger>
-
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <TextBlock Text="渦潮"
-                       Margin="9,2"
-                       HorizontalAlignment="Center" />
-        </Border>
-    </Grid>
+    <ItemsControl ItemsSource="{Binding SigleCellTypes}"
+                  Background="Transparent">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type viewModels:CellTypeViewModel}">
+                <Border MinWidth="50" Margin="0,0,4,0">
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="戦闘">
+                                    <Setter Property="Background"
+                                            Value="#CF0000" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="ボス">
+                                    <Setter Property="Background"
+                                            Value="DarkRed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="航空戦">
+                                    <Setter Property="Background"
+                                            Value="DarkGreen" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="夜戦">
+                                    <Setter Property="Background"
+                                            Value="#433390" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="補給">
+                                    <Setter Property="Background"
+                                            Value="#20C020" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="航空偵察">
+                                    <Setter Property="Background"
+                                            Value="Green" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="気のせい">
+                                    <Setter Property="Background"
+                                            Value="#0080C0" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="能動分岐">
+                                    <Setter Property="Background"
+                                            Value="#0080C0" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="渦潮">
+                                    <Setter Property="Background"
+                                            Value="Purple" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Margin="9,2"
+                               Text="{Binding CellType, Mode=OneWay}"
+                               HorizontalAlignment="Center"
+                               Style="{StaticResource DefaultTextStyleKey}"
+                               Foreground="White" />
+                </Border>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 </UserControl>
