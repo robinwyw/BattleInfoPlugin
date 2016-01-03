@@ -20,6 +20,7 @@ namespace BattleInfoPlugin.Models
         母港 = 1 << 8,
         航空偵察 = 1 << 9,
 
+        能動分岐 = 1 << 30,
         夜戦 = 1 << 31,
     }
 
