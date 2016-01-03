@@ -86,8 +86,24 @@
                         <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
                             <Run Text="戦闘結果:" />
                             <Run Text="{Binding BattleResult, Mode=OneWay}"
-                                 FontSize="12"
-                                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
+                                 FontSize="12">
+                                <Run.Style>
+                                    <Style BasedOn="{StaticResource EmphaticTextElementStyleKey}"
+                                           TargetType="{x:Type Run}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding BattleResult}" Value="戦術的敗北C">
+                                                <Setter Property="Foreground" Value="LightCoral" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding BattleResult}" Value="敗北D">
+                                                <Setter Property="Foreground" Value="LightCoral" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding BattleResult}" Value="敗北E">
+                                                <Setter Property="Foreground" Value="LightCoral" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Run.Style>
+                            </Run>
                         </TextBlock>
                         <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
                             <Run Text="ドロップ:" />
