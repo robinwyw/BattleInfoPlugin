@@ -76,6 +76,11 @@
                                     <Setter Property="Background"
                                             Value="Purple" />
                                 </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="母港">
+                                    <Setter Property="Background"
+                                            Value="#20C020" />
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </Border.Style>
