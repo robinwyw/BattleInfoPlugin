@@ -34,22 +34,30 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
+    <Grid IsSharedSizeScope="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <DockPanel metro:MetroWindow.IsCaptionBar="True">
-            <Border DockPanel.Dock="Bottom"
-                    Height="4" />
-            <controls:AppIcon Width="36"
+        <Grid metro:MetroWindow.IsCaptionBar="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"
+                                  SharedSizeGroup="Icon" />
+                <ColumnDefinition Width="Auto"
+                                  SharedSizeGroup="Title"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"
+                                  SharedSizeGroup="Buttons" />
+            </Grid.ColumnDefinitions>
+            <controls:AppIcon Grid.Column="0"
+                              Width="36"
                               Height="36"
                               Background="Transparent"
                               AnchorVisibility="Collapsed"
                               BandVisibility="Collapsed" />
 
-            <StackPanel DockPanel.Dock="Right"
+            <StackPanel Grid.Column="3"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top">
@@ -59,12 +67,22 @@
                                      VerticalAlignment="Top" />
             </StackPanel>
 
-            <TextBlock Text="{Binding Title}"
+            <TextBlock Grid.Column="1"
+                       Text="{Binding Title}"
                        Style="{DynamicResource CaptionTextStyleKey}"
                        Margin="2,0,8,0" />
-            
-            <views:NextPointInfoView DataContext="{Binding Battle.NextPointInfo}"/>
-        </DockPanel>
+        </Grid>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition SharedSizeGroup="Icon" />
+                <ColumnDefinition SharedSizeGroup="Title" />
+                <ColumnDefinition />
+                <ColumnDefinition SharedSizeGroup="Buttons" />
+            </Grid.ColumnDefinitions>
+
+            <views:NextPointInfoView Grid.Column="2"
+                                     DataContext="{Binding Battle.NextPointInfo}"/>
+        </Grid>
 
         <ScrollViewer Grid.Row="1"
                       HorizontalScrollBarVisibility="Auto"
