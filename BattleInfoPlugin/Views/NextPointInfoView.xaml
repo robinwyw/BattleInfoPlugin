@@ -6,8 +6,9 @@
              xmlns:local="clr-namespace:BattleInfoPlugin.Views"
              xmlns:viewModels="clr-namespace:BattleInfoPlugin.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="20" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance viewModels:NextPointInfoViewModel}">
+             d:DesignHeight="20" d:DesignWidth="480"
+             d:DataContext="{d:DesignInstance viewModels:NextPointInfoViewModel}"
+             x:Name="Control">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -46,6 +47,38 @@
 
         <local:CellTypeView DataContext="{Binding CellType}"
                             Margin="5,0"
-                            VerticalAlignment="Center" />
+                            VerticalAlignment="Center">
+            <local:CellTypeView.Style>
+                <Style TargetType="{x:Type local:CellTypeView}">
+                    <Setter Property="Visibility"
+                            Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DataContext.GetLostItem, ElementName=Control}"
+                                     Value="{x:Null}">
+                            <Setter Property="Visibility"
+                                    Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </local:CellTypeView.Style>
+        </local:CellTypeView>
+        
+        <local:GetLostItemView DataContext="{Binding GetLostItem}"
+                               Margin="5,0"
+                               VerticalAlignment="Center">
+            <local:GetLostItemView.Style>
+                <Style TargetType="{x:Type local:GetLostItemView}">
+                    <Setter Property="Visibility"
+                            Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding}"
+                                     Value="{x:Null}">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </local:GetLostItemView.Style>
+        </local:GetLostItemView>
     </StackPanel>
 </UserControl>

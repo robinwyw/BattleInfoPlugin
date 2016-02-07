@@ -168,12 +168,23 @@ namespace BattleInfoPlugin.ViewModels
                     () => this.BattleData.NextCell,
                     (_, __) =>
                     {
+                        var nextCell = this.BattleData.NextCell;
+
+                        GetLostItemViewModel getLostItem;
+                        if (nextCell.GetItem != null)
+                            getLostItem = new GetLostItemViewModel(nextCell.GetItem, true);
+                        else if (nextCell.LostItem != null)
+                            getLostItem = new GetLostItemViewModel(nextCell.LostItem, false);
+                        else
+                            getLostItem = null;
+
                         this.NextPointInfo = new NextPointInfoViewModel
                         {
-                            MapId = this.BattleData.NextCell.MapId.ToString(),
-                            Id = ((char) (this.BattleData.NextCell.Id - 1 + 'A')).ToString(),
-                            CellType = this.BattleData.NextCell.Type,
+                            MapId = nextCell.MapId.ToString(),
+                            Id = ((char) (nextCell.Id - 1 + 'A')).ToString(),
+                            CellType = nextCell.Type,
                             IsInSortie = true,
+                            GetLostItem = getLostItem,
                         };
                     }
                 },

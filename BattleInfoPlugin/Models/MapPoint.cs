@@ -10,17 +10,26 @@ namespace BattleInfoPlugin.Models
 {
     public class MapPoint : NotificationObject
     {
-        public MapId MapId { get; internal set; } 
+        public MapId MapId { get; internal set; }
 
         public int Id { get; internal set; }
 
         public CellType Type { get; internal set; }
+
+        public GetLostItem GetItem { get; }
+
+        public GetLostItem LostItem { get; }
 
         internal MapPoint(map_start_next data)
         {
             this.MapId = new MapId(data.api_maparea_id, data.api_mapinfo_no);
             this.Id = data.api_no;
             this.Type = data.ToCellType();
+
+            this.GetItem = data.api_itemget
+                           ?? data.api_itemget_eo_comment
+                           ?? data.api_itemget_eo_result;
+            this.LostItem = data.api_happening;
         }
     }
 
@@ -40,6 +49,36 @@ namespace BattleInfoPlugin.Models
             return this.AreaId >= 22
                 ? "E-" + this.InfoIdInArea
                 : this.AreaId + "-" + this.InfoIdInArea;
+        }
+    }
+
+    public class GetLostItem
+    {
+        public ItemType Type { get; }
+        public int Count { get; }
+
+        public GetLostItem(Api_Itemget itemget)
+        {
+            this.Type = (ItemType)itemget.api_id;
+            this.Count = itemget.api_getcount;
+        }
+
+        public GetLostItem(Api_Happening happening)
+        {
+            this.Type = (ItemType)happening.api_mst_id;
+            this.Count = happening.api_count;
+        }
+
+        public static implicit operator GetLostItem(Api_Itemget itemget)
+        {
+            if (itemget == null) return null;
+            return new GetLostItem(itemget);
+        }
+
+        public static implicit operator GetLostItem(Api_Happening happening)
+        {
+            if (happening == null) return null;
+            return new GetLostItem(happening);
         }
     }
 }

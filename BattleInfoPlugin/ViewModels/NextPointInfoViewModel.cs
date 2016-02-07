@@ -17,5 +17,7 @@ namespace BattleInfoPlugin.ViewModels
         public CellTypeViewModel CellType { get; set; }
 
         public bool IsInSortie { get; set; }
+
+        public GetLostItemViewModel GetLostItem { get; set; }
     }
 }

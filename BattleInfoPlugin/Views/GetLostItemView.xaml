@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="BattleInfoPlugin.Views.GetLostItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattleInfoPlugin.Views"
+             xmlns:vm="clr-namespace:BattleInfoPlugin.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="20" d:DesignWidth="120"
+             d:DataContext="{d:DesignInstance vm:GetLostItemViewModel}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/PluginStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type TextBlock}"
+                   BasedOn="{StaticResource DefaultTextStyleKey}">
+                <Setter Property="Foreground"
+                        Value="White" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Border MinWidth="50">
+            <Border.Style>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="Background"
+                            Value="Purple" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsGetItem}"
+                                     Value="True">
+                            <Setter Property="Background"
+                                    Value="#20A020" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <DockPanel HorizontalAlignment="Center"
+                       Margin="9,2">
+                <TextBlock Text="{Binding ItemName}" />
+                <TextBlock Margin="2,0">
+                    <Run>
+                        <Run.Style>
+                            <Style TargetType="{x:Type Run}">
+                                <Setter Property="Text"
+                                        Value="-" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsGetItem}"
+                                                 Value="True">
+                                        <Setter Property="Text"
+                                                Value="×" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Run.Style>
+                    </Run>
+                </TextBlock>
+                <TextBlock Text="{Binding Count}" />
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

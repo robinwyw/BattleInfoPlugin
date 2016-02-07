@@ -159,6 +159,7 @@
     <Compile Include="Models\FleetData.cs" />
     <Compile Include="Models\FleetType.cs" />
     <Compile Include="Models\Formation.cs" />
+    <Compile Include="Models\ItemType.cs" />
     <Compile Include="Models\MapPoint.cs" />
     <Compile Include="Models\Raw\IPracticeData.cs" />
     <Compile Include="Models\MapArea.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="ViewModels\Enemies\EnemyShipViewModel.cs" />
     <Compile Include="ViewModels\EnemyWindowViewModel.cs" />
     <Compile Include="ViewModels\FleetViewModel.cs" />
+    <Compile Include="ViewModels\GetLostItemViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\NextPointInfoViewModel.cs" />
     <Compile Include="ViewModels\TabItemViewModel.cs" />
@@ -249,6 +251,9 @@
     </Compile>
     <Compile Include="Views\Fleet.xaml.cs">
       <DependentUpon>Fleet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GetLostItemView.xaml.cs">
+      <DependentUpon>GetLostItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NextPointInfoView.xaml.cs">
       <DependentUpon>NextPointInfoView.xaml</DependentUpon>
@@ -298,6 +303,10 @@
     <Page Include="Views\Fleet.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\GetLostItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NextPointInfoView.xaml">
       <SubType>Designer</SubType>
