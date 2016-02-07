@@ -37,6 +37,10 @@ namespace BattleInfoPlugin.Models
                     type |= CellType.夜戦;
                 }
             }
+            else if (data.api_event_kind == 4)
+            {
+                type = CellType.航空戦;
+            }
             else if (data.api_event_id == 7 && data.api_event_kind == 0)
             {
                 type = CellType.航空偵察;
