@@ -10,6 +10,8 @@ namespace BattleInfoPlugin.ViewModels
 {
     public class BattleViewModel : ViewModel
     {
+        public static BattleViewModel Current { get; } = new BattleViewModel();
+
         private BattleData BattleData { get; } = BattleData.Current;
 
         public string BattleResult
@@ -110,7 +112,7 @@ namespace BattleInfoPlugin.ViewModels
             }
         }
 
-        public BattleViewModel()
+        private BattleViewModel()
         {
             this._FirstFleet = new FleetViewModel("自艦隊");
             this._SecondFleet = new FleetViewModel("護衛艦隊");

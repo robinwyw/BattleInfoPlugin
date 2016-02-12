@@ -26,6 +26,6 @@ namespace BattleInfoPlugin.ViewModels
             }
         }
 
-        public BattleViewModel Battle { get; } = new BattleViewModel();
+        public BattleViewModel Battle { get; } = BattleViewModel.Current;
     }
 }

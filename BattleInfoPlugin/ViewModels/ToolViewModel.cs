@@ -11,7 +11,7 @@ namespace BattleInfoPlugin.ViewModels
     public class ToolViewModel : ViewModel
     {
         private readonly BattleEndNotifier notifier;
-        
+
         private BattleViewModel _Battle;
 
         public BattleViewModel Battle
@@ -65,7 +65,7 @@ namespace BattleInfoPlugin.ViewModels
         public ToolViewModel(Plugin plugin)
         {
             this.notifier = new BattleEndNotifier(plugin);
-            this.Battle = new BattleViewModel();            
+            this.Battle = BattleViewModel.Current;
         }
 
         public void OpenEnemyWindow()
