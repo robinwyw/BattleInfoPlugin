@@ -18,7 +18,7 @@ namespace BattleInfoPlugin.ViewModels
             {
                 var cellTypes = this._CellType.Split().ToArray();
 
-                if (cellTypes.Contains(CellType.夜戦) && cellTypes.Contains(CellType.戦闘))
+                if (cellTypes.Length > 1 && cellTypes.Contains(CellType.戦闘))
                 {
                     cellTypes = cellTypes.Where(type => type != CellType.戦闘).ToArray();
                 }

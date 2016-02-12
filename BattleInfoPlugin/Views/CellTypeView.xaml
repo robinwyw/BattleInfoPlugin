@@ -37,6 +37,11 @@
                                             Value="#CF0000" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding CellType}"
+                                             Value="空襲">
+                                    <Setter Property="Background"
+                                            Value="DarkGreen" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
                                              Value="ボス">
                                     <Setter Property="Background"
                                             Value="DarkRed" />
@@ -55,6 +60,11 @@
                                              Value="補給">
                                     <Setter Property="Background"
                                             Value="#20C020" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="輸送">
+                                    <Setter Property="Background"
+                                            Value="Green" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding CellType}"
                                              Value="航空偵察">

@@ -12,7 +12,7 @@ namespace BattleInfoPlugin.Models
         #region Split CellType
 
         private static readonly CellType[] SigleTypes
-            = ((CellType[]) Enum.GetValues(typeof (CellType)))
+            = ((CellType[])Enum.GetValues(typeof(CellType)))
                 .Where(type => type != default(CellType)).ToArray();
 
         public static IEnumerable<CellType> Split(this CellType type)
@@ -40,6 +40,10 @@ namespace BattleInfoPlugin.Models
             else if (data.api_event_kind == 4)
             {
                 type = CellType.航空戦;
+            }
+            else if (data.api_event_kind == 6)
+            {
+                type |= CellType.空襲;
             }
             else if (data.api_event_id == 7 && data.api_event_kind == 0)
             {

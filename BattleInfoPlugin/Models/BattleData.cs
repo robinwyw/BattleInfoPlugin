@@ -291,6 +291,11 @@ namespace BattleInfoPlugin.Models
             proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_map/next")
                 .TryParse<map_start_next>().Subscribe(x => this.UpdateFleetsByStartNext(x.Data));
 
+            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "kcsapi/api_req_sortie/ld_airbattle")
+                .TryParse<sortie_airbattle>().Subscribe(x => this.Update(x.Data));
+
+            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_combined_battle/ld_airbattle")
+                .TryParse<combined_battle_airbattle>().Subscribe(x => this.Update(x.Data));
         }
 
         #region Update From Battle SvData
@@ -512,7 +517,7 @@ namespace BattleInfoPlugin.Models
             this.FriendAirSupremacy = data.api_kouku.GetAirSupremacy();
 
             var combat = data as IAirBattleMembers;
-            if (combat != null)
+            if (combat?.api_kouku2 != null)
             {
                 this.AirCombatResults = combat.api_kouku.ToResult("1回目/")
                     .Concat(combat.api_kouku2.ToResult("2回目/")).ToArray();
