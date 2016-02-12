@@ -13,8 +13,8 @@ namespace BattleInfoPlugin.Models
         {
             if (!battleData.IsInBattle) return BattleResult.なし;
             
-            var friendShips = battleData.FirstFleet.Ships.Where(s => !s.IsInEvacuationOrTow())
-                .Concat(battleData.SecondFleet?.Ships.Where(s => !s.IsInEvacuationOrTow()) ?? new ShipData[0])
+            var friendShips = battleData.FirstFleet.Ships
+                .Concat(battleData.SecondFleet?.Ships ?? new ShipData[0])
                 .ToArray();
 
             var enemyShips = battleData.Enemies.Ships.ToArray();
@@ -79,9 +79,9 @@ namespace BattleInfoPlugin.Models
 
         }
 
-        private static double GetHpLostPersent(this ShipData[] data)
+        public static double GetHpLostPersent(this ShipData[] data)
         {
-            var totalOriginalHP = data.Sum(s => s.OriginalHP);
+            var totalOriginalHP = data.Where(s => !s.IsInEvacuationOrTow()).Sum(s => s.OriginalHP);
             var totalNowHP = data.Sum(s => s.NowHP);
 
             return 1.0 - (double)totalNowHP / totalOriginalHP;

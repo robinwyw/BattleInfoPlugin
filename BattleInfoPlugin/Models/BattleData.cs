@@ -83,7 +83,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._Name; }
             set
-            { 
+            {
                 if (this._Name == value)
                     return;
                 this._Name = value;
@@ -101,7 +101,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._UpdatedTime; }
             set
-            { 
+            {
                 if (this._UpdatedTime == value)
                     return;
                 this._UpdatedTime = value;
@@ -138,7 +138,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._FirstFleet; }
             set
-            { 
+            {
                 if (this._FirstFleet == value)
                     return;
                 this._FirstFleet = value;
@@ -156,7 +156,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._SecondFleet; }
             set
-            { 
+            {
                 if (this._SecondFleet == value)
                     return;
                 this._SecondFleet = value;
@@ -174,7 +174,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._Enemies; }
             set
-            { 
+            {
                 if (this._Enemies == value)
                     return;
                 this._Enemies = value;
@@ -192,7 +192,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._FriendAirSupremacy; }
             set
-            { 
+            {
                 if (this._FriendAirSupremacy == value)
                     return;
                 this._FriendAirSupremacy = value;
@@ -218,7 +218,7 @@ namespace BattleInfoPlugin.Models
             }
         }
         #endregion
-        
+
 
         #region DropShipName変更通知プロパティ
         private string _DropShipName;
@@ -277,7 +277,7 @@ namespace BattleInfoPlugin.Models
             proxy.api_req_sortie_battle
                 .TryParse<sortie_battle>().Subscribe(x => this.Update(x.Data));
 
-            
+
             proxy.api_req_sortie_battleresult
                 .TryParse<battle_result>().Subscribe(x => this.Update(x.Data));
 
@@ -317,7 +317,7 @@ namespace BattleInfoPlugin.Models
         public void Update(combined_battle_airbattle data)
         {
             this.Name = "連合艦隊 - 航空戦 - 昼戦";
-            
+
             this.UpdateData(data);
         }
 
@@ -331,7 +331,7 @@ namespace BattleInfoPlugin.Models
         public void Update(combined_battle_battle_water data)
         {
             this.Name = "連合艦隊 - 水上部隊 - 昼戦";
-            
+
             this.UpdateData(data);
         }
 
@@ -387,6 +387,18 @@ namespace BattleInfoPlugin.Models
 
             switch (data.api_win_rank)
             {
+                case "S":
+                    this.BattleResult =
+                        this.FirstFleet.Ships
+                            .Concat(this.SecondFleet?.Ships ?? new ShipData[0])
+                            .ToArray()
+                            .GetHpLostPersent() > 0
+                            ? BattleResult.勝利S
+                            : BattleResult.完全勝利S;
+                    break;
+                case "A":
+                    this.BattleResult = BattleResult.勝利A;
+                    break;
                 case "B":
                     this.BattleResult = BattleResult.戦術的勝利B;
                     break;
