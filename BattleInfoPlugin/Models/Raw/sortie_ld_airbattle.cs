@@ -3,7 +3,7 @@
     /// <summary>
     /// 長距離空襲戦
     /// </summary>
-    public class sortie_ld_airbattle : ICommonFirstBattleMembers, IFleetBattleInfo
+    public class sortie_ld_airbattle : ICommonFirstBattleMembers, IFleetBattleInfo, IAirStageMembers
     {
         public int api_deck_id { get; set; }
         public int api_dock_id { get; set; }
