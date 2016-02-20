@@ -11,8 +11,11 @@ using BattleInfoPlugin.Models.Settings;
 namespace BattleInfoPlugin.Models.Repositories
 {
     [DataContract]
-    internal class EnemyData {
-        private static readonly DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(EnemyData));
+    internal class EnemyData
+    {
+        private static readonly DataContractJsonSerializer serializer =
+            new DataContractJsonSerializer(typeof (EnemyData));
+
         private static readonly object margeLock = new object();
         private static readonly object saveLoadLock = new object();
         public static EnemyData Curret { get; } = new EnemyData();
@@ -28,8 +31,10 @@ namespace BattleInfoPlugin.Models.Repositories
             if (this.EnemyLevels == null) this.EnemyLevels = new Dictionary<string, int[]>();
             if (this.EnemyHPs == null) this.EnemyHPs = new Dictionary<string, int[]>();
             if (this.EnemyNames == null) this.EnemyNames = new Dictionary<string, string>();
+            if (this.EnemyEncounterRank == null) this.EnemyEncounterRank = new Dictionary<string, HashSet<int>>();
             if (this.MapEnemyData == null) this.MapEnemyData = new Dictionary<int, Dictionary<int, HashSet<string>>>();
-            if (this.MapCellBattleTypes == null) this.MapCellBattleTypes = new Dictionary<int, Dictionary<int, string>>();
+            if (this.MapCellBattleTypes == null)
+                this.MapCellBattleTypes = new Dictionary<int, Dictionary<int, string>>();
             if (this.MapRoute == null) this.MapRoute = new Dictionary<int, HashSet<KeyValuePair<int, int>>>();
             if (this.MapCellDatas == null) this.MapCellDatas = new Dictionary<int, List<MapCellData>>();
         }
@@ -65,6 +70,10 @@ namespace BattleInfoPlugin.Models.Repositories
         // EnemyId, Name
         [DataMember]
         public Dictionary<string, string> EnemyNames { get; set; }
+
+        // EnemyId, Rank
+        [DataMember]
+        public Dictionary<string, HashSet<int>> EnemyEncounterRank { get; set; }
 
         // MapInfoID, CellNo, EnemyId
         [DataMember]
@@ -103,6 +112,7 @@ namespace BattleInfoPlugin.Models.Repositories
                         this.EnemyLevels = this.EnemyLevels.Merge(obj.EnemyLevels);
                         this.EnemyHPs = this.EnemyHPs.Merge(obj.EnemyHPs);
                         this.EnemyNames = this.EnemyNames.Merge(obj.EnemyNames);
+                        this.EnemyEncounterRank = this.EnemyEncounterRank.Merge(obj.EnemyEncounterRank);
                         this.MapEnemyData = this.MapEnemyData.Merge(obj.MapEnemyData, (v1, v2) => v1.Merge(v2, (h1, h2) => h1.Merge(h2)));
                         this.MapCellBattleTypes = this.MapCellBattleTypes.Merge(obj.MapCellBattleTypes, (v1, v2) => v1.Merge(v2));
                         this.MapRoute = this.MapRoute.Merge(obj.MapRoute, (v1, v2) => v1.Merge(v2));
@@ -118,60 +128,27 @@ namespace BattleInfoPlugin.Models.Repositories
 
         internal void Reload()
         {
-            Debug.WriteLine("Start Reload");
-            //deserialize
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, PathSettings.EnemyDataFilePath);
-            lock (saveLoadLock)
-            {
-                if (!File.Exists(path)) return;
+            var obj = PathSettings.EnemyDataFileName.Deserialize<EnemyData>();
+            if (obj == null) return;
 
-                using (var stream = Stream.Synchronized(new FileStream(path, FileMode.Open, FileAccess.Read)))
-                {
-                    var obj = serializer.ReadObject(stream) as EnemyData;
-                    if (obj == null) return;
-                    this.EnemyDictionary = obj.EnemyDictionary ?? new Dictionary<string, int[]>();
-                    this.EnemyFormation = obj.EnemyFormation ?? new Dictionary<string, Formation>();
-                    this.EnemySlotItems = obj.EnemySlotItems ?? new Dictionary<string, int[][]>();
-                    this.EnemyUpgraded = obj.EnemyUpgraded ?? new Dictionary<string, int[][]>();
-                    this.EnemyParams = obj.EnemyParams ?? new Dictionary<string, int[][]>();
-                    this.EnemyLevels = obj.EnemyLevels ?? new Dictionary<string, int[]>();
-                    this.EnemyHPs = obj.EnemyHPs ?? new Dictionary<string, int[]>();
-                    this.EnemyNames = obj.EnemyNames ?? new Dictionary<string, string>();
-                    this.MapEnemyData = obj.MapEnemyData ?? new Dictionary<int, Dictionary<int, HashSet<string>>>();
-                    this.MapCellBattleTypes = obj.MapCellBattleTypes ?? new Dictionary<int, Dictionary<int, string>>();
-                    this.MapRoute = obj.MapRoute ?? new Dictionary<int, HashSet<KeyValuePair<int, int>>>();
-                    this.MapCellDatas = obj.MapCellDatas ?? new Dictionary<int, List<MapCellData>>();
-                }
-
-                this.RemoveDuplicate();
-            }
-            Debug.WriteLine("End  Reload");
+            this.EnemyDictionary = obj.EnemyDictionary ?? new Dictionary<string, int[]>();
+            this.EnemyFormation = obj.EnemyFormation ?? new Dictionary<string, Formation>();
+            this.EnemySlotItems = obj.EnemySlotItems ?? new Dictionary<string, int[][]>();
+            this.EnemyUpgraded = obj.EnemyUpgraded ?? new Dictionary<string, int[][]>();
+            this.EnemyParams = obj.EnemyParams ?? new Dictionary<string, int[][]>();
+            this.EnemyLevels = obj.EnemyLevels ?? new Dictionary<string, int[]>();
+            this.EnemyHPs = obj.EnemyHPs ?? new Dictionary<string, int[]>();
+            this.EnemyNames = obj.EnemyNames ?? new Dictionary<string, string>();
+            this.EnemyEncounterRank = obj.EnemyEncounterRank ?? new Dictionary<string, HashSet<int>>();
+            this.MapEnemyData = obj.MapEnemyData ?? new Dictionary<int, Dictionary<int, HashSet<string>>>();
+            this.MapCellBattleTypes = obj.MapCellBattleTypes ?? new Dictionary<int, Dictionary<int, string>>();
+            this.MapRoute = obj.MapRoute ?? new Dictionary<int, HashSet<KeyValuePair<int, int>>>();
+            this.MapCellDatas = obj.MapCellDatas ?? new Dictionary<int, List<MapCellData>>();
+            this.RemoveDuplicate();
         }
 
         internal void Save()
-        {
-            Debug.WriteLine("Start Save");
-            //serialize
-            lock (saveLoadLock)
-            {
-                var i = 0;
-                string tempPath;
-                do
-                {
-                    tempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"_{i++}_{PathSettings.EnemyDataFilePath}");
-                } while (File.Exists(tempPath));
-                using (var stream = Stream.Synchronized(new FileStream(tempPath, FileMode.Create, FileAccess.Write)))
-                {
-                    serializer.WriteObject(stream, this);
-                }
-
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, PathSettings.EnemyDataFilePath);
-                if (File.Exists(path))
-                    File.Delete(path);
-                File.Move(tempPath, path);
-            }
-            Debug.WriteLine("End  Save");
-        }
+            => this.Serialize(PathSettings.EnemyDataFileName);
 
         internal void RemoveDuplicate()
         {
@@ -196,6 +173,7 @@ namespace BattleInfoPlugin.Models.Repositories
             this.EnemyLevels.Remove(enemyId);
             this.EnemyHPs.Remove(enemyId);
             this.EnemyNames.Remove(enemyId);
+            this.EnemyEncounterRank.Remove(enemyId);
 
             var kvps = this.MapEnemyData
                 .SelectMany(x => x.Value);

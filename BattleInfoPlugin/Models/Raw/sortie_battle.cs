@@ -2,8 +2,8 @@
 {
     /// <summary>
     /// 昼戦
-    /// </summary>
-    public class sortie_battle: ICommonBattleMembers, IBattleFormationInfo, IDayBattleMembers, IFleetBattleInfo
+    /// </summary>=
+    public class sortie_battle: ICommonBattleMembers, IBattleFormationInfo, IDayBattleMembers, IFleetBattleInfo, ICommonFirstBattleMembers
     {
         public int api_deck_id
         {

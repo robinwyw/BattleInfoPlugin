@@ -1,9 +1,9 @@
 ﻿namespace BattleInfoPlugin.Models.Raw
 {
     /// <summary>
-    /// 連合艦隊-航空戦
+    /// 連合艦隊-長距離空襲戦
     /// </summary>
-    public class combined_battle_airbattle : ICombinedBattleMembers, IBattleFormationInfo, IAirBattleMembers, IFleetBattleInfo, ICommonFirstBattleMembers
+    public class combined_battle_ld_airbattle : ICommonFirstBattleMembers, IFleetBattleInfo
     {
         public int api_deck_id { get; set; }
         public int[] api_ship_ke { get; set; }
@@ -22,13 +22,9 @@
         public int[] api_formation { get; set; }
         public int[] api_stage_flag { get; set; }
         public Api_Kouku api_kouku { get; set; }
-        public int api_support_flag { get; set; }
-        public Api_Support_Info api_support_info { get; set; }
-        public int[] api_stage_flag2 { get; set; }
-        public Api_Kouku api_kouku2 { get; set; }
 
-        public FleetDamages FirstFleetDamages => this.GetFirstFleetDamages();
-        public FleetDamages SecondFleetDamages => this.GetSecondFleetDamages();
-        public FleetDamages EnemyDamages => this.GetEnemyDamages();
+        public FleetDamages FirstFleetDamages => this.api_kouku.GetFirstFleetDamages();
+        public FleetDamages SecondFleetDamages => this.api_kouku.GetSecondFleetDamages();
+        public FleetDamages EnemyDamages => this.api_kouku.GetEnemyDamages();
     }
 }

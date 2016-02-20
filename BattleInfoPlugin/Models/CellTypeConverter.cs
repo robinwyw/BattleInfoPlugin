@@ -43,7 +43,7 @@ namespace BattleInfoPlugin.Models
             }
             else if (data.api_event_kind == 6)
             {
-                type |= CellType.空襲;
+                type |= CellType.空襲戦;
             }
             else if (data.api_event_id == 7 && data.api_event_kind == 0)
             {

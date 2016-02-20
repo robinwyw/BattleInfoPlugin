@@ -3,7 +3,7 @@
     /// <summary>
     /// 通常艦隊-航空戦
     /// </summary>
-    public class sortie_airbattle : ICommonBattleMembers, IBattleFormationInfo, IAirBattleMembers, IFleetBattleInfo
+    public class sortie_airbattle : ICommonBattleMembers, IBattleFormationInfo, IAirBattleMembers, IFleetBattleInfo, ICommonFirstBattleMembers
     {
         public int api_deck_id
         {

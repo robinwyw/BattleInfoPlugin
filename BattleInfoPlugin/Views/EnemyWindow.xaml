@@ -25,7 +25,8 @@
                    TextOptions.TextFormattingMode="Display"
                    AllowDrop="True"
                    Drop="Window_Drop"
-                   d:DataContext="{d:DesignInstance vm:EnemyWindowViewModel, IsDesignTimeCreatable=True}">
+                   d:DataContext="{d:DesignInstance vm:EnemyWindowViewModel, IsDesignTimeCreatable=True}"
+                   metro:ThemeHelper.HasThemeResources="True">
 
     <metro:MetroWindow.Resources>
         <ResourceDictionary>
@@ -282,13 +283,30 @@
                         <Canvas Width="768"
                                 Height="435">
                             <!-- マップイメージ -->
-                            <Image Source="{Binding /MapImage}"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Center"
-                                   Width="768"
-                                   Height="435"
-                                   Margin="0"
-                                   />
+                            <ItemsControl ItemsSource="{Binding /MapImages}"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"
+                                          Width="768"
+                                          Height="435"
+                                          Margin="0"
+                                          Padding="0">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Canvas Margin="0"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding}"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               Width="768"
+                                               Height="435"
+                                               Margin="0"
+                                               />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                             <!-- セルアイコン -->
                             <ItemsControl ItemsSource="{Binding /CellPoints}"
                                           VerticalAlignment="Center"
@@ -541,10 +559,40 @@
                                                                            HorizontalAlignment="Center"/>
                                                             </Border>
 
+                                                            <Border Background="DarkGreen"
+                                                                    HorizontalAlignment="Left"
+                                                                    Margin="5,0"
+                                                                    MinWidth="50">
+                                                                <Border.Style>
+                                                                    <Style TargetType="{x:Type Border}">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ParentCell.CellType, Converter={StaticResource HasFlagConverter}, ConverterParameter=空襲戦}"
+                                                                                         Value="True">
+                                                                                <Setter Property="Visibility"
+                                                                                        Value="Visible"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                                <TextBlock Text="空襲戦"
+                                                                           Margin="9,2"
+                                                                           HorizontalAlignment="Center"/>
+                                                            </Border>
+
                                                             <TextBlock Margin="5,10,5,0">
                                                                 <Run Text="陣形:"
                                                                      FontSize="12"/>
-                                                                <Run Text="{Binding Fleet.Formation, Mode=OneTime}"
+                                                                <Run Text="{Binding Formation, Mode=OneTime}"
+                                                                     Style="{DynamicResource EmphaticTextElementStyleKey}"
+                                                                     FontSize="12"/>
+                                                            </TextBlock>
+
+                                                            <TextBlock Margin="5,10,5,0"
+                                                                       Visibility="{Binding RankVisibility}">
+                                                                <Run Text="難易度:"
+                                                                     FontSize="12"/>
+                                                                <Run Text="{Binding Rank, Mode=OneTime}"
                                                                      Style="{DynamicResource EmphaticTextElementStyleKey}"
                                                                      FontSize="12"/>
                                                             </TextBlock>

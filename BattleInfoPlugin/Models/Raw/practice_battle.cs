@@ -3,7 +3,7 @@
     /// <summary>
     /// 演習-昼戦
     /// </summary>
-    public class practice_battle : ICommonBattleMembers, IBattleFormationInfo, IDayBattleMembers, IPracticeData, IFleetBattleInfo
+    public class practice_battle : ICommonBattleMembers, IBattleFormationInfo, IDayBattleMembers, IPracticeData, IFleetBattleInfo, ICommonFirstBattleMembers
     {
         public int api_deck_id
         {

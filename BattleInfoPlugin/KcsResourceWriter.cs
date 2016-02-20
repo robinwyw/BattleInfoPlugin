@@ -5,28 +5,57 @@ using System.Reactive.Linq;
 using BattleInfoPlugin.Models.Settings;
 using Nekoxy;
 using Grabacr07.KanColleWrapper;
+using Grabacr07.KanColleWrapper.Models.Raw;
+using System.Collections.Generic;
+using BattleInfoPlugin.Properties;
+using BattleInfoPlugin.Models.Repositories;
+using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace BattleInfoPlugin
 {
     class KcsResourceWriter
     {
+        private int currentMapAreaId;
+        private int currentMapInfoNo;
+        private readonly ConcurrentDictionary<int, ConcurrentDictionary<int, string>> resourceUrlMapping;
+
         public KcsResourceWriter()
         {
-            var resources = KanColleClient.Current.Proxy.SessionSource
-                .Where(s => s.Request.PathAndQuery.StartsWith("/kcs/resources/swf/map"));
+            this.resourceUrlMapping = Settings.Default.ResourceUrlMappingFileName.Deserialize<ConcurrentDictionary<int, ConcurrentDictionary<int, string>>>()
+                                    ?? new ConcurrentDictionary<int, ConcurrentDictionary<int, string>>();
 
-            resources.Subscribe(s => s.SaveResponseBody(s.GetSaveFilePath()));
+            var proxy = KanColleClient.Current.Proxy;
+            proxy.SessionSource
+                .Where(s => s.Request.PathAndQuery.StartsWith("/kcs/resources/swf/map"))
+                .Subscribe(s => this.HttpGetMapResource(s));
+            proxy.api_req_map_start
+                .TryParse<kcsapi_map_start>()
+                .Subscribe(x => this.ReqMapStart(x.Data));
+        }
+
+        private void HttpGetMapResource(Session s)
+        {
+            var filePath = s.Request.PathAndQuery.Split('?').First();
+            s.SaveResponseBody(Settings.Default.CacheDirPath + filePath);
+
+            Debug.WriteLine($"{this.currentMapAreaId}-{this.currentMapInfoNo}:{filePath}");
+
+            this.resourceUrlMapping
+                .GetOrAdd(this.currentMapAreaId, new ConcurrentDictionary<int, string>())
+                .AddOrUpdate(this.currentMapInfoNo, filePath, (_, __) => filePath);
+            this.resourceUrlMapping.Serialize(Settings.Default.ResourceUrlMappingFileName);
+        }
+
+        private void ReqMapStart(kcsapi_map_start data)
+        {
+            this.currentMapAreaId = data.api_maparea_id;
+            this.currentMapInfoNo = data.api_mapinfo_no;
         }
     }
 
     static class KcsResourceWriterExtensions
     {
-        public static string GetSaveFilePath(this Session session)
-        {
-            return PathSettings.CacheDirPath
-                   + session.Request.PathAndQuery.Split('?').First();
-        }
-
         private static readonly object lockObj = new object();
 
         public static void SaveResponseBody(this Session session, string filePath)
