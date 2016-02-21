@@ -62,7 +62,7 @@
                                             Value="#20C020" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding CellType}"
-                                             Value="輸送">
+                                             Value="揚陸地点">
                                     <Setter Property="Background"
                                             Value="Green" />
                                 </DataTrigger>
