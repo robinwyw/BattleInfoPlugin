@@ -70,7 +70,7 @@ namespace BattleInfoPlugin.Models.Raw
         public static AirCombatResult[] ToResult(this Api_Kouku kouku, string prefixName = "")
         {
             return kouku.IsEnabled()
-                ? new []
+                ? new[]
                 {
                     kouku.api_stage1.ToResult($"{prefixName}空対空"),
                     kouku.api_stage2.ToResult($"{prefixName}空対艦")
@@ -78,10 +78,19 @@ namespace BattleInfoPlugin.Models.Raw
                 : new AirCombatResult[0];
         }
 
+        public static AirCombatResult[] ToResult(this Api_Air_Base_Attack attack, string prefixName = "")
+        {
+            return new[]
+            {
+                attack.api_stage1.ToResult($"{prefixName}空対空"),
+                attack.api_stage2.ToResult($"{prefixName}空対艦")
+            };
+        }
+
         public static AirCombatResult ToResult(this Api_Stage_Combat stage, string name)
             => stage == null ? new AirCombatResult(name)
             : new AirCombatResult(name, stage.api_f_count, stage.api_f_lostcount, stage.api_e_count, stage.api_e_lostcount);
-        
+
         #endregion
 
         #region 雷撃戦
@@ -168,7 +177,7 @@ namespace BattleInfoPlugin.Models.Raw
         private static int[] ToIntArray(this object[] damages)
             => damages
                 .Where(x => x is Array)
-                .Select(x => ((Array) x).Cast<object>())
+                .Select(x => ((Array)x).Cast<object>())
                 .SelectMany(x => x.Select(Convert.ToInt32))
                 .ToArray();
 
@@ -181,7 +190,7 @@ namespace BattleInfoPlugin.Models.Raw
         /// <returns></returns>
         private static int[] ToSortedDamages(this int[] damages, int[] dfList)
         {
-            var zip = damages.Zip(dfList, (da, df) => new {df, da});
+            var zip = damages.Zip(dfList, (da, df) => new { df, da });
             var ret = new int[12];
             foreach (var d in zip.Where(d => 0 < d.df))
             {

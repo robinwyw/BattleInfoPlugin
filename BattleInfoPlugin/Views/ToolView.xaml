@@ -90,6 +90,9 @@
             <StackPanel Grid.Row="2"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
+                <CheckBox Content="显示陆基航空队Stage信息"
+                          IsChecked="{Binding IsShowLandBaseAirStage}"
+                          Margin="0,0,10,0" />
                 <CheckBox Content="戦闘終了通知"
                           IsChecked="{Binding IsNotifierEnabled}"
                           Margin="0,0,10,0"/>

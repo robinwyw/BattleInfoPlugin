@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using BattleInfoPlugin.Models.Raw;
 using BattleInfoPlugin.Models.Repositories;
+using BattleInfoPlugin.Models.Settings;
 using Grabacr07.KanColleWrapper;
 using Livet;
 
@@ -12,6 +13,8 @@ namespace BattleInfoPlugin.Models
     public class BattleData : NotificationObject
     {
         public static BattleData Current { get; } = new BattleData();
+
+        #region State
 
         private BattleState _State;
 
@@ -28,6 +31,10 @@ namespace BattleInfoPlugin.Models
             }
         }
 
+        #endregion
+
+        #region IsInBattle
+
         private bool _IsInBattle;
 
         public bool IsInBattle
@@ -42,6 +49,10 @@ namespace BattleInfoPlugin.Models
                 }
             }
         }
+
+        #endregion
+
+        #region BattleResult
 
         private BattleResult _BattleResult;
 
@@ -58,6 +69,10 @@ namespace BattleInfoPlugin.Models
             }
         }
 
+        #endregion
+
+        #region NextCell
+
         private MapPoint _NextCell;
 
         public MapPoint NextCell
@@ -72,6 +87,25 @@ namespace BattleInfoPlugin.Models
                 }
             }
         }
+
+        #endregion
+
+        #region IsShowLandBaseAirStage
+
+        public bool IsShowLandBaseAirStage
+        {
+            get { return BattleDataSettings.IsShowLandBaseAirStage.Value; }
+            set
+            {
+                if (BattleDataSettings.IsShowLandBaseAirStage.Value != value)
+                {
+                    BattleDataSettings.IsShowLandBaseAirStage.Value = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
 
         //FIXME 敵の開幕雷撃&連合艦隊がまだ不明(とりあえず第二艦隊が受けるようにしてる)
 
@@ -567,16 +601,36 @@ namespace BattleInfoPlugin.Models
 
             this.FriendAirSupremacy = data.api_kouku.GetAirSupremacy();
 
+            IEnumerable<AirCombatResult> airResult = new AirCombatResult[0];
+
+            if (this.IsShowLandBaseAirStage)
+            {
+                var airbase = data as IAirBaseAttack;
+                if (airbase?.api_air_base_attack != null)
+                {
+                    var count = airbase.api_air_base_attack.Length;
+                    for (var i = 0; i < count; i++)
+                    {
+                        airResult = airResult
+                            .Concat(airbase.api_air_base_attack[i].ToResult($"{count}-{i + 1}/"));
+                    }
+                }
+            }
+
             var combat = data as IAirBattleMembers;
             if (combat?.api_kouku2 != null)
             {
-                this.AirCombatResults = combat.api_kouku.ToResult("1回目/")
-                    .Concat(combat.api_kouku2.ToResult("2回目/")).ToArray();
+                airResult = airResult
+                    .Concat(combat.api_kouku.ToResult("1回目/"))
+                    .Concat(combat.api_kouku2.ToResult("2回目/"));
             }
             else
             {
-                this.AirCombatResults = data.api_kouku.ToResult();
+                airResult = airResult
+                    .Concat(data.api_kouku.ToResult());
             }
+
+            this.AirCombatResults = airResult.ToArray();
         }
 
 

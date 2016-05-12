@@ -12,6 +12,8 @@ namespace BattleInfoPlugin.ViewModels
     {
         private readonly BattleEndNotifier notifier;
 
+        #region Battle
+
         private BattleViewModel _Battle;
 
         public BattleViewModel Battle
@@ -26,6 +28,26 @@ namespace BattleInfoPlugin.ViewModels
                 }
             }
         }
+
+        #endregion
+
+
+        #region IsShowLandBaseAirStage
+
+        public bool IsShowLandBaseAirStage
+        {
+            get { return BattleData.Current.IsShowLandBaseAirStage; }
+            set
+            {
+                if (BattleData.Current.IsShowLandBaseAirStage != value)
+                {
+                    BattleData.Current.IsShowLandBaseAirStage = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
 
 
         #region IsNotifierEnabled変更通知プロパティ
