@@ -18,6 +18,19 @@ namespace BattleInfoPlugin.Models
             if (this.Ships.Length != 6) throw new ArgumentException("艦隊ダメージ配列の長さは6である必要があります。");
         }
 
+        public FleetDamages Add(FleetDamages value)
+        {
+            return Parse(new[]
+            {
+                this.Ships[0] + value.Ships[0],
+                this.Ships[1] + value.Ships[1],
+                this.Ships[2] + value.Ships[2],
+                this.Ships[3] + value.Ships[3],
+                this.Ships[4] + value.Ships[4],
+                this.Ships[5] + value.Ships[5],
+            });
+        }
+
         public static FleetDamages Parse(IEnumerable<int> damages)
         {
             if (damages == null) throw new ArgumentNullException();

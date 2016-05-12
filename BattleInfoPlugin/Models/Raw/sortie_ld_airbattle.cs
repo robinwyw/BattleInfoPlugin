@@ -5,7 +5,7 @@ namespace BattleInfoPlugin.Models.Raw
     /// <summary>
     /// 長距離空襲戦
     /// </summary>
-    public class sortie_ld_airbattle : ICommonFirstBattleMembers, IFleetBattleInfo, IAirStageMembers, IBattleFormationInfo
+    public class sortie_ld_airbattle : ICommonFirstBattleMembers, IFleetBattleInfo, IAirBattleMembers, IBattleFormationInfo
     {
         private int _apiDeckId;
 
@@ -33,11 +33,16 @@ namespace BattleInfoPlugin.Models.Raw
         public int[][] api_eParam { get; set; }
         public int[] api_search { get; set; }
         public int[] api_formation { get; set; }
+        public Api_Air_Base_Attack[] api_air_base_attack { get; set; }
         public int[] api_stage_flag { get; set; }
         public Api_Kouku api_kouku { get; set; }
+        public int[] api_stage_flag2 { get; set; }
+        public Api_Kouku api_kouku2 { get; set; }
+        public int api_support_flag { get; set; }
+        public Api_Support_Info api_support_info { get; set; }
 
-        public FleetDamages FirstFleetDamages => this.api_kouku.GetFirstFleetDamages();
+        public FleetDamages FirstFleetDamages => this.GetFirstFleetDamages();
         public FleetDamages SecondFleetDamages => null;
-        public FleetDamages EnemyDamages => this.api_kouku.GetEnemyDamages();
+        public FleetDamages EnemyDamages => this.GetEnemyDamages();
     }
 }

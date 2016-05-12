@@ -155,6 +155,7 @@
     <Compile Include="Models\Formation.cs" />
     <Compile Include="Models\ItemType.cs" />
     <Compile Include="Models\MapPoint.cs" />
+    <Compile Include="Models\Raw\IAirBaseAttack.cs" />
     <Compile Include="Models\Raw\IPracticeData.cs" />
     <Compile Include="Models\MapArea.cs" />
     <Compile Include="Models\MapCell.cs" />
@@ -216,6 +217,7 @@
     <Compile Include="ViewModels\BattleViewModel.cs" />
     <Compile Include="ViewModels\BattleWindowViewModel.cs" />
     <Compile Include="ViewModels\CellTypeViewModel.cs" />
+    <Compile Include="ViewModels\Enemies\CellPointViewModel.cs" />
     <Compile Include="ViewModels\Enemies\EnemyFleetViewModel.cs" />
     <Compile Include="ViewModels\Enemies\EnemyMapViewModel.cs" />
     <Compile Include="ViewModels\Enemies\EnemyCellViewModel.cs" />

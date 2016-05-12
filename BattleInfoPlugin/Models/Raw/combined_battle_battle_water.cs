@@ -20,6 +20,7 @@
         public int[][] api_fParam_combined { get; set; }
         public int[] api_search { get; set; }
         public int[] api_formation { get; set; }
+        public Api_Air_Base_Attack[] api_air_base_attack { get; set; }
         public int[] api_stage_flag { get; set; }
         public Api_Kouku api_kouku { get; set; }
         public int api_support_flag { get; set; }
@@ -32,14 +33,14 @@
         public Hougeki api_hougeki3 { get; set; }
         public Raigeki api_raigeki { get; set; }
 
-        FleetDamages IFleetBattleInfo.FirstFleetDamages => new[]
+        public FleetDamages FirstFleetDamages => new[]
         {
             this.api_kouku.GetFirstFleetDamages(),
             this.api_hougeki1.GetFriendDamages(),
             this.api_hougeki2.GetFriendDamages()
         }.Merge();
 
-        FleetDamages IFleetBattleInfo.SecondFleetDamages => new[]
+        public FleetDamages SecondFleetDamages => new[]
         {
             this.api_kouku.GetSecondFleetDamages(),
             this.api_opening_atack.GetFriendDamages(),

@@ -1,5 +1,8 @@
 ﻿namespace BattleInfoPlugin.Models.Raw
 {
+    
+
+
     public class map_start_next
     {
         public int api_rashin_flg { get; set; }
@@ -13,7 +16,11 @@
         public int api_next { get; set; }
         public int api_bosscell_no { get; set; }
         public int api_bosscomp { get; set; }
+        public Api_Airsearch api_airsearch { get; set; }
         public Api_Eventmap api_eventmap { get; set; }
+        public int api_from_no { get; set; }
+        public Api_Distance_Data[] api_distance_data { get; set; }
+        // 以下next
         public int api_comment_kind { get; set; }
         public int api_production_kind { get; set; }
         public Api_Enemy api_enemy { get; set; }
@@ -22,6 +29,13 @@
         public Api_Itemget api_itemget_eo_result { get; set; }
         public Api_Itemget api_itemget_eo_comment { get; set; }
         public Api_Select_Route api_select_route { get; set; }
+        public int api_ration_flag { get; set; }
+    }
+
+    public class Api_Airsearch
+    {
+        public int api_plane_type { get; set; }
+        public int api_result { get; set; }
     }
 
     public class Api_Eventmap
@@ -29,6 +43,12 @@
         public int api_max_maphp { get; set; }
         public int api_now_maphp { get; set; }
         public int api_dmg { get; set; }
+    }
+
+    public class Api_Distance_Data
+    {
+        public int api_mapcell_id { get; set; }
+        public int api_distance { get; set; }
     }
 
     public class Api_Enemy

@@ -1,6 +1,6 @@
 ﻿namespace BattleInfoPlugin.Models.Raw
 {
-    public interface IAirBattleMembers : IAirStageMembers
+    public interface IAirBattleMembers : IAirStageMembers, IAirBaseAttack
     {
         int api_support_flag { get; set; }
         Api_Support_Info api_support_info { get; set; }
@@ -32,6 +32,7 @@
         {
             return new[]
             {
+                data.api_air_base_attack.GetEnemyDamages(),
                 data.api_support_info.GetEnemyDamages(), //将来的に増える可能性を想定して追加しておく
                 data.api_kouku.GetEnemyDamages(),
                 data.api_kouku2.GetEnemyDamages()

@@ -58,6 +58,10 @@ namespace BattleInfoPlugin.Models.Raw
         public static bool IsEnabled(this Api_Kouku kouku)
             => kouku?.api_plane_from.Any(arr => arr.Any(n => n != -1)) ?? false;
 
+        public static FleetDamages GetEnemyDamages(this Api_Air_Base_Attack[] attacks)
+            => attacks?.Select(x => x?.api_stage3?.api_edam?.GetDamages() ?? defaultValue)
+            ?.Aggregate((a, b) => a.Add(b)) ?? defaultValue;
+
         public static AirSupremacy GetAirSupremacy(this Api_Kouku kouku)
             => kouku.IsEnabled()
             ? (AirSupremacy)(kouku.api_stage1?.api_disp_seiku ?? (int)AirSupremacy.航空戦なし)
