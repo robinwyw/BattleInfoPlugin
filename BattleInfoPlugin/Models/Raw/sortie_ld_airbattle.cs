@@ -1,12 +1,27 @@
-﻿namespace BattleInfoPlugin.Models.Raw
+﻿using System;
+
+namespace BattleInfoPlugin.Models.Raw
 {
     /// <summary>
     /// 長距離空襲戦
     /// </summary>
-    public class sortie_ld_airbattle : ICommonFirstBattleMembers, IFleetBattleInfo, IAirStageMembers
+    public class sortie_ld_airbattle : ICommonFirstBattleMembers, IFleetBattleInfo, IAirStageMembers, IBattleFormationInfo
     {
-        public int api_deck_id { get; set; }
-        public int api_dock_id { get; set; }
+        private int _apiDeckId;
+
+        public dynamic api_dock_id
+        {
+            get { return this._apiDeckId; }
+            set { this._apiDeckId = value is int ? value : Convert.ToInt32(value); }
+        }
+
+        public int api_deck_id
+        {
+            get { return this._apiDeckId; }
+            set { this._apiDeckId = value; }
+
+        }
+
         public int[] api_ship_ke { get; set; }
         public int[] api_ship_lv { get; set; }
         public int[] api_nowhps { get; set; }

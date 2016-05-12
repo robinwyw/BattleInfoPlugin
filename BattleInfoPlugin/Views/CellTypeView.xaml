@@ -52,6 +52,11 @@
                                             Value="DarkGreen" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding CellType}"
+                                             Value="空襲戦">
+                                    <Setter Property="Background"
+                                            Value="DarkGreen" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
                                              Value="夜戦">
                                     <Setter Property="Background"
                                             Value="#433390" />
