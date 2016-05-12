@@ -30,8 +30,8 @@
         public int[] api_stage_flag2 { get; set; }
         public Api_Kouku api_kouku2 { get; set; }
 
-        public FleetDamages FirstFleetDamages => this.GetFirstFleetDamages();
-        public FleetDamages SecondFleetDamages => this.GetSecondFleetDamages();
-        public FleetDamages EnemyDamages => this.GetEnemyDamages();
+        public FleetDamages[] FirstFleetDamages => this.GetFirstFleetDamages();
+        public FleetDamages[] SecondFleetDamages => this.GetSecondFleetDamages();
+        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
     }
 }

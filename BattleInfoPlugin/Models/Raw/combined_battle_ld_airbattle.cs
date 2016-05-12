@@ -28,8 +28,8 @@
         public int api_support_flag { get; set; }
         public Api_Support_Info api_support_info { get; set; }
 
-        public FleetDamages FirstFleetDamages => this.GetFirstFleetDamages();
-        public FleetDamages SecondFleetDamages => this.GetSecondFleetDamages();
-        public FleetDamages EnemyDamages => this.GetEnemyDamages();
+        public FleetDamages[] FirstFleetDamages => this.GetFirstFleetDamages();
+        public FleetDamages[] SecondFleetDamages => this.GetSecondFleetDamages();
+        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
     }
 }

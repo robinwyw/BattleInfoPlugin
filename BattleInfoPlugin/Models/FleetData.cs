@@ -36,7 +36,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._Name; }
             set
-            { 
+            {
                 if (this._Name == value)
                     return;
                 this._Name = value;
@@ -53,7 +53,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._Ships; }
             set
-            { 
+            {
                 if (this._Ships == value)
                     return;
                 this._Ships = value;
@@ -61,7 +61,7 @@ namespace BattleInfoPlugin.Models
             }
         }
         #endregion
-        
+
         #region Formation変更通知プロパティ
         private Formation _Formation;
 
@@ -70,7 +70,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._Formation; }
             set
-            { 
+            {
                 if (this._Formation == value)
                     return;
                 this._Formation = value;
@@ -95,7 +95,7 @@ namespace BattleInfoPlugin.Models
             }
         }
         #endregion
-        
+
         //#region AirSuperiorityPotential変更通知プロパティ
         //private int _AirSuperiorityPotential;
 
@@ -170,22 +170,27 @@ namespace BattleInfoPlugin.Models
         /// <param name="damages">適用ダメージリスト</param>
         public static void CalcDamages(this FleetData fleet, params FleetDamages[] damages)
         {
-            fleet.Ships.SetValues(damages.Merge(), (s, d) => s.ReceiveDamage(d));
+            if (damages == null) return;
 
-            if (fleet.FleetType == FleetType.Enemy) return;
-
-            // ダメコンによる回復処理。同一戦闘で2度目が発生する事はないという前提……
-            // ダメコン優先度: 拡張スロット＞インデックス順
-            var dameconState = fleet.Ships.Select(x => new { HasDamecon = x.HasDamecon(), HasMegami = x.HasMegami() });
-            fleet.Ships.SetValues(dameconState, (s, d) =>
+            foreach (var damage in damages.Where(d => d != null))
             {
-                if (0 < s.NowHP) return;
-                s.IsUsedDamecon = d.HasDamecon || d.HasMegami;
-                if (d.HasDamecon)
-                    s.NowHP = (int) Math.Floor(s.MaxHP*0.2);
-                else if (d.HasMegami)
-                    s.NowHP = s.MaxHP;
-            });
+                fleet.Ships.SetValues(damage, (s, d) => s.ReceiveDamage(d));
+
+                if (fleet.FleetType == FleetType.Enemy) continue;
+
+                // ダメコンによる回復処理。同一戦闘で2度目が発生する事はないという前提……
+                // ダメコン優先度: 拡張スロット＞インデックス順
+                var dameconState = fleet.Ships.Select(x => new { HasDamecon = x.HasDamecon(), HasMegami = x.HasMegami() });
+                fleet.Ships.SetValues(dameconState, (s, d) =>
+                {
+                    if (0 < s.NowHP) return;
+                    s.IsUsedDamecon = d.HasDamecon || d.HasMegami;
+                    if (d.HasDamecon)
+                        s.NowHP = (int)Math.Floor(s.MaxHP * 0.2);
+                    else if (d.HasMegami)
+                        s.NowHP = s.MaxHP;
+                });
+            }
         }
 
         /// <summary>
@@ -195,7 +200,12 @@ namespace BattleInfoPlugin.Models
         /// <param name="damages">適用ダメージリスト</param>
         public static void CalcPracticeDamages(this FleetData fleet, params FleetDamages[] damages)
         {
-            fleet.Ships.SetValues(damages.Merge(), (s, d) => s.ReceiveDamage(d));
+            if (damages == null) return;
+
+            foreach (var damage in damages)
+            {
+                fleet.Ships.SetValues(damage, (s, d) => s.ReceiveDamage(d));
+            }
         }
 
         private static bool HasDamecon(this ShipData ship)

@@ -2,8 +2,8 @@
 {
     public interface IFleetBattleInfo
     {
-        FleetDamages FirstFleetDamages { get; }
-        FleetDamages SecondFleetDamages { get; }
-        FleetDamages EnemyDamages { get; }
+        FleetDamages[] FirstFleetDamages { get; }
+        FleetDamages[] SecondFleetDamages { get; }
+        FleetDamages[] EnemyDamages { get; }
     }
 }

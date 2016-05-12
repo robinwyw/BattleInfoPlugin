@@ -35,8 +35,8 @@
         public Hougeki api_hougeki3 { get; set; }
         public Raigeki api_raigeki { get; set; }
 
-        public FleetDamages FirstFleetDamages => this.GetFriendDamages();
-        public FleetDamages SecondFleetDamages => null;
-        public FleetDamages EnemyDamages => this.GetEnemyDamages();
+        public FleetDamages[] FirstFleetDamages => this.GetFriendDamages();
+        public FleetDamages[] SecondFleetDamages => null;
+        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
     }
 }

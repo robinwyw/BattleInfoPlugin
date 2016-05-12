@@ -8,11 +8,11 @@
     }
 
     public static class MidnightExtensions
-    { 
-        public static FleetDamages GetFriendDamages(this IMidnightBattleMembers data)
-            => data.api_hougeki.GetFriendDamages();
+    {
+        public static FleetDamages[] GetFriendDamages(this IMidnightBattleMembers data)
+            => new[] { data.api_hougeki.GetFriendDamages() };
 
-        public static FleetDamages GetEnemyDamages(this IMidnightBattleMembers data)
-            => data.api_hougeki.GetEnemyDamages();
+        public static FleetDamages[] GetEnemyDamages(this IMidnightBattleMembers data)
+            => new[] { data.api_hougeki.GetEnemyDamages() };
     }
 }

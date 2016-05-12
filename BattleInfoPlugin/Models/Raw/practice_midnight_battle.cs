@@ -18,8 +18,8 @@
         public int[] api_flare_pos { get; set; }
         public Midnight_Hougeki api_hougeki { get; set; }
 
-        public FleetDamages FirstFleetDamages => this.GetFriendDamages();
-        public FleetDamages SecondFleetDamages => null;
-        public FleetDamages EnemyDamages => this.GetEnemyDamages();
+        public FleetDamages[] FirstFleetDamages => this.GetFriendDamages();
+        public FleetDamages[] SecondFleetDamages => null;
+        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
     }
 }

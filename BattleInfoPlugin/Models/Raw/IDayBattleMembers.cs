@@ -15,7 +15,7 @@
 
     public static class DayBattleMembersExtension
     {
-        public static FleetDamages GetFriendDamages(this IDayBattleMembers data)
+        public static FleetDamages[] GetFriendDamages(this IDayBattleMembers data)
         {
             return new[]
             {
@@ -24,10 +24,10 @@
                 data.api_hougeki1.GetFriendDamages(),
                 data.api_hougeki2.GetFriendDamages(),
                 data.api_raigeki.GetFriendDamages()
-            }.Merge();
+            };
         }
 
-        public static FleetDamages GetEnemyDamages(this IDayBattleMembers data)
+        public static FleetDamages[] GetEnemyDamages(this IDayBattleMembers data)
         {
             return new[]
             {
@@ -39,7 +39,7 @@
                 data.api_hougeki2.GetEnemyDamages(),
                 data.api_hougeki3.GetEnemyDamages(),
                 data.api_raigeki.GetEnemyDamages()
-            }.Merge();
+            };
         }
     }
 }

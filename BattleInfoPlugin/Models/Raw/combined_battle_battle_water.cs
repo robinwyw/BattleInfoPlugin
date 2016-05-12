@@ -33,21 +33,21 @@
         public Hougeki api_hougeki3 { get; set; }
         public Raigeki api_raigeki { get; set; }
 
-        public FleetDamages FirstFleetDamages => new[]
+        public FleetDamages[] FirstFleetDamages => new[]
         {
             this.api_kouku.GetFirstFleetDamages(),
             this.api_hougeki1.GetFriendDamages(),
             this.api_hougeki2.GetFriendDamages()
-        }.Merge();
+        };
 
-        public FleetDamages SecondFleetDamages => new[]
+        public FleetDamages[] SecondFleetDamages => new[]
         {
             this.api_kouku.GetSecondFleetDamages(),
             this.api_opening_atack.GetFriendDamages(),
             this.api_hougeki3.GetFriendDamages(),
             this.api_raigeki.GetFriendDamages()
-        }.Merge();
+        };
 
-        public FleetDamages EnemyDamages => this.GetEnemyDamages();
+        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
     }
 }

@@ -10,25 +10,25 @@
 
     public static class AirBattleMembersExtensions
     {
-        public static FleetDamages GetFirstFleetDamages(this IAirBattleMembers data)
+        public static FleetDamages[] GetFirstFleetDamages(this IAirBattleMembers data)
         {
             return new[]
             {
                 data.api_kouku.GetFirstFleetDamages(),
                 data.api_kouku2.GetFirstFleetDamages()
-            }.Merge();
+            };
         }
 
-        public static FleetDamages GetSecondFleetDamages(this IAirBattleMembers data)
+        public static FleetDamages[] GetSecondFleetDamages(this IAirBattleMembers data)
         {
             return new[]
             {
                 data.api_kouku.GetSecondFleetDamages(),
                 data.api_kouku2.GetSecondFleetDamages()
-            }.Merge();
+            };
         }
 
-        public static FleetDamages GetEnemyDamages(this IAirBattleMembers data)
+        public static FleetDamages[] GetEnemyDamages(this IAirBattleMembers data)
         {
             return new[]
             {
@@ -36,7 +36,7 @@
                 data.api_support_info.GetEnemyDamages(), //将来的に増える可能性を想定して追加しておく
                 data.api_kouku.GetEnemyDamages(),
                 data.api_kouku2.GetEnemyDamages()
-            }.Merge();
+            };
         }
     }
 }
