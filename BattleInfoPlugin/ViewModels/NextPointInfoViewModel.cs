@@ -18,6 +18,6 @@ namespace BattleInfoPlugin.ViewModels
 
         public bool IsInSortie { get; set; }
 
-        public GetLostItemViewModel GetLostItem { get; set; }
+        public GetLostItemViewModel[] GetLostItems { get; set; }
     }
 }

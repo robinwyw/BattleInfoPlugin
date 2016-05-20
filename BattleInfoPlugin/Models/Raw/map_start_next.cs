@@ -25,7 +25,7 @@
         public int api_production_kind { get; set; }
         public Api_Enemy api_enemy { get; set; }
         public Api_Happening api_happening { get; set; }
-        public Api_Itemget api_itemget { get; set; }
+        public Api_Itemget[] api_itemget { get; set; }
         public Api_Itemget api_itemget_eo_result { get; set; }
         public Api_Itemget api_itemget_eo_comment { get; set; }
         public Api_Select_Route api_select_route { get; set; }

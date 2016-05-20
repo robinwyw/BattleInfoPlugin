@@ -172,13 +172,11 @@ namespace BattleInfoPlugin.ViewModels
                     {
                         var nextCell = this.BattleData.NextCell;
 
-                        GetLostItemViewModel getLostItem;
+                        var getLostItems = new List<GetLostItemViewModel>();
                         if (nextCell.GetItem != null)
-                            getLostItem = new GetLostItemViewModel(nextCell.GetItem, true);
-                        else if (nextCell.LostItem != null)
-                            getLostItem = new GetLostItemViewModel(nextCell.LostItem, false);
-                        else
-                            getLostItem = null;
+                            getLostItems.AddRange(nextCell.GetItem.Select(item => new GetLostItemViewModel(item, true)));
+                        if (nextCell.LostItem != null)
+                            getLostItems.Add(new GetLostItemViewModel(nextCell.LostItem, false));
 
                         this.NextPointInfo = new NextPointInfoViewModel
                         {
@@ -186,7 +184,7 @@ namespace BattleInfoPlugin.ViewModels
                             Id = ((char) (nextCell.Id - 1 + 'A')).ToString(),
                             CellType = nextCell.Type,
                             IsInSortie = true,
-                            GetLostItem = getLostItem,
+                            GetLostItems = getLostItems.ToArray(),
                         };
                     }
                 },

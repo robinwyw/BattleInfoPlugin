@@ -16,7 +16,7 @@ namespace BattleInfoPlugin.Models
 
         public CellType Type { get; internal set; }
 
-        public GetLostItem GetItem { get; }
+        public GetLostItem[] GetItem { get; }
 
         public GetLostItem LostItem { get; }
 
@@ -26,9 +26,21 @@ namespace BattleInfoPlugin.Models
             this.Id = data.api_no;
             this.Type = data.ToCellType();
 
-            this.GetItem = data.api_itemget
-                           ?? data.api_itemget_eo_comment
-                           ?? data.api_itemget_eo_result;
+            var getItems = new List<Api_Itemget>();
+            if (data.api_itemget != null)
+            {
+                getItems.AddRange(data.api_itemget);
+            }
+            if (data.api_itemget_eo_comment != null)
+            {
+                getItems.Add(data.api_itemget_eo_comment);
+            }
+            if (data.api_itemget_eo_result != null)
+            {
+                getItems.Add(data.api_itemget_eo_result);
+            }
+
+            this.GetItem = getItems.Select(item => new GetLostItem(item)).ToArray();
             this.LostItem = data.api_happening;
         }
     }

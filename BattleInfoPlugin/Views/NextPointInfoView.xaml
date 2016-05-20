@@ -19,7 +19,7 @@
     </UserControl.Resources>
 
     <StackPanel Orientation="Horizontal"
-                Margin="10,0">
+                Margin="8,0">
 
         <StackPanel.Style>
             <Style TargetType="StackPanel">
@@ -53,8 +53,8 @@
                     <Setter Property="Visibility"
                             Value="Collapsed" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding DataContext.GetLostItem, ElementName=Control}"
-                                     Value="{x:Null}">
+                        <DataTrigger Binding="{Binding DataContext.GetLostItems.Length, ElementName=Control}"
+                                     Value="0">
                             <Setter Property="Visibility"
                                     Value="Visible" />
                         </DataTrigger>
@@ -62,23 +62,36 @@
                 </Style>
             </local:CellTypeView.Style>
         </local:CellTypeView>
-        
-        <local:GetLostItemView DataContext="{Binding GetLostItem}"
-                               Margin="5,0"
-                               VerticalAlignment="Center">
-            <local:GetLostItemView.Style>
-                <Style TargetType="{x:Type local:GetLostItemView}">
+
+        <ItemsControl ItemsSource="{Binding GetLostItems}">
+            <ItemsControl.Style>
+                <Style TargetType="{x:Type ItemsControl}">
                     <Setter Property="Visibility"
                             Value="Visible" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding}"
-                                     Value="{x:Null}">
+                        <DataTrigger Binding="{Binding GetLostItems.Length}"
+                                     Value="0">
                             <Setter Property="Visibility"
                                     Value="Collapsed" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </local:GetLostItemView.Style>
-        </local:GetLostItemView>
+            </ItemsControl.Style>
+            
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:GetLostItemView DataContext="{Binding}"
+                                           Margin="5,0,0,0" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
     </StackPanel>
 </UserControl>
