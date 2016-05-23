@@ -27,6 +27,7 @@ namespace BattleInfoPlugin.Views
                 Application.Current.MainWindow,
                 "Closed",
                 (_, __) => this.Close());
+            this.Owner = Application.Current.MainWindow;
         }
     }
 }

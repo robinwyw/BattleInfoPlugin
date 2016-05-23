@@ -18,7 +18,8 @@
                    Foreground="{DynamicResource ActiveForegroundBrushKey}"
                    IsRestoringWindowPlacement="True"
                    SnapsToDevicePixels="True"
-                   Topmost="{Binding TopMost}">
+                   Topmost="{Binding TopMost}"
+                   ShowInTaskbar="False">
 
     <metro:MetroWindow.Resources>
         <ResourceDictionary>
