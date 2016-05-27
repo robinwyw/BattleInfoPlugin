@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BattleInfoPlugin.Models;
 using BattleInfoPlugin.Models.Notifiers;
