@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using BattleInfoPlugin.Models;
 using BattleInfoPlugin.Models.Notifiers;
 using Livet;
 using Livet.EventListeners;
 using Livet.Messaging;
+using MetroTrilithon.Lifetime;
+using MetroTrilithon.Mvvm;
 
 namespace BattleInfoPlugin.ViewModels
 {
@@ -15,7 +18,10 @@ namespace BattleInfoPlugin.ViewModels
 
         private BattleData BattleData { get; } = BattleData.Current;
 
-        public string BattleResult
+        public bool IsInBattle
+            => this.BattleData.IsInBattle;
+
+        public string BattleResultRank
             => this.BattleData.BattleResult != Models.BattleResult.なし
                 ? this.BattleData.BattleResult.ToString()
                 : "";
@@ -34,9 +40,7 @@ namespace BattleInfoPlugin.ViewModels
                 : "";
 
         public string FriendAirSupremacy
-            => this.BattleData != null && this.BattleData.FriendAirSupremacy != AirSupremacy.航空戦なし
-                ? this.BattleData.FriendAirSupremacy.ToString()
-                : "";
+            => this.BattleData?.FriendAirSupremacy.ToString();
 
         public string DropShipName
             => this.BattleData?.DropShipName;
@@ -98,6 +102,9 @@ namespace BattleInfoPlugin.ViewModels
         }
         #endregion
 
+
+        #region NextPointInfo
+
         private NextPointInfoViewModel _NextPointInfo = new NextPointInfoViewModel { IsInSortie = false };
 
         public NextPointInfoViewModel NextPointInfo
@@ -113,6 +120,108 @@ namespace BattleInfoPlugin.ViewModels
             }
         }
 
+        #endregion
+
+
+        #region LandBaseVisibility
+
+        private Visibility _LandBaseVisibility;
+
+        public Visibility LandBaseVisibility
+        {
+            get { return this._LandBaseVisibility; }
+            set
+            {
+                if (this._LandBaseVisibility != value)
+                {
+                    this._LandBaseVisibility = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region FriendLandBaseAirCombatResults
+
+        private LandBaseAirCombatResultViewModel[] _FriendLandBaseAirCombatResults;
+
+        public LandBaseAirCombatResultViewModel[] FriendLandBaseAirCombatResults
+        {
+            get { return this._FriendLandBaseAirCombatResults; }
+            set
+            {
+                if (this._FriendLandBaseAirCombatResults != value)
+                {
+                    this._FriendLandBaseAirCombatResults = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region EnemyLandBaseAirCombatResults
+
+        private LandBaseAirCombatResultViewModel[] _EnemyLandBaseAirCombatResults;
+
+        public LandBaseAirCombatResultViewModel[] EnemyLandBaseAirCombatResults
+        {
+            get { return this._EnemyLandBaseAirCombatResults; }
+            set
+            {
+                if (this._EnemyLandBaseAirCombatResults != value)
+                {
+                    this._EnemyLandBaseAirCombatResults = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region FriendAirCombatResults
+
+        private AirCombatResultViewModel[] _FriendAirCombatResults;
+
+        public AirCombatResultViewModel[] FriendAirCombatResults
+        {
+            get { return this._FriendAirCombatResults; }
+            set
+            {
+                if (this._FriendAirCombatResults != value)
+                {
+                    this._FriendAirCombatResults = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region EnemyAirCombatResults
+
+        private AirCombatResultViewModel[] _EnemyAirCombatResults;
+
+        public AirCombatResultViewModel[] EnemyAirCombatResults
+        {
+            get { return this._EnemyAirCombatResults; }
+            set
+            {
+                if (this._EnemyAirCombatResults != value)
+                {
+                    this._EnemyAirCombatResults = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
         private BattleViewModel()
         {
             this._FirstFleet = new FleetViewModel("自艦隊");
@@ -122,8 +231,12 @@ namespace BattleInfoPlugin.ViewModels
             this.CompositeDisposable.Add(new PropertyChangedEventListener(this.BattleData)
             {
                 {
-                  () => this.BattleData.BattleResult,
-                  (_, __) => this.RaisePropertyChanged(() => this.BattleResult)
+                    () => this.BattleData.IsInBattle,
+                    (_, __) => this.RaisePropertyChanged(() => this.IsInBattle)
+                },
+                {
+                    () => this.BattleData.BattleResult,
+                    (_, __) => this.RaisePropertyChanged(() => this.BattleResultRank)
                 },
                 {
                     () => this.BattleData.Name,
@@ -142,13 +255,22 @@ namespace BattleInfoPlugin.ViewModels
                     (_, __) => this.RaisePropertyChanged(() => this.FriendAirSupremacy)
                 },
                 {
+                    () => this.BattleData.LandBaseAirCombatResults,
+                    (_, __) =>
+                    {
+                        var landbase = this.BattleData.LandBaseAirCombatResults;
+                        this.UpdateLandBaseVisibility(landbase.Length > 0);
+                        this.FriendLandBaseAirCombatResults = landbase.Select(x => new LandBaseAirCombatResultViewModel(x, FleetType.First)).ToArray();
+                        this.EnemyLandBaseAirCombatResults = landbase.Select(x => new LandBaseAirCombatResultViewModel(x, FleetType.Enemy)).ToArray();
+                    }
+                },
+                {
                     () => this.BattleData.AirCombatResults,
                     (_, __) =>
                     {
                         this.RaisePropertyChanged(() => this.AirCombatResults);
-                        this.FirstFleet.AirCombatResults = this.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.First)).ToArray();
-                        this.SecondFleet.AirCombatResults = this.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.Second)).ToArray();
-                        this.Enemies.AirCombatResults = this.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.Enemy)).ToArray();
+                        this.FriendAirCombatResults = this.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.First)).ToArray();
+                        this.EnemyAirCombatResults = this.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.Enemy)).ToArray();
                     }
                 },
                 {
@@ -194,6 +316,18 @@ namespace BattleInfoPlugin.ViewModels
                     (_, __) => this.NextPointInfo = new NextPointInfoViewModel { IsInSortie = false }
                 }
             });
+
+            this.BattleData
+                .Subscribe(nameof(BattleData.IsShowLandBaseAirStage),
+                    () => this.UpdateLandBaseVisibility(this.BattleData.IsShowLandBaseAirStage))
+                .AddTo(this);
+        }
+
+        private void UpdateLandBaseVisibility(bool visible)
+        {
+            this.LandBaseVisibility = visible
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
     }
 }

@@ -9,6 +9,8 @@
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:models="clr-namespace:BattleInfoPlugin.Models"
+             xmlns:viewModels="clr-namespace:BattleInfoPlugin.ViewModels"
+             xmlns:controls="clr-namespace:BattleInfoPlugin.Views.Controls"
              Background="{DynamicResource ThemeBrushKey}"
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
              mc:Ignorable="d"
@@ -21,6 +23,82 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles/PluginStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="AirCombatTemplate"
+                          DataType="{x:Type viewModels:AirCombatResultViewModel}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name, StringFormat={}{0}:}"
+                               Style="{DynamicResource DefaultTextStyleKey}"
+                               Margin="0,0,5,0" />
+
+                    <StackPanel Orientation="Horizontal"
+                                Visibility="{Binding IsHappen, Converter={StaticResource TrueToVisibleConverter}}">
+                        <TextBlock Style="{DynamicResource EmphaticTextStyleKey}"
+                                   FontSize="12"
+                                   Margin="0,0,5,0">
+                            <Run Text="{Binding RemainingCount, Mode=OneWay}" />
+                            <Run Text="/" />
+                            <Run Text="{Binding Count, Mode=OneWay}" />
+                            <Run Text="{Binding LostCount, Mode=OneWay, StringFormat=(-{0})}"
+                                 Style="{DynamicResource DefaultTextElementStyleKey}" />
+                        </TextBlock>
+                    </StackPanel>
+                    <TextBlock Text="なし"
+                               Style="{DynamicResource EmphaticTextStyleKey}"
+                               FontSize="12"
+                               Visibility="{Binding IsHappen, Converter={StaticResource FalseToVisibleConverter}}" />
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="SquadronTemplate"
+                          DataType="{x:Type models:Squadron}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{DynamicResource DefaultTextStyleKey}"
+                               Margin="0,0,10,0">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}[{0:D2}/{1:D2}]">
+                                <Binding Path="Count" />
+                                <Binding Path="Max" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+
+                    <TextBlock Text="{Binding Plane.Name}"
+                               Style="{DynamicResource EmphaticTextStyleKey}"
+                               FontSize="12" />
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="LandBaseTemplate"
+                          DataType="{x:Type viewModels:LandBaseAirCombatResultViewModel}">
+                <StackPanel Orientation="Horizontal"
+                            ToolTipService.ShowDuration="60000">
+                    <StackPanel.ToolTip>
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding Squadrons}"
+                                          ItemTemplate="{StaticResource SquadronTemplate}" />
+                            <ContentControl Content="{Binding Stage1}"
+                                            ContentTemplate="{StaticResource AirCombatTemplate}" />
+                            <ContentControl Content="{Binding Stage2}"
+                                            ContentTemplate="{StaticResource AirCombatTemplate}" />
+                        </StackPanel>
+                    </StackPanel.ToolTip>
+
+                    <TextBlock Text="{Binding Name, StringFormat={}{0}:}"
+                               Style="{DynamicResource DefaultTextStyleKey}"
+                               Margin="0,0,5,0" />
+                    <TextBlock Style="{DynamicResource EmphaticTextStyleKey}"
+                               FontSize="12"
+                               Margin="0,0,5,0">
+                        <Run Text="{Binding RemainingCount, Mode=OneWay}" />
+                        <Run Text="/" />
+                        <Run Text="{Binding Count, Mode=OneWay}" />
+                        <Run Text="{Binding LostCount, Mode=OneWay, StringFormat=(-{0})}"
+                             Style="{DynamicResource DefaultTextElementStyleKey}" />
+                    </TextBlock>
+                </StackPanel>
+            </DataTemplate>
+
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -33,103 +111,161 @@
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
 
-    <Grid Margin="8,4">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+    <StackPanel Margin="8,4">
 
-        <DockPanel Grid.Row="0">
-            <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="190"
-                                          MaxWidth="220" />
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="140" />
-                    </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsInBattle}"
+                                     Value="False">
+                            <Setter Property="Visibility"
+                                    Value="Hidden" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            
+            <StackPanel Grid.Column="0"
+                        Margin="3,0"
+                        VerticalAlignment="Bottom">
+                <ItemsControl ItemsSource="{Binding FriendLandBaseAirCombatResults}"
+                              ItemTemplate="{StaticResource LandBaseTemplate}"
+                              Visibility="{Binding LandBaseVisibility}" />
 
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                            <Run Text="更新日時:" />
-                            <Run Text="{Binding UpdatedTime, Mode=OneWay}"
-                                 FontSize="12"
-                                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
-                        </TextBlock>
-                        <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                            <Run Text="戦闘種別:" />
-                            <Run Text="{Binding BattleName, Mode=OneWay}"
-                                 FontSize="12"
-                                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
-                        </TextBlock>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1"
-                                Width="120"
-                                HorizontalAlignment="Center">
-                        <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                            <Run Text="交戦形態:" />
-                            <Run Text="{Binding BattleSituation, Mode=OneWay}"
-                                 FontSize="12"
-                                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
-                        </TextBlock>
-                        <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                            <Run Text="制空結果:" />
-                            <Run Text="{Binding FriendAirSupremacy, Mode=OneWay}"
-                                 FontSize="12"
-                                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
-                        </TextBlock>
-                    </StackPanel>
-
-
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                            <Run Text="戦闘結果:" />
-                            <Run Text="{Binding BattleResult, Mode=OneWay}"
-                                 FontSize="12">
-                                <Run.Style>
-                                    <Style BasedOn="{StaticResource EmphaticTextElementStyleKey}"
-                                           TargetType="{x:Type Run}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding BattleResult}" Value="戦術的敗北C">
-                                                <Setter Property="Foreground" Value="LightCoral" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding BattleResult}" Value="敗北D">
-                                                <Setter Property="Foreground" Value="LightCoral" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding BattleResult}" Value="敗北E">
-                                                <Setter Property="Foreground" Value="LightCoral" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Run.Style>
-                            </Run>
-                        </TextBlock>
-                        <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
-                            <Run Text="ドロップ:" />
-                            <Run Text="{Binding DropShipName, Mode=OneWay}"
-                                 FontSize="12"
-                                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
-                        </TextBlock>
-                    </StackPanel>
-                </Grid>
-
-                <Rectangle Height="1"
-                           Margin="3, 4"
-                           Style="{DynamicResource SeparatorRectangleStyleKey}" />
+                <ItemsControl ItemsSource="{Binding FriendAirCombatResults}"
+                              ItemTemplate="{StaticResource AirCombatTemplate}" />
             </StackPanel>
+
+            <StackPanel Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalAlignment="Center">
+                <!--<TextBlock Style="{DynamicResource EmphaticTextStyleKey}"
+                               Text="{Binding BattleSituation, Mode=OneWay}"
+                               HorizontalAlignment="Right" />-->
+                <controls:PlaceHolderTextControl Text="{Binding BattleSituation, Mode=OneWay}"
+                                               PlaceHolder="航向"
+                                               HorizontalAlignment="Right" />
+
+                <controls:PlaceHolderTextControl Text="{Binding FriendAirSupremacy, Mode=OneWay}"
+                                               PlaceHolder="制空結果"
+                                               HorizontalAlignment="Right"/>
+                <!--<TextBlock Style="{DynamicResource EmphaticTextStyleKey}"
+                               Text="{Binding FriendAirSupremacy, Mode=OneWay}"
+                               HorizontalAlignment="Right" />-->
+            </StackPanel>
+
+            <StackPanel Grid.Row="0"
+                        Grid.Column="3"
+                        VerticalAlignment="Center">
+                <!--<TextBlock Text="{Binding BattleResult, Mode=OneWay}"
+                               HorizontalAlignment="Left">
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource EmphaticTextStyleKey}"
+                               TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding BattleResult}" Value="戦術的敗北C">
+                                    <Setter Property="Foreground" Value="LightCoral" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding BattleResult}" Value="敗北D">
+                                    <Setter Property="Foreground" Value="LightCoral" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding BattleResult}" Value="敗北E">
+                                    <Setter Property="Foreground" Value="LightCoral" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>-->
+
+                <!--<TextBlock HorizontalAlignment="Left">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility"
+                                    Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DropShipName}"
+                                             Value="">
+                                    <Setter Property="Visibility"
+                                            Value="Hidden" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding DropShipName}"
+                                             Value="{x:Null}">
+                                    <Setter Property="Visibility"
+                                            Value="Hidden" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                            <Run Text="ドロップ:"
+                                 Style="{DynamicResource DefaultTextElementStyleKey}" />
+                            <Run Text="{Binding DropShipName, Mode=OneWay}"
+                                 Style="{DynamicResource EmphaticTextElementStyleKey}" />
+                </TextBlock>-->
+                <controls:PlaceHolderTextControl Text="{Binding BattleResultRank, Mode=OneWay}"
+                                               PlaceHolder="戦闘結果">
+                    <controls:PlaceHolderTextControl.Style>
+                        <Style TargetType="{x:Type controls:PlaceHolderTextControl}"
+                               BasedOn="{StaticResource {x:Type controls:PlaceHolderTextControl}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding BattleResultRank}" Value="戦術的敗北C">
+                                    <Setter Property="Foreground" Value="LightCoral" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding BattleResultRank}" Value="敗北D">
+                                    <Setter Property="Foreground" Value="LightCoral" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding BattleResultRank}" Value="敗北E">
+                                    <Setter Property="Foreground" Value="LightCoral" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:PlaceHolderTextControl.Style>
+                </controls:PlaceHolderTextControl>
+                <controls:PlaceHolderTextControl Text="{Binding DropShipName, Mode=OneWay}"
+                                               PlaceHolder="ドロップ" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="0"
+                        Grid.Column="4"
+                        Margin="3,0"
+                        VerticalAlignment="Bottom">
+                <ItemsControl ItemsSource="{Binding EnemyLandBaseAirCombatResults}"
+                              ItemTemplate="{StaticResource LandBaseTemplate}"
+                              Visibility="{Binding LandBaseVisibility}" />
+
+                <ItemsControl ItemsSource="{Binding EnemyAirCombatResults}"
+                              ItemTemplate="{StaticResource AirCombatTemplate}" />
+            </StackPanel>
+            
+            
+        </Grid>
+
+        <Rectangle Height="1"
+                   Margin="3,4"
+                   Style="{DynamicResource SeparatorRectangleStyleKey}" />
+
+        <DockPanel>
+            <views:Fleet DataContext="{Binding FirstFleet}" />
+
+            <views:Fleet DataContext="{Binding SecondFleet}" />
+
+            <views:Fleet DataContext="{Binding Enemies}"
+                         HorizontalAlignment="Right" />
         </DockPanel>
 
-        <DockPanel Grid.Row="1">
-            <views:Fleet Margin="0,6,0,0"
-                         DataContext="{Binding FirstFleet}" />
-
-            <views:Fleet Margin="0,6,0,0"
-                         DataContext="{Binding SecondFleet}" />
-
-            <views:Fleet Margin="0,6,0,0"
-                         HorizontalAlignment="Right"
-                         DataContext="{Binding Enemies}" />
-        </DockPanel>
-    </Grid>
+    </StackPanel>
 </UserControl>
+
+
+

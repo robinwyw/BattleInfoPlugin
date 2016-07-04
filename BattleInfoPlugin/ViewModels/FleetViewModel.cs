@@ -18,7 +18,7 @@ namespace BattleInfoPlugin.ViewModels
             get
             { return this._Name; }
             set
-            { 
+            {
                 if (this._Name == value)
                     return;
                 this._Name = value;

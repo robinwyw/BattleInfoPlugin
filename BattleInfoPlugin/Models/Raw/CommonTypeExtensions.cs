@@ -78,13 +78,24 @@ namespace BattleInfoPlugin.Models.Raw
                 : new AirCombatResult[0];
         }
 
-        public static AirCombatResult[] ToResult(this Api_Air_Base_Attack attack, string prefixName = "")
+        public static LandBaseAirCombatResult[] ToResult(this IAirBaseAttack attacks)
         {
-            return new[]
-            {
-                attack.api_stage1.ToResult($"{prefixName}空対空"),
-                attack.api_stage2.ToResult($"{prefixName}空対艦")
-            };
+            if (attacks?.api_air_base_attack == null) return new LandBaseAirCombatResult[0];
+
+            var hashset = new HashSet<int>();
+            return attacks.api_air_base_attack
+                .Select(attack =>
+                {
+                    var firstTime = hashset.Add(attack.api_base_id);
+                    var index = firstTime ? 1 : 2;
+
+                    return new LandBaseAirCombatResult(
+                        $"{attack.api_base_id.ToString()}-{index.ToString()}",
+                        attack.api_stage1.ToResult("空対空"),
+                        attack.api_stage2.ToResult("空対艦"),
+                        attack.api_squadron_plane);
+                })
+                .ToArray();
         }
 
         public static AirCombatResult ToResult(this Api_Stage_Combat stage, string name)

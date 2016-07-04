@@ -52,7 +52,7 @@ namespace BattleInfoPlugin.Models
 
         #endregion
 
-        #region BattleResult
+        #region BattleResultRank
 
         private BattleResult _BattleResult;
 
@@ -233,6 +233,26 @@ namespace BattleInfoPlugin.Models
                 this.RaisePropertyChanged();
             }
         }
+        #endregion
+
+
+        #region LandBaseAirCombatResults
+
+        private LandBaseAirCombatResult[] _LandBaseAirCombatResults = new LandBaseAirCombatResult[0];
+
+        public LandBaseAirCombatResult[] LandBaseAirCombatResults
+        {
+            get { return this._LandBaseAirCombatResults; }
+            set
+            {
+                if (this._LandBaseAirCombatResults != value)
+                {
+                    this._LandBaseAirCombatResults = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
         #endregion
 
 
@@ -597,26 +617,14 @@ namespace BattleInfoPlugin.Models
 
         private void UpdateAirStage(IAirStageMembers data)
         {
-            if (data == null) return;
+            if (data?.api_kouku == null) return;
 
             this.FriendAirSupremacy = data.api_kouku.GetAirSupremacy();
 
+            var airbase = data as IAirBaseAttack;
+            this.LandBaseAirCombatResults = airbase.ToResult();
+
             IEnumerable<AirCombatResult> airResult = new AirCombatResult[0];
-
-            if (this.IsShowLandBaseAirStage)
-            {
-                var airbase = data as IAirBaseAttack;
-                if (airbase?.api_air_base_attack != null)
-                {
-                    var count = airbase.api_air_base_attack.Length;
-                    for (var i = 0; i < count; i++)
-                    {
-                        airResult = airResult
-                            .Concat(airbase.api_air_base_attack[i].ToResult($"{count}-{i + 1}/"));
-                    }
-                }
-            }
-
             var combat = data as IAirBattleMembers;
             if (combat?.api_kouku2 != null)
             {

@@ -19,7 +19,7 @@
     </UserControl.Resources>
 
     <StackPanel Orientation="Horizontal"
-                Margin="8,0">
+                Margin="11,0">
 
         <StackPanel.Style>
             <Style TargetType="StackPanel">
