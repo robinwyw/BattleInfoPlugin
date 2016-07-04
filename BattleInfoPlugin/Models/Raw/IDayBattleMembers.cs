@@ -4,6 +4,8 @@
     {
         int api_support_flag { get; set; }
         Api_Support_Info api_support_info { get; set; }
+        int api_opening_taisen_flag { get; set; }
+        Hougeki api_opening_taisen { get; set; }
         int api_opening_flag { get; set; }
         Raigeki api_opening_atack { get; set; }
         int[] api_hourai_flag { get; set; }
@@ -34,6 +36,7 @@
                 data.api_air_base_attack.GetEnemyDamages(),
                 data.api_support_info.GetEnemyDamages(),
                 data.api_kouku.GetEnemyDamages(),
+                data.api_opening_taisen.GetEnemyDamages(),
                 data.api_opening_atack.GetEnemyDamages(),
                 data.api_hougeki1.GetEnemyDamages(),
                 data.api_hougeki2.GetEnemyDamages(),
