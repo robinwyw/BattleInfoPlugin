@@ -56,7 +56,7 @@ namespace BattleInfoPlugin.Models.Raw
                ?? defaultValue;
 
         public static bool IsEnabled(this Api_Kouku kouku)
-            => kouku?.api_plane_from.Any(arr => arr.Any(n => n != -1)) ?? false;
+            => kouku?.api_plane_from?.Any(arr => arr.Any(n => n != -1)) ?? false;
 
         public static FleetDamages GetEnemyDamages(this Api_Air_Base_Attack[] attacks)
             => attacks?.Select(x => x?.api_stage3?.api_edam?.GetDamages() ?? defaultValue)
