@@ -617,7 +617,7 @@ namespace BattleInfoPlugin.Models
 
         private void UpdateAirStage(IAirStageMembers data)
         {
-            if (data?.api_kouku == null) return;
+            if (data == null) return;
 
             this.FriendAirSupremacy = data.api_kouku.GetAirSupremacy();
 
