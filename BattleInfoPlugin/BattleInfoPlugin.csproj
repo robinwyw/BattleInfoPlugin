@@ -182,8 +182,10 @@
     <Compile Include="Models\Settings\BattleWindowSettings.cs" />
     <Compile Include="Models\CellTypeConverter.cs" />
     <Compile Include="Models\Settings\NotifierSettings.cs" />
-    <Compile Include="Models\Settings\PathSettings.cs" />
-    <Compile Include="Models\Settings\SettingsProvider.cs" />
+    <Compile Include="Models\Settings\PathsSettings.cs" />
+    <Compile Include="Models\Settings\PluginSettings.cs" />
+    <Compile Include="Models\Settings\SimpleSettingsBase.cs" />
+    <Compile Include="Models\Settings\SettingsHelper.cs" />
     <Compile Include="Models\BattleState.cs" />
     <Compile Include="NotificationType.cs" />
     <Compile Include="Models\Raw\battle_midnight_battle.cs" />

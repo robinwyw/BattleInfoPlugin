@@ -128,7 +128,7 @@ namespace BattleInfoPlugin.Models.Repositories
 
         internal void Reload()
         {
-            var obj = PathSettings.EnemyDataFileName.Deserialize<EnemyData>();
+            var obj = PluginSettings.Paths.EnemyDataFileName.Deserialize<EnemyData>();
             if (obj == null) return;
 
             this.EnemyDictionary = obj.EnemyDictionary ?? new Dictionary<string, int[]>();
@@ -148,7 +148,7 @@ namespace BattleInfoPlugin.Models.Repositories
         }
 
         internal void Save()
-            => this.Serialize(PathSettings.EnemyDataFileName);
+            => this.Serialize(PluginSettings.Paths.EnemyDataFileName);
 
         internal void RemoveDuplicate()
         {

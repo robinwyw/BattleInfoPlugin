@@ -15,12 +15,12 @@ namespace BattleInfoPlugin.ViewModels
 
         public bool TopMost
         {
-            get { return BattleWindowSettings.TopMost; }
+            get { return PluginSettings.BattleWindow.TopMost; }
             set
             {
-                if (BattleWindowSettings.TopMost != value)
+                if (PluginSettings.BattleWindow.TopMost != value)
                 {
-                    BattleWindowSettings.TopMost.Value = value;
+                    PluginSettings.BattleWindow.TopMost.Value = value;
                     this.RaisePropertyChanged();
                 }
             }

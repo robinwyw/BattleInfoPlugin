@@ -94,12 +94,12 @@ namespace BattleInfoPlugin.Models
 
         public bool IsShowLandBaseAirStage
         {
-            get { return BattleDataSettings.IsShowLandBaseAirStage.Value; }
+            get { return Settings.PluginSettings.BattleData.IsShowLandBaseAirStage.Value; }
             set
             {
-                if (BattleDataSettings.IsShowLandBaseAirStage.Value != value)
+                if (Settings.PluginSettings.BattleData.IsShowLandBaseAirStage.Value != value)
                 {
-                    BattleDataSettings.IsShowLandBaseAirStage.Value = value;
+                    Settings.PluginSettings.BattleData.IsShowLandBaseAirStage.Value = value;
                     this.RaisePropertyChanged();
                 }
             }

@@ -46,7 +46,7 @@ namespace BattleInfoPlugin.Models.Repositories
             this.MapAreas = new ConcurrentDictionary<int, MapArea>();
             this.MapInfos = new ConcurrentDictionary<int, MapInfo>();
             this.MapCells = new ConcurrentDictionary<int, MapCell>();
-            var obj = PathSettings.MasterDataFileName.Deserialize<Master>();
+            var obj = PluginSettings.Paths.MasterDataFileName.Deserialize<Master>();
             if (obj == null) return;
             this.MapAreas = obj.MapAreas;
             this.MapInfos = obj.MapInfos;
@@ -63,7 +63,7 @@ namespace BattleInfoPlugin.Models.Repositories
             foreach (var key in infos.Keys) this.MapInfos.AddOrUpdate(key, infos[key], (k, v) => infos[k]);
             foreach (var key in cells.Keys) this.MapCells.AddOrUpdate(key, cells[key], (k, v) => cells[k]);
 
-            this.Serialize(PathSettings.MasterDataFileName);
+            this.Serialize(PluginSettings.Paths.MasterDataFileName);
         }
 
         //private static void UpdateMasterTable<T>(IDictionary<int, T> target, Dictionary<int, T> source)
@@ -93,7 +93,7 @@ namespace BattleInfoPlugin.Models.Repositories
                         this.MapInfos = new ConcurrentDictionary<int, MapInfo>(this.MapInfos.Merge(obj.MapInfos));
                         this.MapCells = new ConcurrentDictionary<int, MapCell>(this.MapCells.Merge(obj.MapCells));
                     }
-                    this.Serialize(PathSettings.MasterDataFileName);
+                    this.Serialize(PluginSettings.Paths.MasterDataFileName);
                 }
 
                 return true;

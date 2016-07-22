@@ -8,12 +8,9 @@ using MetroTrilithon.Serialization;
 
 namespace BattleInfoPlugin.Models.Settings
 {
-    public static class BattleWindowSettings
+    public sealed class BattleWindowSettings : SimpleSettingsBase<BattleWindowSettings>
     {
-        public static SerializableProperty<bool> TopMost
-            = new SerializableProperty<bool>(GetKey(), SettingsProvider.Local, false) { AutoSave = true };
-
-        private static string GetKey([CallerMemberName] string caller = "")
-            => nameof(BattleWindowSettings) + "." + caller;
+        public SerializableProperty<bool> TopMost
+            = SettingsHelper.GenerateProperty(GetKey(), false);
     }
 }

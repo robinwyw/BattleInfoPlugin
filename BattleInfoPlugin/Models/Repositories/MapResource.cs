@@ -154,15 +154,15 @@ namespace BattleInfoPlugin.Models.Repositories
 
         private static string GetMapSwfFilePath(this MapInfo map)
         {
-            var urlMapping = PathSettings.ResourceUrlMappingFileName.Deserialize<IDictionary<int, IDictionary<int, string>>>();
+            var urlMapping = PluginSettings.Paths.ResourceUrlMappingFileName.Deserialize<IDictionary<int, IDictionary<int, string>>>();
 
             Debug.WriteLine($"FromFile:{urlMapping.GetValueOrDefault(map.MapAreaId)?.GetValueOrDefault(map.IdInEachMapArea)}");
             Debug.WriteLine($"FromCode:{knownUrlMapping.GetValueOrDefault(map.MapAreaId)?.GetValueOrDefault(map.IdInEachMapArea)}");
 
             var r = urlMapping?.GetValueOrDefault(map.MapAreaId)?.GetValueOrDefault(map.IdInEachMapArea)
                 ?? knownUrlMapping.GetValueOrDefault(map.MapAreaId)?.GetValueOrDefault(map.IdInEachMapArea)
-                ?? "\\kcs\\resources\\swf\\map\\" + map.MapAreaId.ToString("00") + "_" + map.IdInEachMapArea.ToString("00") + ".swf";
-            return PathSettings.CacheDirPath + r;
+                ?? @"\kcs\resources\swf\map\" + map.MapAreaId.ToString("00") + "_" + map.IdInEachMapArea.ToString("00") + ".swf";
+            return PluginSettings.Paths.CacheDirPath + r;
         }
 
         public static bool HasMapSwf(this MapInfo map)

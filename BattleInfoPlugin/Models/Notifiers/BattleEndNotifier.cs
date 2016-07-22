@@ -18,12 +18,12 @@ namespace BattleInfoPlugin.Models.Notifiers
 
         public bool IsEnabled
         {
-            get { return NotifierSettings.IsEnabled; }
+            get { return PluginSettings.Notifier.IsEnabled; }
             set
             {
-                if (NotifierSettings.IsEnabled == value)
+                if (PluginSettings.Notifier.IsEnabled == value)
                     return;
-                NotifierSettings.IsEnabled.Value = value;
+                PluginSettings.Notifier.IsEnabled.Value = value;
                 this.RaisePropertyChanged();
             }
         }
@@ -34,12 +34,12 @@ namespace BattleInfoPlugin.Models.Notifiers
 
         public bool IsNotifyOnlyWhenInactive
         {
-            get { return NotifierSettings.IsEnabledOnlyWhenInactive; }
+            get { return PluginSettings.Notifier.IsEnabledOnlyWhenInactive; }
             set
             {
-                if (NotifierSettings.IsEnabledOnlyWhenInactive == value)
+                if (PluginSettings.Notifier.IsEnabledOnlyWhenInactive == value)
                     return;
-                NotifierSettings.IsEnabledOnlyWhenInactive.Value = value;
+                PluginSettings.Notifier.IsEnabledOnlyWhenInactive.Value = value;
                 this.RaisePropertyChanged();
             }
         }

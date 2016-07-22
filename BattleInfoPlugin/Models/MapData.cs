@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,11 +73,11 @@ namespace BattleInfoPlugin.Models
                 };
 
                 var info = new FileInfo(filePath);
-                if (info.Name == PathSettings.EnemyDataFileName)
+                if (info.Name == PluginSettings.Paths.EnemyDataFileName)
                 {
                     this.EnemyData.Merge(filePath)
                         .ContinueWith(continuationAction, TaskScheduler.FromCurrentSynchronizationContext());
-                }else if (info.Name == PathSettings.MasterDataFileName)
+                }else if (info.Name == PluginSettings.Paths.MasterDataFileName)
                 {
                     Master.Current.Merge(filePath)
                         .ContinueWith(continuationAction, TaskScheduler.FromCurrentSynchronizationContext());

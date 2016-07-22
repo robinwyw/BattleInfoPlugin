@@ -8,15 +8,12 @@ using MetroTrilithon.Serialization;
 
 namespace BattleInfoPlugin.Models.Settings
 {
-    public static class NotifierSettings
+    public sealed class NotifierSettings : SimpleSettingsBase<NotifierSettings>
     {
-        public static SerializableProperty<bool> IsEnabled { get; }
-            = new SerializableProperty<bool>(GetKey(), SettingsProvider.Local, true) { AutoSave = true };
+        public SerializableProperty<bool> IsEnabled { get; }
+            = SettingsHelper.GenerateProperty(GetKey(), true);
 
-        public static SerializableProperty<bool> IsEnabledOnlyWhenInactive { get; }
-            = new SerializableProperty<bool>(GetKey(), SettingsProvider.Local, true) { AutoSave = true };
-
-        public static string GetKey([CallerMemberName] string caller = "")
-            => nameof(NotifierSettings) + "." + caller;
+        public SerializableProperty<bool> IsEnabledOnlyWhenInactive { get; }
+            = SettingsHelper.GenerateProperty(GetKey(), true);
     }
 }

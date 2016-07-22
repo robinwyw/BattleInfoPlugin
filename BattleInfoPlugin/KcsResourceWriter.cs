@@ -22,7 +22,7 @@ namespace BattleInfoPlugin
 
         public KcsResourceWriter()
         {
-            this.resourceUrlMapping = Settings.Default.ResourceUrlMappingFileName.Deserialize<ConcurrentDictionary<int, ConcurrentDictionary<int, string>>>()
+            this.resourceUrlMapping = PluginSettings.Paths.ResourceUrlMappingFileName.Deserialize<ConcurrentDictionary<int, ConcurrentDictionary<int, string>>>()
                                     ?? new ConcurrentDictionary<int, ConcurrentDictionary<int, string>>();
 
             var proxy = KanColleClient.Current.Proxy;
@@ -37,14 +37,14 @@ namespace BattleInfoPlugin
         private void HttpGetMapResource(Session s)
         {
             var filePath = s.Request.PathAndQuery.Split('?').First();
-            s.SaveResponseBody(Settings.Default.CacheDirPath + filePath);
+            s.SaveResponseBody(PluginSettings.Paths.CacheDirPath + filePath);
 
             Debug.WriteLine($"{this.currentMapAreaId}-{this.currentMapInfoNo}:{filePath}");
 
             this.resourceUrlMapping
                 .GetOrAdd(this.currentMapAreaId, new ConcurrentDictionary<int, string>())
                 .AddOrUpdate(this.currentMapInfoNo, filePath, (_, __) => filePath);
-            this.resourceUrlMapping.Serialize(Settings.Default.ResourceUrlMappingFileName);
+            this.resourceUrlMapping.Serialize(PluginSettings.Paths.ResourceUrlMappingFileName);
         }
 
         private void ReqMapStart(kcsapi_map_start data)
