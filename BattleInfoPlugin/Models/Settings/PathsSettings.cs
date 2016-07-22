@@ -8,12 +8,16 @@ namespace BattleInfoPlugin.Models.Settings
 {
     public sealed class PathsSettings
     {
-        public string MasterDataFileName { get; } = "BattleInfoPlugin_MasterData.txt";
+        private const string Dir = "BattleInfoPluginData";
 
-        public string EnemyDataFileName { get; } = "BattleInfoPlugin_EnemyData.txt";
+        public string BaseDir { get; } = Dir;
 
-        public string CacheDirPath { get; } = "BattleInfoPluginData";
+        public string MasterDataFileName { get; } = $@"{Dir}\MasterData.json";
 
-        public string ResourceUrlMappingFileName { get; } = "BattleInfoPlugin_ResourceUrlMapping.txt";
+        public string EnemyDataFileName { get; } = $@"{Dir}\EnemyData.json";
+
+        public string CacheDirPath { get; } = Dir;
+
+        public string ResourceUrlMappingFileName { get; } = $@"{Dir}\ResourceUrlMapping.json";
     }
 }
