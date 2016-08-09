@@ -23,8 +23,15 @@ namespace BattleInfoPlugin.Models.Settings
 
         private static void TryMoveFile(string oldPath, string newPath)
         {
-            if (File.Exists(oldPath) && !File.Exists(newPath))
-                File.Move(oldPath, newPath);
+            try
+            {
+                if (File.Exists(oldPath) && !File.Exists(newPath))
+                    File.Move(oldPath, newPath);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // cannot access, ignore
+            }
         }
 
         public static BattleDataSettings BattleData { get; } = new BattleDataSettings();
