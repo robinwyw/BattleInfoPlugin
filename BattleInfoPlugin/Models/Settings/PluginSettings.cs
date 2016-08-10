@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BattleInfoPlugin.Models.Repositories;
 
 namespace BattleInfoPlugin.Models.Settings
 {
@@ -14,24 +15,24 @@ namespace BattleInfoPlugin.Models.Settings
             var oldPaths = new _PathsSettings();
             var newPaths = new PathsSettings();
 
-            Directory.CreateDirectory(newPaths.BaseDir);
-
-            TryMoveFile(oldPaths.MasterDataFileName, newPaths.MasterDataFileName);
-            TryMoveFile(oldPaths.EnemyDataFileName, newPaths.EnemyDataFileName);
-            TryMoveFile(oldPaths.ResourceUrlMappingFileName, newPaths.ResourceUrlMappingFileName);
-        }
-
-        private static void TryMoveFile(string oldPath, string newPath)
-        {
             try
             {
-                if (File.Exists(oldPath) && !File.Exists(newPath))
-                    File.Move(oldPath, newPath);
+                Directory.CreateDirectory(newPaths.BaseDir.ToAbsolutePath());
+
+                TryMoveFile(oldPaths.MasterDataFileName, newPaths.MasterDataFileName);
+                TryMoveFile(oldPaths.EnemyDataFileName, newPaths.EnemyDataFileName);
+                TryMoveFile(oldPaths.ResourceUrlMappingFileName, newPaths.ResourceUrlMappingFileName);
             }
             catch (UnauthorizedAccessException)
             {
                 // cannot access, ignore
             }
+        }
+
+        private static void TryMoveFile(string oldPath, string newPath)
+        {
+            if (File.Exists(oldPath) && !File.Exists(newPath))
+                File.Move(oldPath, newPath);
         }
 
         public static BattleDataSettings BattleData { get; } = new BattleDataSettings();

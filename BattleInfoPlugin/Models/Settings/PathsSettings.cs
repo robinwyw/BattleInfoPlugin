@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BattleInfoPlugin.Models.Repositories;
 
 namespace BattleInfoPlugin.Models.Settings
 {
     public sealed class PathsSettings
     {
-        private const string Dir = "BattleInfoPluginData";
+        private static readonly string Dir = "BattleInfoPluginData".ToAbsolutePath();
 
         public string BaseDir { get; } = Dir;
 

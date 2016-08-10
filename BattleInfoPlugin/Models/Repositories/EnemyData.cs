@@ -14,29 +14,15 @@ namespace BattleInfoPlugin.Models.Repositories
     internal class EnemyData
     {
         private static readonly DataContractJsonSerializer serializer =
-            new DataContractJsonSerializer(typeof (EnemyData));
+            new DataContractJsonSerializer(typeof(EnemyData));
 
         private static readonly object margeLock = new object();
-        private static readonly object saveLoadLock = new object();
+
         public static EnemyData Curret { get; } = new EnemyData();
 
         private EnemyData()
         {
             this.Reload();
-            if (this.EnemyDictionary == null) this.EnemyDictionary = new Dictionary<string, int[]>();
-            if (this.EnemyFormation == null) this.EnemyFormation = new Dictionary<string, Formation>();
-            if (this.EnemySlotItems == null) this.EnemySlotItems = new Dictionary<string, int[][]>();
-            if (this.EnemyUpgraded == null) this.EnemyUpgraded = new Dictionary<string, int[][]>();
-            if (this.EnemyParams == null) this.EnemyParams = new Dictionary<string, int[][]>();
-            if (this.EnemyLevels == null) this.EnemyLevels = new Dictionary<string, int[]>();
-            if (this.EnemyHPs == null) this.EnemyHPs = new Dictionary<string, int[]>();
-            if (this.EnemyNames == null) this.EnemyNames = new Dictionary<string, string>();
-            if (this.EnemyEncounterRank == null) this.EnemyEncounterRank = new Dictionary<string, HashSet<int>>();
-            if (this.MapEnemyData == null) this.MapEnemyData = new Dictionary<int, Dictionary<int, HashSet<string>>>();
-            if (this.MapCellBattleTypes == null)
-                this.MapCellBattleTypes = new Dictionary<int, Dictionary<int, string>>();
-            if (this.MapRoute == null) this.MapRoute = new Dictionary<int, HashSet<KeyValuePair<int, int>>>();
-            if (this.MapCellDatas == null) this.MapCellDatas = new Dictionary<int, List<MapCellData>>();
         }
 
         // EnemyId, EnemyMasterIDs
@@ -99,25 +85,22 @@ namespace BattleInfoPlugin.Models.Repositories
 
                 lock (margeLock)
                 {
-                    using (var stream = Stream.Synchronized(new FileStream(path, FileMode.Open, FileAccess.Read)))
-                    {
-                        var obj = serializer.ReadObject(stream) as EnemyData;
-                        if (obj == null) return false;
+                    var obj = path.Deserialize<EnemyData>();
+                    if (obj == null) return false;
 
-                        this.EnemyDictionary = this.EnemyDictionary.Merge(obj.EnemyDictionary);
-                        this.EnemyFormation = this.EnemyFormation.Merge(obj.EnemyFormation);
-                        this.EnemySlotItems = this.EnemySlotItems.Merge(obj.EnemySlotItems);
-                        this.EnemyUpgraded = this.EnemyUpgraded.Merge(obj.EnemyUpgraded);
-                        this.EnemyParams = this.EnemyParams.Merge(obj.EnemyParams);
-                        this.EnemyLevels = this.EnemyLevels.Merge(obj.EnemyLevels);
-                        this.EnemyHPs = this.EnemyHPs.Merge(obj.EnemyHPs);
-                        this.EnemyNames = this.EnemyNames.Merge(obj.EnemyNames);
-                        this.EnemyEncounterRank = this.EnemyEncounterRank.Merge(obj.EnemyEncounterRank);
-                        this.MapEnemyData = this.MapEnemyData.Merge(obj.MapEnemyData, (v1, v2) => v1.Merge(v2, (h1, h2) => h1.Merge(h2)));
-                        this.MapCellBattleTypes = this.MapCellBattleTypes.Merge(obj.MapCellBattleTypes, (v1, v2) => v1.Merge(v2));
-                        this.MapRoute = this.MapRoute.Merge(obj.MapRoute, (v1, v2) => v1.Merge(v2));
-                        this.MapCellDatas = this.MapCellDatas.Merge(obj.MapCellDatas, (v1, v2) => v1.Merge(v2, x => x.No));
-                    }
+                    this.EnemyDictionary = this.EnemyDictionary.Merge(obj.EnemyDictionary);
+                    this.EnemyFormation = this.EnemyFormation.Merge(obj.EnemyFormation);
+                    this.EnemySlotItems = this.EnemySlotItems.Merge(obj.EnemySlotItems);
+                    this.EnemyUpgraded = this.EnemyUpgraded.Merge(obj.EnemyUpgraded);
+                    this.EnemyParams = this.EnemyParams.Merge(obj.EnemyParams);
+                    this.EnemyLevels = this.EnemyLevels.Merge(obj.EnemyLevels);
+                    this.EnemyHPs = this.EnemyHPs.Merge(obj.EnemyHPs);
+                    this.EnemyNames = this.EnemyNames.Merge(obj.EnemyNames);
+                    this.EnemyEncounterRank = this.EnemyEncounterRank.Merge(obj.EnemyEncounterRank);
+                    this.MapEnemyData = this.MapEnemyData.Merge(obj.MapEnemyData, (v1, v2) => v1.Merge(v2, (h1, h2) => h1.Merge(h2)));
+                    this.MapCellBattleTypes = this.MapCellBattleTypes.Merge(obj.MapCellBattleTypes, (v1, v2) => v1.Merge(v2));
+                    this.MapRoute = this.MapRoute.Merge(obj.MapRoute, (v1, v2) => v1.Merge(v2));
+                    this.MapCellDatas = this.MapCellDatas.Merge(obj.MapCellDatas, (v1, v2) => v1.Merge(v2, x => x.No));
 
                     this.RemoveDuplicate();
                     this.Save();
