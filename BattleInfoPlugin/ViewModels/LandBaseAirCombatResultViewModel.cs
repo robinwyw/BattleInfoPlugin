@@ -7,10 +7,11 @@ using BattleInfoPlugin.Models;
 
 namespace BattleInfoPlugin.ViewModels
 {
-    public class LandBaseAirCombatResultViewModel
+    public class LandBaseAirCombatResultViewModel : IAirCombatResultViewModel
     {
         public string Name { get; }
         public Squadron[] Squadrons { get; }
+        public bool IsHappen { get; }
         public AirCombatResultViewModel Stage1 { get; }
         public AirCombatResultViewModel Stage2 { get; }
         public int Count { get; }
@@ -25,6 +26,8 @@ namespace BattleInfoPlugin.ViewModels
             this.Count = this.Stage1.Count;
             this.LostCount = this.Stage1.LostCount + this.Stage2.LostCount;
             this.RemainingCount = this.Count - this.LostCount;
+
+            this.IsHappen = this.Count > 0;
 
             this.Squadrons = (type == FleetType.First) ? result.Squadrons : new Squadron[0];
         }

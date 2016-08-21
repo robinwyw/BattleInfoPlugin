@@ -8,7 +8,7 @@ using Livet;
 
 namespace BattleInfoPlugin.ViewModels
 {
-    public class AirCombatResultViewModel : ViewModel
+    public class AirCombatResultViewModel : ViewModel, IAirCombatResultViewModel
     {
         public string Name { get; }
         public bool IsHappen { get; }
@@ -21,17 +21,17 @@ namespace BattleInfoPlugin.ViewModels
             if (type == FleetType.First)
             {
                 this.Name = result.Name;
-                this.IsHappen = result.IsHappen;
                 this.Count = result.FriendCount;
                 this.LostCount = result.FriendLostCount;
             }
             if (type == FleetType.Enemy)
             {
                 this.Name = result.Name;
-                this.IsHappen = result.IsHappen;
                 this.Count = result.EnemyCount;
                 this.LostCount = result.EnemyLostCount;
             }
+
+            this.IsHappen = result.IsHappen && this.Count > 0;
         }
     }
 }

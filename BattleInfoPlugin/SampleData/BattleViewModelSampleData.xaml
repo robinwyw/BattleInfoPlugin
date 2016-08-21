@@ -8,7 +8,145 @@
                             BattleName="連合艦隊 - 水上部隊 - 昼戦"
                             BattleResultRank="戦術的敗北C"
                             IsInBattle="True"
-                            DropShipName="ほっぽ">
+                            DropShipName="ほっぽ"
+                            FriendLostGauge="10.1%"
+                            EnemyLostGauge="20.0%">
+
+    <viewModels:BattleViewModel.FriendFleet>
+        <viewModels:FleetViewModel Name="連合艦隊"  IsVisible="True" FleetFormation="戦闘陣形">
+            <viewModels:FleetViewModel.Fleets>
+                <x:Array Type="{x:Type viewModels:SingleFleetViewModel}">
+                    <viewModels:SingleFleetViewModel Name="自艦隊" FleetFormation="戦闘陣形" IsVisible="True">
+                        <viewModels:SingleFleetViewModel.Fleet>
+                            <models:FleetData FleetType="First">
+                                <models:FleetData.Ships>
+                                    <x:Array Type="models:MembersShipData">
+                                        <models:MembersShipData MaxHP="56" NowHP="54" Name="Bismarck drei"
+                                                                Situation="None"
+                                                                TypeName="戦艦">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="64" Maximum="57" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                        <models:MembersShipData MaxHP="71" NowHP="60" Name="U-511改" Situation="Repair"
+                                                                TypeName="潜水艦">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="1" Maximum="8" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                        <models:MembersShipData MaxHP="50" NowHP="83" Name="北上改二"
+                                                                Situation="Evacuation"
+                                                                TypeName="重雷装巡洋艦">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="25" Maximum="34" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                        <models:MembersShipData MaxHP="71" NowHP="82" Name="まるゆ" Situation="Repair"
+                                                                TypeName="超弩級戦艦">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="61" Maximum="19" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                        <models:MembersShipData MaxHP="82" NowHP="51" Name="伊8" Situation="None"
+                                                                TypeName="潜水艦">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="60" Maximum="44" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                        <models:MembersShipData MaxHP="77" NowHP="60" Name="伊168" Situation="Tow"
+                                                                TypeName="潜水艦">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="17" Maximum="39" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                    </x:Array>
+
+                                </models:FleetData.Ships>
+                            </models:FleetData>
+                        </viewModels:SingleFleetViewModel.Fleet>
+                    </viewModels:SingleFleetViewModel>
+
+                    <viewModels:SingleFleetViewModel Name="護衛艦隊" IsVisible="True">
+                        <viewModels:SingleFleetViewModel.Fleet>
+                            <models:FleetData FleetType="Second">
+                                <models:FleetData.Ships>
+                                    <x:Array Type="models:MembersShipData">
+                                        <models:MembersShipData MaxHP="76" NowHP="63" Name="夕立改二"
+                                                                Situation="HeavilyDamaged"
+                                                                TypeName="ぽいぬ" IsUsedDamecon="True"
+                                                                DamageControlled="True">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="28" Maximum="99" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                        <models:MembersShipData MaxHP="15" NowHP="93" Name="Верный" Situation="Tow"
+                                                                TypeName="駆逐艦"
+                                                                DamageControlled="True">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="29" Maximum="85" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                        <models:MembersShipData MaxHP="20" NowHP="52" Name="香取改" Situation="Repair"
+                                                                TypeName="練習巡洋艦">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="44" Maximum="12" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                        <models:MembersShipData MaxHP="18" NowHP="94" Name="Prinz Eugen改"
+                                                                Situation="None"
+                                                                TypeName="重巡洋艦">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="70" Maximum="41" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                    </x:Array>
+                                </models:FleetData.Ships>
+                            </models:FleetData>
+                        </viewModels:SingleFleetViewModel.Fleet>
+                    </viewModels:SingleFleetViewModel>
+                </x:Array>
+            </viewModels:FleetViewModel.Fleets>
+        </viewModels:FleetViewModel>
+    </viewModels:BattleViewModel.FriendFleet>
+
+    <viewModels:BattleViewModel.EnemyFleet>
+        <viewModels:FleetViewModel Name="敵艦隊" FleetFormation="輪形陣" IsVisible="True">
+            <viewModels:FleetViewModel.Fleets>
+                <x:Array Type="{x:Type viewModels:SingleFleetViewModel}">
+                    <viewModels:SingleFleetViewModel Name="敵艦隊" FleetFormation="輪形陣" IsVisible="True">
+                        <viewModels:SingleFleetViewModel.Fleet>
+                            <models:FleetData FleetType="Enemy">
+                                <models:FleetData.Ships>
+                                    <x:Array Type="models:MembersShipData">
+                                        <models:MembersShipData MaxHP="15" NowHP="83" Name="戦艦水鬼" Situation="Tow"
+                                                                TypeName="つよい">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="36" Maximum="43" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                        <models:MembersShipData MaxHP="20" NowHP="96" Name="ほっぽ" Situation="Repair"
+                                                                TypeName="ろり"
+                                                                AdditionalName="elite">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="71" Maximum="85" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                        <models:MembersShipData MaxHP="40" NowHP="-999" Name="駆逐ロ級後期型"
+                                                                Situation="HeavilyDamaged"
+                                                                TypeName="きもい" AdditionalName="flagship">
+                                            <models:MembersShipData.HP>
+                                                <wrapper:LimitedValue Current="-999" Maximum="999" Minimum="0" />
+                                            </models:MembersShipData.HP>
+                                        </models:MembersShipData>
+                                    </x:Array>
+                                </models:FleetData.Ships>
+                            </models:FleetData>
+                        </viewModels:SingleFleetViewModel.Fleet>
+                    </viewModels:SingleFleetViewModel>
+                </x:Array>
+            </viewModels:FleetViewModel.Fleets>
+        </viewModels:FleetViewModel>
+    </viewModels:BattleViewModel.EnemyFleet>
 
     <viewModels:BattleViewModel.FriendAirCombatResults>
         <x:Array Type="viewModels:AirCombatResultViewModel">
@@ -33,8 +171,8 @@
     </viewModels:BattleViewModel.EnemyAirCombatResults>
 
     <viewModels:BattleViewModel.Enemies>
-        <viewModels:FleetViewModel Name="敵艦隊" FleetFormation="輪形陣" IsVisible="True">
-            <viewModels:FleetViewModel.Fleet>
+        <viewModels:SingleFleetViewModel Name="敵艦隊" FleetFormation="輪形陣" IsVisible="True">
+            <viewModels:SingleFleetViewModel.Fleet>
                 <models:FleetData FleetType="Enemy">
                     <models:FleetData.Ships>
                         <x:Array Type="models:MembersShipData">
@@ -58,13 +196,13 @@
                         </x:Array>
                     </models:FleetData.Ships>
                 </models:FleetData>
-            </viewModels:FleetViewModel.Fleet>
-        </viewModels:FleetViewModel>
+            </viewModels:SingleFleetViewModel.Fleet>
+        </viewModels:SingleFleetViewModel>
     </viewModels:BattleViewModel.Enemies>
 
     <viewModels:BattleViewModel.FirstFleet>
-        <viewModels:FleetViewModel Name="自艦隊" FleetFormation="戦闘陣形" IsVisible="True">
-            <viewModels:FleetViewModel.Fleet>
+        <viewModels:SingleFleetViewModel Name="自艦隊" FleetFormation="戦闘陣形" IsVisible="True">
+            <viewModels:SingleFleetViewModel.Fleet>
                 <models:FleetData FleetType="First">
                     <models:FleetData.Ships>
                         <x:Array Type="models:MembersShipData">
@@ -106,13 +244,13 @@
 
                     </models:FleetData.Ships>
                 </models:FleetData>
-            </viewModels:FleetViewModel.Fleet>
-        </viewModels:FleetViewModel>
+            </viewModels:SingleFleetViewModel.Fleet>
+        </viewModels:SingleFleetViewModel>
     </viewModels:BattleViewModel.FirstFleet>
 
     <viewModels:BattleViewModel.SecondFleet>
-        <viewModels:FleetViewModel Name="護衛艦隊" IsVisible="True">
-            <viewModels:FleetViewModel.Fleet>
+        <viewModels:SingleFleetViewModel Name="護衛艦隊" IsVisible="True">
+            <viewModels:SingleFleetViewModel.Fleet>
                 <models:FleetData FleetType="Second">
                     <models:FleetData.Ships>
                         <x:Array Type="models:MembersShipData">
@@ -143,7 +281,7 @@
                         </x:Array>
                     </models:FleetData.Ships>
                 </models:FleetData>
-            </viewModels:FleetViewModel.Fleet>
-        </viewModels:FleetViewModel>
+            </viewModels:SingleFleetViewModel.Fleet>
+        </viewModels:SingleFleetViewModel>
     </viewModels:BattleViewModel.SecondFleet>
 </viewModels:BattleViewModel>

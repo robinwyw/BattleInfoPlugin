@@ -95,7 +95,7 @@ namespace BattleInfoPlugin.Models.Raw
                     var index = firstTime ? 1 : 2;
 
                     return new LandBaseAirCombatResult(
-                        $"{attack.api_base_id.ToString()}-{index.ToString()}",
+                        $"陸{attack.api_base_id.ToString()}-{index.ToString()}",
                         attack.api_stage1.ToResult("空対空"),
                         attack.api_stage2.ToResult("空対艦"),
                         attack.api_squadron_plane);

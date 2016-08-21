@@ -232,6 +232,8 @@
     <Compile Include="ViewModels\Enemies\EnemyShipViewModel.cs" />
     <Compile Include="ViewModels\EnemyWindowViewModel.cs" />
     <Compile Include="ViewModels\FleetViewModel.cs" />
+    <Compile Include="ViewModels\IAirCombatResultViewModel.cs" />
+    <Compile Include="ViewModels\SingleFleetViewModel.cs" />
     <Compile Include="ViewModels\GetLostItemViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\LandBaseAirCombatResultViewModel.cs" />

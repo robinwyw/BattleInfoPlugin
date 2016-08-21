@@ -40,7 +40,9 @@ namespace BattleInfoPlugin.ViewModels
                 : "";
 
         public string FriendAirSupremacy
-            => this.BattleData?.FriendAirSupremacy.ToString();
+            => this.BattleData.FriendAirSupremacy != AirSupremacy.航空戦なし
+                ? this.BattleData.FriendAirSupremacy.ToString()
+                : "";
 
         public string DropShipName
             => this.BattleData?.DropShipName;
@@ -48,11 +50,56 @@ namespace BattleInfoPlugin.ViewModels
         public AirCombatResult[] AirCombatResults
             => this.BattleData?.AirCombatResults ?? new AirCombatResult[0];
 
+        public string FriendLostGauge
+            => this.BattleData.FriendLostGauge.ToString("P1");
+
+        public string EnemyLostGauge
+            => this.BattleData.EnemyLostGauge.ToString("P1");
+
+        #region FriendFleet
+
+        private FleetViewModel _FriendFleet;
+
+        public FleetViewModel FriendFleet
+        {
+            get { return this._FriendFleet; }
+            set
+            {
+                if (this._FriendFleet != value)
+                {
+                    this._FriendFleet = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region EnemyFleet
+
+        private FleetViewModel _EnemyFleet;
+
+        public FleetViewModel EnemyFleet
+        {
+            get { return this._EnemyFleet; }
+            set
+            {
+                if (this._EnemyFleet != value)
+                {
+                    this._EnemyFleet = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
 
         #region FirstFleet変更通知プロパティ
-        private FleetViewModel _FirstFleet;
+        private SingleFleetViewModel _FirstFleet;
 
-        public FleetViewModel FirstFleet
+        public SingleFleetViewModel FirstFleet
         {
             get
             { return this._FirstFleet; }
@@ -68,9 +115,9 @@ namespace BattleInfoPlugin.ViewModels
 
 
         #region SecondFleet変更通知プロパティ
-        private FleetViewModel _SecondFleet;
+        private SingleFleetViewModel _SecondFleet;
 
-        public FleetViewModel SecondFleet
+        public SingleFleetViewModel SecondFleet
         {
             get
             { return this._SecondFleet; }
@@ -86,9 +133,9 @@ namespace BattleInfoPlugin.ViewModels
 
 
         #region Enemies変更通知プロパティ
-        private FleetViewModel _Enemies;
+        private SingleFleetViewModel _Enemies;
 
-        public FleetViewModel Enemies
+        public SingleFleetViewModel Enemies
         {
             get
             { return this._Enemies; }
@@ -224,15 +271,26 @@ namespace BattleInfoPlugin.ViewModels
 
         private BattleViewModel()
         {
-            this._FirstFleet = new FleetViewModel("自艦隊");
-            this._SecondFleet = new FleetViewModel("護衛艦隊");
-            this._Enemies = new FleetViewModel("敵艦隊");
+            this.FriendFleet = new FleetViewModel();
+            this.EnemyFleet = new FleetViewModel();
+
+            this._FirstFleet = new SingleFleetViewModel("自艦隊");
+            this._SecondFleet = new SingleFleetViewModel("護衛艦隊");
+            this._Enemies = new SingleFleetViewModel("敵艦隊");
 
             this.CompositeDisposable.Add(new PropertyChangedEventListener(this.BattleData)
             {
                 {
                     () => this.BattleData.IsInBattle,
                     (_, __) => this.RaisePropertyChanged(() => this.IsInBattle)
+                },
+                {
+                    nameof(this.FriendLostGauge),
+                    (_, __) => this.RaisePropertyChanged(nameof(this.FriendLostGauge))
+                },
+                {
+                    nameof(this.EnemyLostGauge),
+                    (_, __) => this.RaisePropertyChanged(nameof(this.EnemyLostGauge))
                 },
                 {
                     () => this.BattleData.BattleResult,
@@ -279,15 +337,27 @@ namespace BattleInfoPlugin.ViewModels
                 },
                 {
                     () => this.BattleData.FirstFleet,
-                    (_, __) => this.FirstFleet.Fleet = this.BattleData.FirstFleet
+                    (_, __) =>
+                    {
+                        this.FirstFleet.Fleet = this.BattleData.FirstFleet;
+                        this.UpdateFriendFleet();
+                    }
                 },
                 {
                     () => this.BattleData.SecondFleet,
-                    (_, __) => this.SecondFleet.Fleet = this.BattleData.SecondFleet
+                    (_, __) =>
+                    {
+                        this.SecondFleet.Fleet = this.BattleData.SecondFleet;
+                        this.UpdateFriendFleet();
+                    }
                 },
                 {
                     () => this.BattleData.Enemies,
-                    (_, __) => this.Enemies.Fleet = this.BattleData.Enemies
+                    (_, __) =>
+                    {
+                        this.Enemies.Fleet = this.BattleData.Enemies;
+                        this.UpdateEnemyFleet();
+                    }
                 },
                 {
                     () => this.BattleData.NextCell,
@@ -328,6 +398,23 @@ namespace BattleInfoPlugin.ViewModels
             this.LandBaseVisibility = visible
                 ? Visibility.Visible
                 : Visibility.Collapsed;
+        }
+
+        private void UpdateFriendFleet()
+        {
+            this.FriendFleet.Fleets = this.FilterFleets(this.FirstFleet, this.SecondFleet);
+        }
+
+        private void UpdateEnemyFleet()
+        {
+            this.EnemyFleet.Fleets = this.FilterFleets(this.Enemies);
+        }
+
+        private SingleFleetViewModel[] FilterFleets(params SingleFleetViewModel[] fleets)
+        {
+            return fleets
+                .Where(f => f.IsVisible)
+                .ToArray();
         }
     }
 }

@@ -21,7 +21,7 @@
                                    Text="{TemplateBinding PlaceHolder}"
                                    Style="{DynamicResource EmphaticTextStyleKey}"
                                    Foreground="{TemplateBinding PlaceHolderBrush}"
-                                   Visibility="Hidden" />
+                                   Visibility="Collapsed" />
                     </Grid>
 
                     <ControlTemplate.Triggers>
