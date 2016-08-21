@@ -12,15 +12,19 @@ namespace BattleInfoPlugin.Models
         internal static BattleResult GetBattleResult(this BattleData battleData)
         {
             if (!battleData.IsInBattle) return BattleResult.なし;
-            
+
             var friendShips = battleData.FirstFleet.Ships
                 .Concat(battleData.SecondFleet?.Ships ?? new ShipData[0])
                 .ToArray();
 
             var enemyShips = battleData.Enemies.Ships.ToArray();
 
-            var friendGuageRate = friendShips.GetHpLostPersent();
-            var enemyGuageRate = enemyShips.GetHpLostPersent();
+            var friendGuageRate = friendShips.GetHpLostPercent();
+            var enemyGuageRate = enemyShips.GetHpLostPercent();
+
+            battleData.FriendLostGauge = friendGuageRate;
+            battleData.EnemyLostGauge = enemyGuageRate;
+
             var hpLostRatio = enemyGuageRate > 0 ? (friendGuageRate > 0 ? enemyGuageRate / friendGuageRate : 10) : 0;
 
             var friendLostCount = friendShips.GetLostCount();
@@ -35,7 +39,7 @@ namespace BattleInfoPlugin.Models
             if (enemyLostCount == enemyCount)
                 if (friendGuageRate <= 0) return BattleResult.完全勝利S;
                 else if (friendLostCount == 0) return BattleResult.勝利S;
-            
+
 
             // A
             if (enemyLostCount >= Math.Max(enemyCount * 2 / 3, 1) && friendLostCount == 0) return BattleResult.勝利A;
@@ -79,10 +83,43 @@ namespace BattleInfoPlugin.Models
 
         }
 
-        public static double GetHpLostPersent(this ShipData[] data)
+        public static BattleResult GetBattleResult2(this BattleData battleData)
         {
-            var totalOriginalHP = data.Where(s => !s.IsInEvacuationOrTow()).Sum(s => s.OriginalHP);
-            var totalNowHP = data.Sum(s => s.NowHP);
+            battleData.FriendLostGauge = battleData.GetFriendHpLostPercent();
+            battleData.EnemyLostGauge = battleData.GetEnemyHpLostPercent();
+
+            var gauge = (int)(battleData.FriendLostGauge * 100);
+            if (gauge <= 0)
+                return BattleResult.完全勝利S;
+            if (gauge < 10)
+                return BattleResult.勝利A;
+            if (gauge < 20)
+                return BattleResult.戦術的勝利B;
+            if (gauge < 50)
+                return BattleResult.戦術的敗北C;
+            if (gauge < 80)
+                return BattleResult.敗北D;
+
+            return BattleResult.敗北E;
+        }
+
+        public static double GetFriendHpLostPercent(this BattleData battleData)
+        {
+            return battleData.FirstFleet.Ships
+                .Concat(battleData.SecondFleet?.Ships ?? new ShipData[0])
+                .GetHpLostPercent();
+        }
+
+        public static double GetEnemyHpLostPercent(this BattleData battleData)
+        {
+            return battleData.Enemies.Ships.GetHpLostPercent();
+        }
+
+        public static double GetHpLostPercent(this IEnumerable<ShipData> data)
+        {
+            var ships = data.Where(s => !s.IsInEvacuationOrTow());
+            var totalOriginalHP = ships.Sum(s => s.OriginalHP);
+            var totalNowHP = ships.Sum(s => s.NowHP);
 
             return 1.0 - (double)totalNowHP / totalOriginalHP;
         }

@@ -94,12 +94,12 @@ namespace BattleInfoPlugin.Models
 
         public bool IsShowLandBaseAirStage
         {
-            get { return Settings.PluginSettings.BattleData.IsShowLandBaseAirStage.Value; }
+            get { return PluginSettings.BattleData.IsShowLandBaseAirStage.Value; }
             set
             {
-                if (Settings.PluginSettings.BattleData.IsShowLandBaseAirStage.Value != value)
+                if (PluginSettings.BattleData.IsShowLandBaseAirStage.Value != value)
                 {
-                    Settings.PluginSettings.BattleData.IsShowLandBaseAirStage.Value = value;
+                    PluginSettings.BattleData.IsShowLandBaseAirStage.Value = value;
                     this.RaisePropertyChanged();
                 }
             }
@@ -292,6 +292,46 @@ namespace BattleInfoPlugin.Models
         #endregion
 
 
+        #region FriendLostGauge
+
+        private double _FriendLostGauge;
+
+        public double FriendLostGauge
+        {
+            get { return this._FriendLostGauge; }
+            set
+            {
+                if (this._FriendLostGauge != value)
+                {
+                    this._FriendLostGauge = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region EnemyLostGauge
+
+        private double _EnemyLostGauge;
+
+        public double EnemyLostGauge
+        {
+            get { return this._EnemyLostGauge; }
+            set
+            {
+                if (this._EnemyLostGauge != value)
+                {
+                    this._EnemyLostGauge = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
         private int CurrentDeckId { get; set; }
 
         private BattleData()
@@ -436,40 +476,14 @@ namespace BattleInfoPlugin.Models
         {
             this.Name = "空襲戦 - 昼戦";
 
-            this.UpdateData(data);
-            //this.UpdateFleets(data.api_dock_id, data, data.api_formation);
-            //this.UpdateMaxHP(data.api_maxhps);
-            //this.UpdateNowHP(data.api_nowhps);
-
-            //this.FirstFleet.CalcDamages(
-            //    data.api_kouku.GetFirstFleetDamages()
-            //    );
-
-            //this.FriendAirSupremacy = data.api_kouku.GetAirSupremacy();
-
-            //this.AirCombatResults = data.api_kouku.ToResult();
+            this.UpdateData(data, 2);
         }
 
         private void Update(combined_battle_ld_airbattle data)
         {
             this.Name = "連合艦隊 - 空襲戦 - 昼戦";
 
-            this.UpdateData(data);
-            //this.UpdateFleets(data.api_deck_id, data, data.api_formation);
-            //this.UpdateMaxHP(data.api_maxhps, data.api_maxhps_combined);
-            //this.UpdateNowHP(data.api_nowhps, data.api_nowhps_combined);
-
-            //this.FirstFleet.CalcDamages(
-            //    data.api_kouku.GetFirstFleetDamages()
-            //    );
-
-            //this.SecondFleet.CalcDamages(
-            //    data.api_kouku.GetSecondFleetDamages()
-            //    );
-
-            //this.FriendAirSupremacy = data.api_kouku.GetAirSupremacy();
-
-            //this.AirCombatResults = data.api_kouku.ToResult();
+            this.UpdateData(data, 2);
         }
 
         #endregion
@@ -485,7 +499,7 @@ namespace BattleInfoPlugin.Models
                         this.FirstFleet.Ships
                             .Concat(this.SecondFleet?.Ships ?? new ShipData[0])
                             .ToArray()
-                            .GetHpLostPersent() > 0
+                            .GetHpLostPercent() > 0
                             ? BattleResult.勝利S
                             : BattleResult.完全勝利S;
                     break;
@@ -540,7 +554,8 @@ namespace BattleInfoPlugin.Models
         }
 
 
-        private void UpdateData<T>(T data) where T : ICommonBattleMembers, IFleetBattleInfo
+        private void UpdateData<T>(T data, int resultCalculatorId = 1)
+            where T : ICommonBattleMembers, IFleetBattleInfo
         {
             this.IsInBattle = true;
             this.UpdatedTime = DateTimeOffset.Now;
@@ -561,7 +576,15 @@ namespace BattleInfoPlugin.Models
 
             this.UpdateAirStage(data as IAirStageMembers);
 
-            this.BattleResult = this.GetBattleResult();
+            switch (resultCalculatorId)
+            {
+                case 1:
+                    this.BattleResult = this.GetBattleResult();
+                    break;
+                case 2:
+                    this.BattleResult = this.GetBattleResult2();
+                    break;
+            }
         }
 
         private void UpdateFleets(ICommonBattleMembers data)
@@ -651,6 +674,7 @@ namespace BattleInfoPlugin.Models
             this.BattleSituation = BattleSituation.なし;
             this.FriendAirSupremacy = AirSupremacy.航空戦なし;
             this.AirCombatResults = new AirCombatResult[0];
+            this.LandBaseAirCombatResults = new LandBaseAirCombatResult[0];
             if (this.FirstFleet != null) this.FirstFleet.Formation = Formation.なし;
             this.Enemies = new FleetData();
 
