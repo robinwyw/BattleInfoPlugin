@@ -128,6 +128,14 @@ namespace BattleInfoPlugin.Models
             return result;
         }
 
+        public static implicit operator FleetData(BattleFleet fleet)
+        {
+            return new FleetData(fleet.Fleets.SelectMany(f => f.Ships), fleet.Name, fleet.Type, fleet.Rank)
+            {
+                Formation = fleet.Formation
+            };
+        }
+
         private static readonly IReadOnlyList<FleetData> EmptyFleet = new ItemsCollection<FleetData>(new FleetData[0]);
         private static readonly int[] DefaultRank = { 0 };
     }

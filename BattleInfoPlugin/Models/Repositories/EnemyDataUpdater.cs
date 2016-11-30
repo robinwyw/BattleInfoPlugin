@@ -35,46 +35,51 @@ namespace BattleInfoPlugin.Models.Repositories
         {
             var proxy = KanColleClient.Current.Proxy;
 
-            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_battle_midnight/sp_midnight")
-                .TryParse<battle_midnight_sp_midnight>().Subscribe(x => this.Update(x.Data));
+            proxy.Observe<battle_midnight_sp_midnight>("/kcsapi/api_req_battle_midnight/sp_midnight")
+                .Subscribe(x => this.Update(x.Data));
 
-            proxy.api_req_combined_battle_airbattle
-                .TryParse<combined_battle_airbattle>().Subscribe(x => this.Update(x.Data));
+            proxy.Observe<combined_battle_airbattle>("/kcsapi/api_req_combined_battle/airbattle")
+                .Subscribe(x => this.Update(x.Data));
 
-            proxy.api_req_combined_battle_battle
-                .TryParse<combined_battle_battle>().Subscribe(x => this.Update(x.Data));
+            proxy.Observe<combined_battle_battle>("/kcsapi/api_req_combined_battle/battle")
+                .Subscribe(x => this.Update(x.Data));
 
-            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_combined_battle/battle_water")
-                .TryParse<combined_battle_battle_water>().Subscribe(x => this.Update(x.Data));
+            proxy.Observe<combined_battle_battle_water>("/kcsapi/api_req_combined_battle/battle_water")
+                .Subscribe(x => this.Update(x.Data));
 
-            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_combined_battle/sp_midnight")
-                .TryParse<combined_battle_sp_midnight>().Subscribe(x => this.Update(x.Data));
+            proxy.Observe<combined_battle_sp_midnight>("/kcsapi/api_req_combined_battle/sp_midnight")
+                .Subscribe(x => this.Update(x.Data));
 
-            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_sortie/airbattle")
-                .TryParse<sortie_airbattle>().Subscribe(x => this.Update(x.Data));
+            proxy.Observe<sortie_airbattle>("/kcsapi/api_req_sortie/airbattle")
+                .Subscribe(x => this.Update(x.Data));
 
-            proxy.api_req_sortie_battle
-                .TryParse<sortie_battle>().Subscribe(x => this.Update(x.Data));
+            proxy.Observe<sortie_battle>("/kcsapi/api_req_sortie/battle")
+                .Subscribe(x => this.Update(x.Data));
+
+            proxy.Observe<sortie_ld_airbattle>("/kcsapi/api_req_sortie/ld_airbattle")
+                .Subscribe(x => this.Update(x.Data));
+
+            proxy.Observe<combined_battle_ld_airbattle>("/kcsapi/api_req_combined_battle/ld_airbattle")
+                .Subscribe(x => this.Update(x.Data));
+
+            proxy.Observe<combined_battle_ec_battle>("/kcsapi/api_req_combined_battle/ec_battle")
+                .Subscribe(x => this.Update(x.Data));
+
+            proxy.Observe<combined_battle_each_battle>("/kcsapi/api_req_combined_battle/each_battle")
+                .Subscribe(x => this.Update(x.Data));
 
 
-            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_map/start")
-                .TryParse<map_start_next>().Subscribe(x => this.UpdateMapData(x.Data));
+            proxy.Observe<map_start_next>("/kcsapi/api_req_map/start")
+                .Subscribe(x => this.UpdateMapData(x.Data));
 
-            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_map/next")
-                .TryParse<map_start_next>().Subscribe(x => this.UpdateMapData(x.Data));
+            proxy.Observe<map_start_next>("/kcsapi/api_req_map/next")
+                .Subscribe(x => this.UpdateMapData(x.Data));
 
-            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_sortie/ld_airbattle")
-                .TryParse<sortie_ld_airbattle>().Subscribe(x => this.Update(x.Data));
+            proxy.Observe<battle_result>("/kcsapi/api_req_sortie/battleresult")
+                .Subscribe(x => this.UpdateEnemyName(x.Data));
 
-            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_combined_battle/ld_airbattle")
-                .TryParse<combined_battle_ld_airbattle>().Subscribe(x => this.Update(x.Data));
-
-
-            proxy.api_req_sortie_battleresult
-                .TryParse<battle_result>().Subscribe(x => this.UpdateEnemyName(x.Data));
-
-            proxy.api_req_combined_battle_battleresult
-                .TryParse<battle_result>().Subscribe(x => this.UpdateEnemyName(x.Data));
+            proxy.Observe<battle_result>("/kcsapi/api_req_combined_battle/battleresult")
+                .Subscribe(x => this.UpdateEnemyName(x.Data));
         }
 
         #endregion
@@ -205,6 +210,8 @@ namespace BattleInfoPlugin.Models.Repositories
             return Master.Current.MapAreas[areaId][mapId].Id;
         }
 
+        private static readonly int[] spliter = { -1 };
+
         public void UpdateEnemyData(
             int[] api_ship_ke,
             int[] api_ship_ke_combined,
@@ -219,23 +226,30 @@ namespace BattleInfoPlugin.Models.Repositories
             int[] api_maxhps,
             int[] api_maxhps_combined)
         {
-            var enemies = api_ship_ke.Where(x => x != -1).ToArray();
             var formation = (Formation)api_formation[1];
-            var hps = api_maxhps.GetEnemyData().ToArray();
+            var enemies = api_ship_ke.Where(x => x != -1).Concat(api_ship_ke_combined.ValueOrEmpty()).ToArray();
+            var lvs = api_ship_lv.Concat(api_ship_lv_combined.ValueOrEmpty()).ToArray();
+            var hps = api_maxhps.GetEnemyData()
+                .Concat(api_maxhps_combined != null ? spliter.Concat(api_maxhps_combined.GetEnemyData()) : new int[0])
+                .ToArray();
+            var slots = api_eSlot.Concat(api_eSlot_combined.ValueOrEmpty()).ToArray();
+            var param = api_eParam.Concat(api_eParam_combined.ValueOrEmpty()).ToArray();
 
             var mapInfoId = GetMapInfoId(this.currentStartNext);
             var mapCellId = this.currentStartNext.api_no;
             var rank = Master.Current.MapInfos[mapInfoId].Rank;
 
             string enemyId;
-            if (!this.GetEnemyId(mapInfoId, mapCellId, rank, enemies, formation, api_eSlot, api_eKyouka, api_eParam, api_ship_lv, hps, out enemyId))
+            if (
+                !this.GetEnemyId(mapInfoId, mapCellId, rank, enemies, formation, slots, api_eKyouka, param, lvs, hps,
+                    out enemyId))
             {
                 this.EnemyData.EnemyDictionary[enemyId] = enemies;
                 this.EnemyData.EnemyFormation[enemyId] = formation;
-                this.EnemyData.EnemySlotItems[enemyId] = api_eSlot;
+                this.EnemyData.EnemySlotItems[enemyId] = slots;
                 this.EnemyData.EnemyUpgraded[enemyId] = api_eKyouka;
-                this.EnemyData.EnemyParams[enemyId] = api_eParam;
-                this.EnemyData.EnemyLevels[enemyId] = api_ship_lv;
+                this.EnemyData.EnemyParams[enemyId] = param;
+                this.EnemyData.EnemyLevels[enemyId] = lvs;
                 this.EnemyData.EnemyHPs[enemyId] = hps;
             }
 

@@ -170,6 +170,11 @@ namespace BattleInfoPlugin.Models.Repositories
             return source ?? default(T);
         }
 
+        public static T[] ValueOrEmpty<T>(this T[] source)
+        {
+            return source ?? new T[0];
+        }
+
         public static TValue GetOrAddNew<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
             where TValue : new()
         {

@@ -703,9 +703,9 @@ namespace BattleInfoPlugin.Models
         private void UpdateEnemyFleets(ICommonBattleMembers data)
         {
             this.EnemyFleet.Update(data.GetEnemyFleets());
-            if (this.NextCell.KnownEnemies.Length > 0)
+            if (!string.IsNullOrEmpty(this.NextCell.EnemyName))
             {
-                this.EnemyFleet.Name = this.NextCell.KnownEnemies[0].Name;
+                this.EnemyFleet.Name = this.NextCell.EnemyName;
             }
         }
 

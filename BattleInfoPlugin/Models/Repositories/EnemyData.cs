@@ -25,6 +25,7 @@ namespace BattleInfoPlugin.Models.Repositories
         [DataMember]
         public Dictionary<string, int[][]> EnemySlotItems { get; set; } = new Dictionary<string, int[][]>();
 
+        // unused in each_battle?
         // EnemyId, api_eKyouka
         [DataMember]
         public Dictionary<string, int[][]> EnemyUpgraded { get; set; } = new Dictionary<string, int[][]>();

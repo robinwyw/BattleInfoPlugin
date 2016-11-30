@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using BattleInfoPlugin.Models.Raw;
 using Grabacr07.KanColleWrapper;
 using System.Threading.Tasks;
 using BattleInfoPlugin.Models.Settings;
@@ -136,20 +134,27 @@ namespace BattleInfoPlugin.Models.Repositories
             return this.EnemyData.MapEnemyData
                 .Where(x => Master.Current.MapInfos.ContainsKey(x.Key))
                 .ToDictionary(
-                info => Master.Current.MapInfos[info.Key],
-                info => info.Value.ToDictionary(
-                    cell => Master.Current.MapInfos[info.Key][cell.Key],
-                    cell => cell.Value.ToDictionary(
-                        enemy => enemy,
-                        enemy => new FleetData(
-                            this.GetEnemiesFromId(enemy),
-                            this.GetEnemyNameFromId(enemy),
-                            FleetType.Enemy,
-                            this.GetEnemyEncounterRankFromId(enemy)
-                            )
-                        {
-                            Formation = this.GetEnemyFormationFromId(enemy)
-                        })));
+                    info => Master.Current.MapInfos[info.Key],
+                    info => info.Value.ToDictionary(
+                        cell => Master.Current.MapInfos[info.Key][cell.Key],
+                        cell => cell.Value.ToDictionary(
+                            enemy => enemy,
+                            enemy => (FleetData)this.GetEnemiesFleetsById(enemy)
+                        )));
+        }
+
+        public Dictionary<MapInfo, Dictionary<MapCell, Dictionary<string, BattleFleet>>> GetMapEnemiesNew()
+        {
+            return this.EnemyData.MapEnemyData
+                .Where(x => Master.Current.MapInfos.ContainsKey(x.Key))
+                .ToDictionary(
+                    info => Master.Current.MapInfos[info.Key],
+                    info => info.Value.ToDictionary(
+                        cell => Master.Current.MapInfos[info.Key][cell.Key],
+                        cell => cell.Value.ToDictionary(
+                            enemy => enemy,
+                            this.GetEnemiesFleetsById
+                        )));
         }
 
         public Dictionary<int, Dictionary<int, string>> GetMapCellBattleTypes()
@@ -183,37 +188,123 @@ namespace BattleInfoPlugin.Models.Repositories
                 : new[] { 0 };
         }
 
-        private IEnumerable<ShipData> GetEnemiesFromId(string enemyId)
+        private BattleFleet GetEnemiesFleetsById(string enemy)
+        {
+            var fleets = new BattleFleet(FleetType.Enemy)
+            {
+                Name = this.GetEnemyNameFromId(enemy),
+                Rank = this.GetEnemyEncounterRankFromId(enemy),
+                Formation = this.GetEnemyFormationFromId(enemy)
+            };
+
+            fleets.Update(this.GetEnemiesFromId(enemy).Select(f => new FleetData(f)).ToArray());
+
+            return fleets;
+        }
+
+        private IEnumerable<IEnumerable<ShipData>> GetEnemiesFromId(string enemyId)
         {
             var shipInfos = KanColleClient.Current.Master.Ships;
             var slotInfos = KanColleClient.Current.Master.SlotItems;
-            if (!this.EnemyData.EnemyDictionary.ContainsKey(enemyId)) return Enumerable.Repeat(new MastersShipData(), 6).ToArray();
-            return this.EnemyData.EnemyDictionary[enemyId]
-                .Select((x, i) =>
+            int[] ids;
+            int[][] shipParam;
+            int[][] shipSlots;
+            int[] lvs;
+            int[] hps;
+            if (this.EnemyData.EnemyDictionary.TryGetValue(enemyId, out ids) &&
+                this.EnemyData.EnemyParams.TryGetValue(enemyId, out shipParam) &&
+                this.EnemyData.EnemySlotItems.TryGetValue(enemyId, out shipSlots) &&
+                this.EnemyData.EnemyLevels.TryGetValue(enemyId, out lvs) &&
+                this.EnemyData.EnemyHPs.TryGetValue(enemyId, out hps))
+            {
+
+                var shipIds = SplitData(ids);
+                var shipLvs = SplitData(lvs);
+                var shipHps = SplitData(hps);
+
+                int[][] upgrades;
+                this.EnemyData.EnemyUpgraded.TryGetValue(enemyId, out upgrades);
+                if (upgrades != null)
                 {
-                    var param = this.EnemyData.EnemyParams.ContainsKey(enemyId) ? this.EnemyData.EnemyParams[enemyId][i] : new[] { -1, -1, -1, -1 };
-                    var upgrades = this.EnemyData.EnemyUpgraded.ContainsKey(enemyId) ? this.EnemyData.EnemyUpgraded[enemyId][i] : new[] { 0, 0, 0, 0 };
-                    param = param.Zip(upgrades, (p, u) => p + u).ToArray();
-                    var lv = this.EnemyData.EnemyLevels.ContainsKey(enemyId) ? this.EnemyData.EnemyLevels[enemyId][i + 1] : -1;
-                    var hp = this.EnemyData.EnemyHPs.ContainsKey(enemyId) ? this.EnemyData.EnemyHPs[enemyId][i] : -1;
-                    return new MastersShipData(shipInfos[x])
+                    for (var i = 0; i < shipParam.Length; i++)
                     {
-                        Level = lv,
-                        NowHP = hp,
-                        MaxHP = hp,
-                        Firepower = param[0],
-                        Torpedo = param[1],
-                        AA = param[2],
-                        Armer = param[3],
-                        Slots = this.EnemyData.EnemySlotItems.ContainsKey(enemyId)
-                            ? this.EnemyData.EnemySlotItems[enemyId][i]
-                                .Where(s => s != -1)
-                                .Select(s => slotInfos[s])
-                                .Select((s, si) => new ShipSlotData(s))
-                                .ToArray()
-                            : new ShipSlotData[0],
-                    };
-                }).ToArray();
+                        for (var j = 0; j < shipParam[i].Length; j++)
+                        {
+                            shipParam[i][j] += upgrades[i][j];
+                        }
+                    }
+                }
+
+                var baseIndex = 0;
+                return shipIds.Select((x, i) =>
+                    {
+                        var index = baseIndex;
+                        baseIndex += x.Length;
+                        return x.Select((id, j) =>
+                        {
+                            var param = shipParam[index + j];
+                            return new MastersShipData(shipInfos[id])
+                            {
+                                Level = shipLvs[i][j],
+                                NowHP = shipHps[i][j],
+                                MaxHP = shipHps[i][j],
+                                Firepower = param[0],
+                                Torpedo = param[1],
+                                AA = param[2],
+                                Armer = param[3],
+                                Slots = shipSlots[index + j]
+                                    .Where(s => s != -1)
+                                    .Select(s => slotInfos[s])
+                                    .Select((s, si) => new ShipSlotData(s))
+                                    .ToArray()
+                            };
+                        });
+                    })
+                    .ToArray();
+            }
+            else
+            {
+                return new ShipData[0][];
+            }
+        }
+
+        private static int[][] SplitData(int[] source)
+        {
+            Func<int, bool> skipFilter = i => i < 0;
+            Func<int, bool> takeFilter = i => i >= 0;
+
+            var result = new List<int[]>();
+            var position = 0;
+
+            SkipWhile(source, ref position, skipFilter);
+
+            while (position < source.Length)
+            {
+                result.Add(TakeWhile(source, ref position, takeFilter));
+                SkipWhile(source, ref position, skipFilter);
+            }
+
+            return result.ToArray();
+        }
+
+        private static void SkipWhile(int[] source, ref int position, Func<int, bool> filter)
+        {
+            while (position < source.Length && filter(source[position]))
+            {
+                position++;
+            }
+        }
+
+        private static int[] TakeWhile(int[] source, ref int position, Func<int, bool> filter)
+        {
+            var result = new List<int>();
+            while (position < source.Length && filter(source[position]))
+            {
+                result.Add(source[position]);
+                position++;
+            }
+
+            return result.ToArray();
         }
 
         internal EnemyDataComparer GetComparer()

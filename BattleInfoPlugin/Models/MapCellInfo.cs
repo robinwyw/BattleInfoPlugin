@@ -21,7 +21,9 @@ namespace BattleInfoPlugin.Models
 
         public IEnumerable<GetLostItem> GetLostItems { get; }
 
-        public FleetData[] KnownEnemies { get; }
+        public string EnemyName { get; }
+
+        public BattleFleet[] KnownEnemies { get; }
 
         internal MapCellInfo(map_start_next data)
         {
@@ -56,7 +58,7 @@ namespace BattleInfoPlugin.Models
             {
                 var rank = info.Rank;
                 this.KnownEnemies = EnemyDataProvider.Current
-                    .GetMapEnemies()
+                    .GetMapEnemiesNew()
                     .GetOrAddNew(info)
                     .GetOrAddNew(cell).Values
                     .Where(f => f.Rank?.Contains(rank) ?? false)
@@ -64,7 +66,12 @@ namespace BattleInfoPlugin.Models
             }
             else
             {
-                this.KnownEnemies = new FleetData[0];
+                this.KnownEnemies = new BattleFleet[0];
+            }
+
+            if (this.KnownEnemies.Length > 0)
+            {
+                this.EnemyName = this.KnownEnemies[0].Name;
             }
         }
     }
