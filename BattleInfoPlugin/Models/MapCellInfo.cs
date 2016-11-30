@@ -55,7 +55,7 @@ namespace BattleInfoPlugin.Models
             if (cell != null)
             {
                 var rank = info.Rank;
-                this.KnownEnemies = EnemyDataProvider.Default
+                this.KnownEnemies = EnemyDataProvider.Current
                     .GetMapEnemies()
                     .GetOrAddNew(info)
                     .GetOrAddNew(cell).Values

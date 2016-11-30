@@ -177,7 +177,7 @@ namespace BattleInfoPlugin.ViewModels
 
         public static EnemyFleetViewModel[] MergeEnemies(this IEnumerable<KeyValuePair<string, FleetData>> enemies)
         {
-            return enemies.GroupBy(x => x.Key, EnemyDataProvider.Default.GetComparer())
+            return enemies.GroupBy(x => x.Key, EnemyDataProvider.Current.GetComparer())
                         .Select(x => x.First())
                         .GroupBy(x => x.Value.Ships.Select(s => s.Id).JoinString(","))
                         .Select(enemy => new EnemyFleetViewModel
