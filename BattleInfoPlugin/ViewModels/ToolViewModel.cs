@@ -36,12 +36,12 @@ namespace BattleInfoPlugin.ViewModels
 
         public bool IsShowLandBaseAirStage
         {
-            get { return BattleData.Current.IsShowLandBaseAirStage; }
+            get { return this.Battle.IsShowLandBaseAirStage; }
             set
             {
-                if (BattleData.Current.IsShowLandBaseAirStage != value)
+                if (this.Battle.IsShowLandBaseAirStage != value)
                 {
-                    BattleData.Current.IsShowLandBaseAirStage = value;
+                    this.Battle.IsShowLandBaseAirStage = value;
                     this.RaisePropertyChanged();
                 }
             }

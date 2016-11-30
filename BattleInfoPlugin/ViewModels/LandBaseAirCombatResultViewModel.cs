@@ -29,7 +29,7 @@ namespace BattleInfoPlugin.ViewModels
 
             this.IsHappen = this.Count > 0;
 
-            this.Squadrons = (type == FleetType.First) ? result.Squadrons : new Squadron[0];
+            this.Squadrons = (type == FleetType.Friend) ? result.Squadrons : new Squadron[0];
         }
     }
 }

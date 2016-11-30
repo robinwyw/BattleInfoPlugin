@@ -5,6 +5,7 @@
 
     public class map_start_next
     {
+        public Api_Cell_Data[] api_cell_data { get; set; }
         public int api_rashin_flg { get; set; }
         public int api_rashin_id { get; set; }
         public int api_maparea_id { get; set; }
@@ -30,6 +31,15 @@
         public Api_Itemget api_itemget_eo_comment { get; set; }
         public Api_Select_Route api_select_route { get; set; }
         public int api_ration_flag { get; set; }
+        public Api_Destruction_Battle api_destruction_battle { get; set; }
+    }
+
+    public class Api_Cell_Data
+    {
+        public int api_id { get; set; }
+        public int api_no { get; set; }
+        public int api_color_no { get; set; }
+        public int api_passed { get; set; }
     }
 
     public class Api_Airsearch
@@ -81,4 +91,29 @@
         public int[] api_select_cells { get; set; }
     }
 
+    public class Api_Destruction_Battle : ICommonBattleMembers
+    {
+        public int[] api_formation { get; set; }
+        public int[] api_ship_ke { get; set; }
+        public int[] api_ship_lv { get; set; }
+        public int[][] api_eSlot { get; set; }
+        public int[] api_nowhps { get; set; }
+        public int[] api_maxhps { get; set; }
+        public Api_Air_Base_Attack[] api_air_base_attack { get; set; }
+        public int api_lost_kind { get; set; }
+
+        #region not exists
+        int ICommonBattleMembers.api_deck_id { get; set; }
+        int[] ICommonBattleMembers.api_ship_ke_combined { get; set; }
+        int[] ICommonBattleMembers.api_ship_lv_combined { get; set; }
+        int[] ICommonBattleMembers.api_nowhps_combined { get; set; }
+        int[] ICommonBattleMembers.api_maxhps_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eSlot_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eKyouka { get; set; }
+        int[][] ICommonBattleMembers.api_fParam { get; set; }
+        int[][] ICommonBattleMembers.api_fParam_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eParam { get; set; }
+        int[][] ICommonBattleMembers.api_eParam_combined { get; set; }
+        #endregion
+    }
 }

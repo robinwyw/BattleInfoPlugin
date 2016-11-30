@@ -3,7 +3,7 @@
     /// <summary>
     /// 連合艦隊-航空戦
     /// </summary>
-    public class combined_battle_airbattle : ICombinedBattleMembers, IBattleFormationInfo, IAirBattleMembers, IFleetBattleInfo, ICommonFirstBattleMembers
+    public class combined_battle_airbattle : ICommonBattleMembers, IBattleFormationInfo, ICommonFirstBattleMembers
     {
         public int api_deck_id { get; set; }
         public int[] api_ship_ke { get; set; }
@@ -16,8 +16,8 @@
         public int[][] api_eSlot { get; set; }
         public int[][] api_eKyouka { get; set; }
         public int[][] api_fParam { get; set; }
-        public int[][] api_eParam { get; set; }
         public int[][] api_fParam_combined { get; set; }
+        public int[][] api_eParam { get; set; }
         public int[] api_search { get; set; }
         public int[] api_formation { get; set; }
         public Api_Air_Base_Attack[] api_air_base_attack { get; set; }
@@ -28,8 +28,13 @@
         public int[] api_stage_flag2 { get; set; }
         public Api_Kouku api_kouku2 { get; set; }
 
-        public FleetDamages[] FirstFleetDamages => this.GetFirstFleetDamages();
-        public FleetDamages[] SecondFleetDamages => this.GetSecondFleetDamages();
-        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
+        #region not exists
+
+        int[] ICommonBattleMembers.api_ship_ke_combined { get; set; }
+        int[] ICommonBattleMembers.api_ship_lv_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eSlot_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eParam_combined { get; set; }
+
+        #endregion
     }
 }

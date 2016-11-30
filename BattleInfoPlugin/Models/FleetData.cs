@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace BattleInfoPlugin.Models
 {
     public class FleetData : NotificationObject
     {
+        public int Index { get; set; }
+
         #region FleetType変更通知プロパティ
         private FleetType _FleetType;
 
@@ -45,22 +48,9 @@ namespace BattleInfoPlugin.Models
         }
         #endregion
 
-        #region Ships変更通知プロパティ
-        private IEnumerable<ShipData> _Ships;
+        public int ShipCount => this.Ships.Count;
 
-        public IEnumerable<ShipData> Ships
-        {
-            get
-            { return this._Ships; }
-            set
-            {
-                if (this._Ships == value)
-                    return;
-                this._Ships = value;
-                this.RaisePropertyChanged();
-            }
-        }
-        #endregion
+        public IReadOnlyList<ShipData> Ships { get; }
 
         #region Formation変更通知プロパティ
         private Formation _Formation;
@@ -96,44 +86,22 @@ namespace BattleInfoPlugin.Models
         }
         #endregion
 
-        //#region AirSuperiorityPotential変更通知プロパティ
-        //private int _AirSuperiorityPotential;
-
-        //public int AirSuperiorityPotential
-        //{
-        //    get
-        //    { return this._AirSuperiorityPotential; }
-        //    set
-        //    { 
-        //        if (this._AirSuperiorityPotential == value)
-        //            return;
-        //        this._AirSuperiorityPotential = value;
-        //        this.RaisePropertyChanged();
-        //    }
-        //}
-        //#endregion
-
-        //public int AirParityRequirements => this.AirSuperiorityPotential * 2 / 3;
-        //public int AirSuperiorityRequirements => this.AirSuperiorityPotential * 3 / 2;
-        //public int AirSupremacyRequirements => this.AirSuperiorityPotential * 3;
-
-        public FleetData() : this(new ShipData[0], Formation.なし, "", FleetType.Enemy)
+        public FleetData(IEnumerable<ShipData> ships)
         {
+            this.Ships = new ItemsCollection<ShipData>(ships);
         }
 
-        public FleetData(IEnumerable<ShipData> ships, Formation formation, string name, FleetType type, int[] rank = null)
+        public FleetData(IEnumerable<ShipData> ships, string name, FleetType type, int[] rank = null)
         {
-            this._Ships = ships;
-            this._Formation = formation;
+            this.Ships = new ItemsCollection<ShipData>(ships);
             this._Name = name;
             this._FleetType = type;
             this._Rank = rank ?? new[] { 0 };
-            //this._AirSuperiorityPotential = this._Ships
-            //    .SelectMany(s => s.Slots)
-            //    .Where(s => s.Source.IsAirSuperiorityFighter)
-            //    .Sum(s => (int)(s.AA * Math.Sqrt(s.Current)))
-            //    ;
         }
+
+        public static FleetData EmptyFriendFleet { get; } = new FleetData(new ShipData[0], "", FleetType.Friend);
+
+        public static FleetData EmptyEnemyFleet { get; } = new FleetData(new ShipData[0], "", FleetType.Enemy);
     }
 
     public static class FleetDataExtensions
@@ -159,7 +127,17 @@ namespace BattleInfoPlugin.Models
 
         internal static void UpdateHPs(this FleetData fleet, IEnumerable<int> maxhps, IEnumerable<int> nowhps)
         {
+            fleet.UpdateMaxHPs(maxhps);
+            fleet.UpdateNowHPs(nowhps);
+        }
+
+        internal static void UpdateMaxHPs(this FleetData fleet, IEnumerable<int> maxhps)
+        {
             fleet.Ships.SetValues(maxhps, (s, v) => s.MaxHP = v);
+        }
+
+        internal static void UpdateNowHPs(this FleetData fleet, IEnumerable<int> nowhps)
+        {
             fleet.Ships.SetValues(nowhps, (s, v) => s.NowHP = v);
         }
 
@@ -171,10 +149,15 @@ namespace BattleInfoPlugin.Models
         public static void CalcDamages(this FleetData fleet, params FleetDamages[] damages)
         {
             if (damages == null) return;
+            if (fleet == null) return;
 
             foreach (var damage in damages.Where(d => d != null))
             {
-                fleet.Ships.SetValues(damage, (s, d) => s.ReceiveDamage(d));
+                for (var i = 0; i < fleet.ShipCount; i++)
+                {
+                    fleet.Ships[i].ReceiveDamage(damage.Ships[i]);
+                }
+                // fleet.SetValues(damage, (s, d) => s.ReceiveDamage(d));
 
                 if (fleet.FleetType == FleetType.Enemy) continue;
 

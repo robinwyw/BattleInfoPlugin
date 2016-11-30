@@ -23,7 +23,7 @@ namespace BattleInfoPlugin
         public KcsResourceWriter()
         {
             this.resourceUrlMapping = PluginSettings.Paths.ResourceUrlMappingFileName.Deserialize<ConcurrentDictionary<int, ConcurrentDictionary<int, string>>>()
-                                    ?? new ConcurrentDictionary<int, ConcurrentDictionary<int, string>>();
+                                    .ValueOrNew();
 
             var proxy = KanColleClient.Current.Proxy;
             proxy.SessionSource

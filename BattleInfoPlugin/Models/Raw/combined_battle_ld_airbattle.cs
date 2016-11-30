@@ -3,7 +3,7 @@
     /// <summary>
     /// 連合艦隊-長距離空襲戦
     /// </summary>
-    public class combined_battle_ld_airbattle : ICommonFirstBattleMembers, ICombinedBattleMembers, IFleetBattleInfo, IAirBattleMembers, IBattleFormationInfo
+    public class combined_battle_ld_airbattle : ICommonBattleMembers, ICommonFirstBattleMembers, IBattleFormationInfo
     {
         public int api_deck_id { get; set; }
         public int[] api_ship_ke { get; set; }
@@ -23,13 +23,16 @@
         public Api_Air_Base_Attack[] api_air_base_attack { get; set; }
         public int[] api_stage_flag { get; set; }
         public Api_Kouku api_kouku { get; set; }
-        public int[] api_stage_flag2 { get; set; }
-        public Api_Kouku api_kouku2 { get; set; }
         public int api_support_flag { get; set; }
         public Api_Support_Info api_support_info { get; set; }
 
-        public FleetDamages[] FirstFleetDamages => this.GetFirstFleetDamages();
-        public FleetDamages[] SecondFleetDamages => this.GetSecondFleetDamages();
-        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
+        #region not exists
+
+        int[] ICommonBattleMembers.api_ship_ke_combined { get; set; }
+        int[] ICommonBattleMembers.api_ship_lv_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eSlot_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eParam_combined { get; set; }
+
+        #endregion
     }
 }

@@ -3,7 +3,7 @@
     /// <summary>
     /// 演習-昼戦
     /// </summary>
-    public class practice_battle : ICommonBattleMembers, IBattleFormationInfo, IDayBattleMembers, IPracticeData, IFleetBattleInfo, ICommonFirstBattleMembers
+    public class practice_battle : ICommonBattleMembers, IBattleFormationInfo
     {
         public int api_deck_id
         {
@@ -22,11 +22,8 @@
         public int[][] api_eParam { get; set; }
         public int[] api_search { get; set; }
         public int[] api_formation { get; set; }
-        public Api_Air_Base_Attack[] api_air_base_attack { get; set; }
         public int[] api_stage_flag { get; set; }
         public Api_Kouku api_kouku { get; set; }
-        public int api_support_flag { get; set; }
-        public Api_Support_Info api_support_info { get; set; }
         public int api_opening_taisen_flag { get; set; }
         public Hougeki api_opening_taisen { get; set; }
         public int api_opening_flag { get; set; }
@@ -37,8 +34,16 @@
         public Hougeki api_hougeki3 { get; set; }
         public Raigeki api_raigeki { get; set; }
 
-        public FleetDamages[] FirstFleetDamages => this.GetFriendDamages();
-        public FleetDamages[] SecondFleetDamages => null;
-        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
+        #region not exists
+
+        int[] ICommonBattleMembers.api_ship_ke_combined { get; set; }
+        int[] ICommonBattleMembers.api_ship_lv_combined { get; set; }
+        int[] ICommonBattleMembers.api_nowhps_combined { get; set; }
+        int[] ICommonBattleMembers.api_maxhps_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eSlot_combined { get; set; }
+        int[][] ICommonBattleMembers.api_fParam_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eParam_combined { get; set; }
+
+        #endregion
     }
 }

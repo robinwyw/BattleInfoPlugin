@@ -74,9 +74,8 @@ namespace BattleInfoPlugin.ViewModels.Enemies
         private CellPointViewModel CreateCellPoint(KeyValuePair<int, Point> source)
         {
             var data = this.CellDatas.FirstOrDefault(x => x.No == source.Key);
-            var cell = Master.Current.MapCells
-                .Select(c => c.Value)
-                .FirstOrDefault(c => c.IdInEachMapInfo == source.Key && c.MapInfoId == this.Info.Id);
+            var cell = Master.Current.MapCells.Values
+                .FirstOrDefault(c => c.IdInEachMapInfo == source.Key && c.MapAreaId == this.Info.MapAreaId && c.MapInfoIdInEachMapArea == this.Info.IdInEachMapArea);
             return new CellPointViewModel(
                 source.Key.ToString(),
                 source.Value,

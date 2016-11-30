@@ -3,7 +3,7 @@
     /// <summary>
     /// 昼戦
     /// </summary>=
-    public class sortie_battle: ICommonBattleMembers, IBattleFormationInfo, IDayBattleMembers, IFleetBattleInfo, ICommonFirstBattleMembers
+    public class sortie_battle: ICommonBattleMembers, IBattleFormationInfo, ICommonFirstBattleMembers
     {
         public int api_deck_id
         {
@@ -37,8 +37,16 @@
         public Hougeki api_hougeki3 { get; set; }
         public Raigeki api_raigeki { get; set; }
 
-        public FleetDamages[] FirstFleetDamages => this.GetFriendDamages();
-        public FleetDamages[] SecondFleetDamages => null;
-        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
+        #region not exists
+
+        int[] ICommonBattleMembers.api_ship_ke_combined { get; set; }
+        int[] ICommonBattleMembers.api_ship_lv_combined { get; set; }
+        int[] ICommonBattleMembers.api_nowhps_combined { get; set; }
+        int[] ICommonBattleMembers.api_maxhps_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eSlot_combined { get; set; }
+        int[][] ICommonBattleMembers.api_fParam_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eParam_combined { get; set; }
+
+        #endregion
     }
 }

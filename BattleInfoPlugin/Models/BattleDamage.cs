@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BattleInfoPlugin.Models
 {
-    public enum FleetType
+    public class BattleDamage
     {
-        Friend,
-        Enemy
+        public IDictionary<int, IDictionary<int, List<FleetDamages>>> Damages;
     }
 }

@@ -17,6 +17,22 @@ namespace BattleInfoPlugin.Models.Repositories
 {
     public class MapResource
     {
+        static MapResource()
+        {
+            try
+            {
+                System.Reflection.Assembly.LoadFrom("SwfFormat.dll");
+                System.Reflection.Assembly.LoadFrom("ICSharpCode.SharpZipLib.dll");
+                ExistsAssembly = true;
+            }
+            catch (FileNotFoundException)
+            {
+                ExistsAssembly = false;
+            }
+        }
+
+        public static bool ExistsAssembly { get; }
+
         public static BitmapSource[] GetMapImages(MapInfo map)
         {
             return ExistsAssembly ? MapResourcePrivate.GetMapImages(map) : null;
@@ -35,28 +51,6 @@ namespace BattleInfoPlugin.Models.Repositories
         public static bool HasMapSwf(MapInfo map)
         {
             return ExistsAssembly && MapResourcePrivate.HasMapSwf(map);
-        }
-
-        private static bool? _ExistsAssembly;
-
-        public static bool ExistsAssembly
-        {
-            get
-            {
-                if (_ExistsAssembly.HasValue) return _ExistsAssembly.Value;
-
-                try
-                {
-                    System.Reflection.Assembly.LoadFrom("SwfFormat.dll");
-                    System.Reflection.Assembly.LoadFrom("ICSharpCode.SharpZipLib.dll");
-                    _ExistsAssembly = true;
-                }
-                catch (FileNotFoundException)
-                {
-                    _ExistsAssembly = false;
-                }
-                return _ExistsAssembly.Value;
-            }
         }
 
         private static class MapResourcePrivate
@@ -93,15 +87,13 @@ namespace BattleInfoPlugin.Models.Repositories
                     .Where(place => place.Name != null)
                     .Where(place => place.Name.StartsWith("line"))
                     .ToArray();
-                var cellNumbers = Master.Current.MapCells
-                    .Where(c => c.Value.MapInfoId == map.Id)
+                var cellNumbers = Master.Current.MapInfos[map.Id]
                     //.Where(c => new[] { 0, 1, 2, 3, 8 }.All(x => x != c.Value.ColorNo)) //敵じゃないセルは除外(これでは気のせいは見分け付かない)
-                    .Select(c => c.Value.IdInEachMapInfo)
+                    .Select(c => c.IdInEachMapInfo)
                     .ToArray();
                 return cellNumbers
                     .OrderBy(n => n)
-                    .Select(n => new KeyValuePair<int, Point>(n, places.FindPoint(n)))
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                    .ToDictionary(n => n, n => places.FindPoint(n));
             }
 
             public static IEnumerable<Point> GetMapFlags(MapInfo map)

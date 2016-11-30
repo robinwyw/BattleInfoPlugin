@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using BattleInfoPlugin.Models.Raw;
 using Grabacr07.KanColleWrapper.Models.Raw;
 using BattleInfoPlugin.Models.Repositories;
 
@@ -39,6 +40,16 @@ namespace BattleInfoPlugin.Models
             this.MapInfoId = cell.api_map_no;
             this.MapAreaId = cell.api_maparea_id;
             this.MapInfoIdInEachMapArea = cell.api_mapinfo_no;
+            this.IdInEachMapInfo = cell.api_no;
+        }
+
+        public MapCell(Api_Cell_Data cell, int mapArea, int mapNo, int infoId)
+        {
+            this.ColorNo = cell.api_color_no;
+            this.Id = cell.api_id;
+            this.MapInfoId = infoId;
+            this.MapAreaId = mapArea;
+            this.MapInfoIdInEachMapArea = mapNo;
             this.IdInEachMapInfo = cell.api_no;
         }
     }

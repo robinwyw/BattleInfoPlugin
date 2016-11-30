@@ -56,7 +56,7 @@
                            Style="{DynamicResource HeaderTextStyleKey}"
                            Margin="0,5,10,0"/>
 
-                <views:NextPointInfoView DataContext="{Binding Battle.NextPointInfo}" />
+                <views:NextCellInfoView DataContext="{Binding Battle.NextCellInfo}" />
 
                 <Button Content="既知の敵一覧"
                         DockPanel.Dock="Right"

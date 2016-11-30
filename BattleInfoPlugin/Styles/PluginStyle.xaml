@@ -8,14 +8,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Colors.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Controls.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Controls.Button.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Controls.CheckBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Controls.Expander.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Controls.FocusVisualStyle.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Controls.PasswordBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Controls.RadioButton.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Controls.Scrollbar.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Controls.Tooltip.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Icons.xaml" />
 
         <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Themes/Dark.xaml" />
@@ -23,33 +15,28 @@
 
         <ResourceDictionary Source="pack://application:,,,/KanColleViewer.Controls;component/Styles/Colors.xaml" />
         <ResourceDictionary Source="pack://application:,,,/KanColleViewer.Controls;component/Styles/Controls.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/KanColleViewer.Controls;component/Styles/Controls.HorizontalFlatListBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/KanColleViewer.Controls;component/Styles/Controls.ListView.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/KanColleViewer.Controls;component/Styles/Controls.PinButton.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/KanColleViewer.Controls;component/Styles/Controls.TabControl.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/KanColleViewer.Controls;component/Styles/Controls.Text.xaml" />
 
-        <ResourceDictionary Source="pack://application:,,,/BattleInfoPlugin;component/Styles/Cell.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/BattleInfoPlugin;component/Styles/Flag.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/BattleInfoPlugin;component/Styles/PlaceHolderTextControl.xaml" />
+        <ResourceDictionary Source="Cell.xaml" />
+        <ResourceDictionary Source="Flag.xaml" />
+        <ResourceDictionary Source="PlaceHolderTextControl.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     <l:VisibilityAndBooleanConverter x:Key="TrueToVisibleConverter"
                                      ConvertWhenTrue="Visible"
-                                     ConvertWhenFalse="Collapsed"/>
+                                     ConvertWhenFalse="Collapsed" />
     <l:VisibilityAndBooleanConverter x:Key="FalseToVisibleConverter"
                                      ConvertWhenTrue="Collapsed"
-                                     ConvertWhenFalse="Visible"/>
+                                     ConvertWhenFalse="Visible" />
     <l:VisibilityAndBooleanConverter x:Key="FalseToHiddenConverter"
                                      ConvertWhenTrue="Visible"
-                                     ConvertWhenFalse="Hidden"/>
-    <converters:BrTagToNewLineConverter x:Key="BrTagToNewLineConverter"/>
-    <converters:AdditionalNameColorConverter x:Key="AdditionalNameColorConverter"/>
-    <converters:AttackTypeToDisplayTextConverter x:Key="AttackTypeConverter"/>
+                                     ConvertWhenFalse="Hidden" />
+    <converters:BrTagToNewLineConverter x:Key="BrTagToNewLineConverter" />
+    <converters:AdditionalNameColorConverter x:Key="AdditionalNameColorConverter" />
+    <converters:AttackTypeToDisplayTextConverter x:Key="AttackTypeConverter" />
     <converters:FleetBackgroundConverter x:Key="FleetBackgroundConverter"
                                          Background1="{StaticResource ThemeBrushKey}"
-                                         Background2="{StaticResource SemiactiveBackgroundBrushKey}"/>
-    <converters:UnknownValueConverter x:Key="UnknownValueConverter"/>
-    <converters1:HasFlagConverter x:Key="HasFlagConverter"/>
+                                         Background2="{StaticResource SemiactiveBackgroundBrushKey}" />
+    <converters:UnknownValueConverter x:Key="UnknownValueConverter" />
+    <converters1:HasFlagConverter x:Key="HasFlagConverter" />
 </ResourceDictionary>

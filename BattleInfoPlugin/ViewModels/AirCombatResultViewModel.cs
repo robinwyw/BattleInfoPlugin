@@ -18,7 +18,7 @@ namespace BattleInfoPlugin.ViewModels
 
         public AirCombatResultViewModel(AirCombatResult result, FleetType type)
         {
-            if (type == FleetType.First)
+            if (type == FleetType.Friend)
             {
                 this.Name = result.Name;
                 this.Count = result.FriendCount;

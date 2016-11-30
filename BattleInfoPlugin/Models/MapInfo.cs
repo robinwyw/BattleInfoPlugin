@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -9,8 +10,10 @@ using BattleInfoPlugin.Models.Repositories;
 namespace BattleInfoPlugin.Models
 {
     [DataContract]
-    public class MapInfo
+    public class MapInfo : IEnumerable<MapCell>
     {
+        private static Master Master => Master.Current;
+
         [DataMember]
         public int Id { get; private set; }
 
@@ -37,6 +40,13 @@ namespace BattleInfoPlugin.Models
         [DataMember]
         public int RequiredDefeatCount { get; private set; }
 
+        public int Rank { get; internal set; }
+
+        public MapCell this[int cellId] => Master.MapCells.Values
+            .FirstOrDefault(c => c.MapAreaId == this.MapAreaId &&
+                                 c.MapInfoIdInEachMapArea == this.IdInEachMapArea &&
+                                 c.IdInEachMapInfo == cellId);
+
         public MapInfo(kcsapi_mst_mapinfo mapinfo)
         {
             this.Id = mapinfo.api_id;
@@ -51,7 +61,7 @@ namespace BattleInfoPlugin.Models
 
         #region static members
 
-        private static MapInfo dummy = new MapInfo(new kcsapi_mst_mapinfo
+        public static MapInfo Dummy { get; } = new MapInfo(new kcsapi_mst_mapinfo
         {
             api_id = 0,
             api_name = "？？？",
@@ -60,11 +70,19 @@ namespace BattleInfoPlugin.Models
             api_level = 0,
         });
 
-        public static MapInfo Dummy
+        #endregion
+
+        public IEnumerator<MapCell> GetEnumerator()
         {
-            get { return dummy; }
+            return Master.MapCells.Values
+                .Where(cell => cell.MapAreaId == this.MapAreaId &&
+                               cell.MapInfoIdInEachMapArea == this.IdInEachMapArea)
+                .GetEnumerator();
         }
 
-        #endregion
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
     }
 }

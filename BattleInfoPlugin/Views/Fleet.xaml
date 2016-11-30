@@ -3,13 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:kcvc="http://schemes.grabacr.net/winfx/2015/kancolleviewer/controls"
-             xmlns:converters="clr-namespace:Grabacr07.KanColleViewer.Converters;assembly=KanColleViewer.Controls"
              xmlns:models="clr-namespace:BattleInfoPlugin.Models"
-             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
-             xmlns:localConv="clr-namespace:BattleInfoPlugin.Views.Converters"
-             xmlns:viewModels="clr-namespace:BattleInfoPlugin.ViewModels"
              Background="{DynamicResource ThemeBrushKey}"
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
              mc:Ignorable="d"
@@ -61,17 +56,17 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <StackPanel Visibility="{Binding IsVisible, Converter={StaticResource TrueToVisibleConverter}}">
+    <StackPanel>
 
-        <Border BorderThickness="0,0,0,1"
+        <Border BorderThickness="0,0,0,2"
                 BorderBrush="{DynamicResource BorderBrushKey}" />
 
-        <ItemsControl ItemsSource="{Binding Fleet.Ships}"
+        <ItemsControl ItemsSource="{Binding Ships}"
                       DataContext="{Binding}"
                       Margin="0,2">
 
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type models:MembersShipData}">
+                <DataTemplate DataType="{x:Type models:ShipData}">
                     <DataTemplate.Resources>
                         <Style TargetType="{x:Type Run}">
                             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrushKey}" />

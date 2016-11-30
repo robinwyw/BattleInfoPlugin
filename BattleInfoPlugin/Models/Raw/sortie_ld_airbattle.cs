@@ -5,7 +5,7 @@ namespace BattleInfoPlugin.Models.Raw
     /// <summary>
     /// 長距離空襲戦
     /// </summary>
-    public class sortie_ld_airbattle : ICommonFirstBattleMembers, IFleetBattleInfo, IAirBattleMembers, IBattleFormationInfo
+    public class sortie_ld_airbattle : ICommonBattleMembers, IBattleFormationInfo, ICommonFirstBattleMembers
     {
         private int _apiDeckId;
 
@@ -36,13 +36,19 @@ namespace BattleInfoPlugin.Models.Raw
         public Api_Air_Base_Attack[] api_air_base_attack { get; set; }
         public int[] api_stage_flag { get; set; }
         public Api_Kouku api_kouku { get; set; }
-        public int[] api_stage_flag2 { get; set; }
-        public Api_Kouku api_kouku2 { get; set; }
         public int api_support_flag { get; set; }
         public Api_Support_Info api_support_info { get; set; }
 
-        public FleetDamages[] FirstFleetDamages => this.GetFirstFleetDamages();
-        public FleetDamages[] SecondFleetDamages => null;
-        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
+        #region not exists
+
+        int[] ICommonBattleMembers.api_ship_ke_combined { get; set; }
+        int[] ICommonBattleMembers.api_ship_lv_combined { get; set; }
+        int[] ICommonBattleMembers.api_nowhps_combined { get; set; }
+        int[] ICommonBattleMembers.api_maxhps_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eSlot_combined { get; set; }
+        int[][] ICommonBattleMembers.api_fParam_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eParam_combined { get; set; }
+
+        #endregion
     }
 }

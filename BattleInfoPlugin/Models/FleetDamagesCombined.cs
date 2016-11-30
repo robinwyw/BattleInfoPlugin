@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BattleInfoPlugin.Models
 {
-    public enum FleetType
+    public class FleetDamagesCombined
     {
-        Friend,
-        Enemy
+        public IEnumerable<KeyValuePair<int, FleetDamages>> Damages { get; set; }
     }
 }

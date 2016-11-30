@@ -81,8 +81,8 @@
                 <ColumnDefinition SharedSizeGroup="Buttons" />
             </Grid.ColumnDefinitions>
 
-            <views:NextPointInfoView Grid.Column="2"
-                                     DataContext="{Binding Battle.NextPointInfo}"/>
+            <views:NextCellInfoView Grid.Column="2"
+                                    DataContext="{Binding Battle.NextCellInfo}"/>
         </Grid>
 
         <ScrollViewer Grid.Row="1"

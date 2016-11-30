@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BattleInfoPlugin.Models.Repositories;
 
 namespace BattleInfoPlugin.Models.Raw
 {
     public static class CommonTypeExtensions
     {
-        private static readonly FleetDamages defaultValue = new FleetDamages();
-
         #region 支援
 
-        public static FleetDamages GetEnemyDamages(this Api_Support_Info support)
+        public static FleetDamages GetEnemyFirstFleetDamages(this Api_Support_Info support)
             => support?.api_support_airatack?.api_stage3?.api_edam?.GetDamages()
                ?? support?.api_support_hourai?.api_damage?.GetDamages()
-               ?? defaultValue;
+               ?? FleetDamages.EmptyDamage;
 
         #endregion
 
@@ -21,11 +20,40 @@ namespace BattleInfoPlugin.Models.Raw
 
         public static FleetDamages GetFriendDamages(this Hougeki hougeki)
             => hougeki?.api_damage?.GetFriendDamages(hougeki.api_df_list)
-               ?? defaultValue;
+               ?? FleetDamages.EmptyDamage;
 
         public static FleetDamages GetEnemyDamages(this Hougeki hougeki)
             => hougeki?.api_damage?.GetEnemyDamages(hougeki.api_df_list)
-               ?? defaultValue;
+               ?? FleetDamages.EmptyDamage;
+
+        public static Dictionary<int, List<FleetDamages>>[] GetDamages(this Enemy_Combined_Hougeki hougeki)
+        {
+            var result = new[]
+            {
+                new Dictionary<int, List<FleetDamages>>(),
+                new Dictionary<int, List<FleetDamages>>()
+            };
+
+            var flags = hougeki.api_at_eflag.GetData().ToArray();
+            var targets = hougeki.api_df_list.GetData().Cast<object[]>().Select(x => Convert.ToInt32(x[0])).ToArray();
+            var damages = hougeki.api_damage.GetData().Cast<object[]>().Select(x => x.Sum(Convert.ToInt32)).ToArray();
+            for (var i = 0; i < flags.Length; i++)
+            {
+                // 0: f->e; 1: e->f
+                var flag = flags[i] == 0 ? 1 : 0;
+
+                // 1~12
+                var target = targets[i] - 1;
+
+                var fleet = target / 6;
+                target = target % 6;
+
+                var d = new FleetDamages();
+                d.Ships[target] = damages[i];
+                result[flag].GetOrAddNew(fleet).Add(d);
+            }
+            return result;
+        }
 
         #endregion
 
@@ -33,27 +61,35 @@ namespace BattleInfoPlugin.Models.Raw
 
         public static FleetDamages GetFriendDamages(this Midnight_Hougeki hougeki)
             => hougeki?.api_damage?.GetFriendDamages(hougeki.api_df_list)
-               ?? defaultValue;
+               ?? FleetDamages.EmptyDamage;
 
-        public static FleetDamages GetEnemyDamages(this Midnight_Hougeki hougeki)
+        public static FleetDamages GetEnemyFirstFleetDamages(this Midnight_Hougeki hougeki)
             => hougeki?.api_damage?.GetEnemyDamages(hougeki.api_df_list)
-               ?? defaultValue;
+               ?? FleetDamages.EmptyDamage;
 
         #endregion
 
         #region 航空戦
 
-        public static FleetDamages GetFirstFleetDamages(this Api_Kouku kouku)
-            => kouku?.api_stage3?.api_fdam.GetDamages()
-               ?? defaultValue;
+        // 0: first fleet; 1: second fleet
+        private static readonly List<Func<Api_Kouku, Api_Stage3>> Stage3Selector =
+            new List<Func<Api_Kouku, Api_Stage3>>
+            {
+                kouku => kouku?.api_stage3,
+                kouku => kouku?.api_stage3_combined
+            };
 
-        public static FleetDamages GetSecondFleetDamages(this Api_Kouku kouku)
-            => kouku?.api_stage3_combined?.api_fdam?.GetDamages()
-               ?? defaultValue;
+        private static readonly Dictionary<FleetType, Func<Api_Stage3, FleetDamages>> Stage3DamageCalculator =
+            new Dictionary<FleetType, Func<Api_Stage3, FleetDamages>>
+            {
+                [FleetType.Friend] = stage3 => stage3?.api_fdam.GetDamages() ?? FleetDamages.EmptyDamage,
+                [FleetType.Enemy] = stage3 => stage3?.api_edam.GetDamages() ?? FleetDamages.EmptyDamage
+            };
 
-        public static FleetDamages GetEnemyDamages(this Api_Kouku kouku)
-            => kouku?.api_stage3?.api_edam?.GetDamages()
-               ?? defaultValue;
+        public static FleetDamages GetDamages(this Api_Kouku kouku, FleetType type, int fleetIndex)
+        {
+            return Stage3DamageCalculator[type](Stage3Selector[fleetIndex](kouku));
+        }
 
         public static bool IsEnabled(this Api_Kouku kouku)
             => kouku?.api_plane_from?
@@ -61,15 +97,17 @@ namespace BattleInfoPlugin.Models.Raw
                 .Any(arr => arr.Any(n => n != -1))
                ?? false;
 
-        public static FleetDamages GetEnemyDamages(this Api_Air_Base_Attack[] attacks)
-            => attacks?.Where(x => x?.api_stage3?.api_edam != null)
-                .Select(x => x.api_stage3.api_edam.GetDamages())
-                .Aggregate((a, b) => a.Add(b))
-               ?? defaultValue;
+        public static FleetDamages[] GetDamages(this Api_Air_Base_Attack[] attacks, int fleetIndex)
+        {
+            return attacks?.Where(x => x?.api_stage3?.api_edam != null)
+                       .Select(x => Stage3DamageCalculator[FleetType.Enemy](Stage3Selector[fleetIndex](x)))
+                       .ToArray()
+                   ?? FleetDamages.EmptyDamages;
+        }
 
         public static AirSupremacy GetAirSupremacy(this Api_Kouku kouku)
             => kouku.IsEnabled()
-                ? (AirSupremacy) (kouku.api_stage1?.api_disp_seiku ?? (int) AirSupremacy.航空戦なし)
+                ? (AirSupremacy)(kouku.api_stage1?.api_disp_seiku ?? (int)AirSupremacy.航空戦なし)
                 : AirSupremacy.航空戦なし;
 
         public static AirCombatResult[] ToResult(this Api_Kouku kouku, string prefixName = "")
@@ -83,12 +121,12 @@ namespace BattleInfoPlugin.Models.Raw
                 : new AirCombatResult[0];
         }
 
-        public static LandBaseAirCombatResult[] ToResult(this IAirBaseAttack attacks)
+        public static LandBaseAirCombatResult[] ToResult(this Api_Air_Base_Attack[] attacks)
         {
-            if (attacks?.api_air_base_attack == null) return new LandBaseAirCombatResult[0];
+            if (attacks == null) return new LandBaseAirCombatResult[0];
 
             var hashset = new HashSet<int>();
-            return attacks.api_air_base_attack
+            return attacks
                 .Select(attack =>
                 {
                     var firstTime = hashset.Add(attack.api_base_id);
@@ -110,18 +148,37 @@ namespace BattleInfoPlugin.Models.Raw
         #endregion
 
         #region 雷撃戦
-
         public static FleetDamages GetFriendDamages(this Raigeki raigeki)
             => raigeki?.api_fdam?.GetDamages()
-               ?? defaultValue;
+               ?? FleetDamages.EmptyDamage;
 
         public static FleetDamages GetEnemyDamages(this Raigeki raigeki)
             => raigeki?.api_edam?.GetDamages()
-               ?? defaultValue;
+               ?? FleetDamages.EmptyDamage;
+
+        public static FleetDamages[] GetFriendDamagesCombined(this Raigeki raigeki)
+            => raigeki?.api_fdam?.GetCombinedDamages()
+               ?? FleetDamages.EmptyDamages;
+
+        public static FleetDamages[] GetEnemyDamagesCombined(this Raigeki raigeki)
+            => raigeki?.api_edam?.GetCombinedDamages()
+               ?? FleetDamages.EmptyDamages;
 
         #endregion
 
         #region ダメージ計算
+        public static IEnumerable<T> GetData<T>(this IEnumerable<T> source, int origin = 1)
+            => source.Skip(origin);
+
+        public static IEnumerable<T> GetSection<T>(this IEnumerable<T> source, int section, int origin = 1)
+        {
+            return source.GetData(origin).Section(section);
+        }
+
+        private static IEnumerable<T> Section<T>(this IEnumerable<T> source, int section)
+        {
+            return source.Skip(section * 6).Take(6);
+        }
 
         /// <summary>
         /// 12項目中先頭6項目取得
@@ -131,7 +188,7 @@ namespace BattleInfoPlugin.Models.Raw
         /// <param name="origin">ゴミ-1が付いてる場合1オリジン</param>
         /// <returns></returns>
         public static IEnumerable<T> GetFriendData<T>(this IEnumerable<T> source, int origin = 1)
-            => source.Skip(origin).Take(6);
+            => source.GetSection(0, origin);
 
         /// <summary>
         /// 12項目中末尾6項目取得
@@ -141,7 +198,7 @@ namespace BattleInfoPlugin.Models.Raw
         /// <param name="origin">ゴミ-1が付いてる場合1オリジン</param>
         /// <returns></returns>
         public static IEnumerable<T> GetEnemyData<T>(this IEnumerable<T> source, int origin = 1)
-            => source.Skip(origin + 6).Take(6);
+            => source.GetSection(1, origin);
 
         /// <summary>
         /// 雷撃・航空戦ダメージリスト算出
@@ -154,6 +211,22 @@ namespace BattleInfoPlugin.Models.Raw
                 .Select(Convert.ToInt32)
                 .ToArray()
                 .ToFleetDamages();
+
+        public static FleetDamages[] GetCombinedDamages(this double[] damages)
+        {
+            damages = damages.GetData().ToArray();
+
+            var result = new FleetDamages[damages.Length / 6];
+            for (var i = 0; i < result.Length; i++)
+            {
+                result[i] = new FleetDamages();
+                for (var j = 0; j < 6; j++)
+                {
+                    result[i].Ships[j] = Convert.ToInt32(damages[i * 6 + j]);
+                }
+            }
+            return result;
+        }
 
         #region 砲撃戦ダメージリスト算出
 

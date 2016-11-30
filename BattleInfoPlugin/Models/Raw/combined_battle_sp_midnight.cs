@@ -3,7 +3,7 @@
     /// <summary>
     /// 連合艦隊-特殊夜戦
     /// </summary>
-    public class combined_battle_sp_midnight : ICombinedBattleMembers, IBattleFormationInfo, IMidnightBattleMembers, IFleetBattleInfo, ICommonFirstBattleMembers
+    public class combined_battle_sp_midnight : ICommonBattleMembers, IBattleFormationInfo, ICommonFirstBattleMembers
     {
         public int api_deck_id { get; set; }
         public int[] api_ship_ke { get; set; }
@@ -15,15 +15,20 @@
         public int[][] api_eSlot { get; set; }
         public int[][] api_eKyouka { get; set; }
         public int[][] api_fParam { get; set; }
-        public int[][] api_eParam { get; set; }
         public int[][] api_fParam_combined { get; set; }
+        public int[][] api_eParam { get; set; }
         public int[] api_formation { get; set; }
         public int[] api_touch_plane { get; set; }
         public int[] api_flare_pos { get; set; }
         public Midnight_Hougeki api_hougeki { get; set; }
 
-        public FleetDamages[] FirstFleetDamages => null;
-        public FleetDamages[] SecondFleetDamages => this.GetFriendDamages();
-        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
+        #region not exists
+
+        int[] ICommonBattleMembers.api_ship_ke_combined { get; set; }
+        int[] ICommonBattleMembers.api_ship_lv_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eSlot_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eParam_combined { get; set; }
+
+        #endregion
     }
 }

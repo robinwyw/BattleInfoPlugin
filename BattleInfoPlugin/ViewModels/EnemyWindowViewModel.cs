@@ -43,7 +43,7 @@ namespace BattleInfoPlugin.ViewModels
             get
             { return this._SelectedMap; }
             set
-            { 
+            {
                 if (this._SelectedMap == value)
                     return;
                 this._SelectedMap = value;
@@ -71,7 +71,7 @@ namespace BattleInfoPlugin.ViewModels
         public void RemoveEnemy(string enemyId)
         {
             this.mapData.EnemyData.RemoveEnemy(enemyId);
-            
+
             this.SelectedMap.EnemyCells = CreateEnemyCells(this.SelectedMap.Info, this.mapData.GetMapEnemies(), this.mapData.GetCellTypes());
         }
 
@@ -100,7 +100,7 @@ namespace BattleInfoPlugin.ViewModels
         {
             return MapResource.HasMapSwf(mi)
                 ? MapResource.GetMapCellPoints(mi) //マップSWFがあったらそれを元に作る
-                    //外部結合
+                                                   //外部結合
                     .GroupJoin(
                         CreateMapCellViewModelsFromEnemiesData(mi, mapEnemies, cellTypes),
                         outer => outer.Key,
@@ -177,7 +177,7 @@ namespace BattleInfoPlugin.ViewModels
 
         public static EnemyFleetViewModel[] MergeEnemies(this IEnumerable<KeyValuePair<string, FleetData>> enemies)
         {
-            return enemies.GroupBy(x => x.Key, EnemyData.Curret.GetComparer())
+            return enemies.GroupBy(x => x.Key, EnemyDataProvider.Default.GetComparer())
                         .Select(x => x.First())
                         .GroupBy(x => x.Value.Ships.Select(s => s.Id).JoinString(","))
                         .Select(enemy => new EnemyFleetViewModel

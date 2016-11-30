@@ -3,7 +3,7 @@
     /// <summary>
     /// 連合艦隊-水上部隊
     /// </summary>
-    public class combined_battle_battle_water : ICombinedBattleMembers, IBattleFormationInfo, IDayBattleMembers, IFleetBattleInfo, ICommonFirstBattleMembers
+    public class combined_battle_battle_water : ICommonBattleMembers, IBattleFormationInfo, ICommonFirstBattleMembers
     {
         public int api_deck_id { get; set; }
         public int[] api_ship_ke { get; set; }
@@ -16,8 +16,8 @@
         public int[][] api_eSlot { get; set; }
         public int[][] api_eKyouka { get; set; }
         public int[][] api_fParam { get; set; }
-        public int[][] api_eParam { get; set; }
         public int[][] api_fParam_combined { get; set; }
+        public int[][] api_eParam { get; set; }
         public int[] api_search { get; set; }
         public int[] api_formation { get; set; }
         public Api_Air_Base_Attack[] api_air_base_attack { get; set; }
@@ -35,21 +35,13 @@
         public Hougeki api_hougeki3 { get; set; }
         public Raigeki api_raigeki { get; set; }
 
-        public FleetDamages[] FirstFleetDamages => new[]
-        {
-            this.api_kouku.GetFirstFleetDamages(),
-            this.api_hougeki1.GetFriendDamages(),
-            this.api_hougeki2.GetFriendDamages()
-        };
+        #region not exists
 
-        public FleetDamages[] SecondFleetDamages => new[]
-        {
-            this.api_kouku.GetSecondFleetDamages(),
-            this.api_opening_atack.GetFriendDamages(),
-            this.api_hougeki3.GetFriendDamages(),
-            this.api_raigeki.GetFriendDamages()
-        };
+        int[] ICommonBattleMembers.api_ship_ke_combined { get; set; }
+        int[] ICommonBattleMembers.api_ship_lv_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eSlot_combined { get; set; }
+        int[][] ICommonBattleMembers.api_eParam_combined { get; set; }
 
-        public FleetDamages[] EnemyDamages => this.GetEnemyDamages();
+        #endregion
     }
 }

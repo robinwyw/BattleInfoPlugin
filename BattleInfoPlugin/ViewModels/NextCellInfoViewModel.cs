@@ -8,7 +8,7 @@ using Livet;
 
 namespace BattleInfoPlugin.ViewModels
 {
-    public class NextPointInfoViewModel : ViewModel
+    public class NextCellInfoViewModel : ViewModel
     {
         public string MapId { get; set; }
 

@@ -15,12 +15,12 @@ namespace BattleInfoPlugin.ViewModels
         public string ItemName { get; set; }
         public int Count { get; set; }
 
-        public GetLostItemViewModel(GetLostItem item, bool isGetItem)
+        public GetLostItemViewModel(GetLostItem item)
         {
-            this.IsGetItem = isGetItem;
+            this.IsGetItem = item.Count > 0;
             this.Type = item.Type;
             this.ItemName = item.Type.ToDisplayName();
-            this.Count = item.Count;
+            this.Count = Math.Abs(item.Count);
         }
     }
 }

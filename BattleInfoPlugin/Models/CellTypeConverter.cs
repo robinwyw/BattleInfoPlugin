@@ -11,18 +11,18 @@ namespace BattleInfoPlugin.Models
     {
         #region Split CellType
 
-        private static readonly CellType[] SigleTypes
+        private static readonly CellType[] SingleTypes
             = ((CellType[])Enum.GetValues(typeof(CellType)))
                 .Where(type => type != default(CellType)).ToArray();
 
         public static IEnumerable<CellType> Split(this CellType type)
         {
-            return SigleTypes.Where(sigle => type.HasFlag(sigle));
+            return SingleTypes.Where(single => type.HasFlag(single));
         }
 
         #endregion
 
-        public static CellType ToCellType(this map_start_next data)
+        public static CellType GetCellType(this map_start_next data)
         {
             var type = data.api_event_id.ToCellType();
 

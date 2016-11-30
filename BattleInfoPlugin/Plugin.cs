@@ -1,10 +1,9 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using BattleInfoPlugin.Models.Repositories;
 using BattleInfoPlugin.ViewModels;
 using BattleInfoPlugin.Views;
 using Grabacr07.KanColleViewer.Composition;
-using Grabacr07.KanColleWrapper;
-using Grabacr07.KanColleWrapper.Models.Raw;
 
 namespace BattleInfoPlugin
 {
@@ -20,8 +19,7 @@ namespace BattleInfoPlugin
     {
         private readonly ToolViewModel vm;
         internal static KcsResourceWriter ResourceWriter { get; private set; }
-        internal static SortieDataListener SortieListener { get; private set; }
-        internal static kcsapi_start2 RawStart2 { get; private set; }
+        internal static EnemyDataUpdater Updater { get; private set; }
 
         public Plugin()
         {
@@ -30,19 +28,15 @@ namespace BattleInfoPlugin
 
         public void Initialize()
         {
-            KanColleClient.Current.Proxy.api_start2.TryParse<kcsapi_start2>().Subscribe(x =>
-            {
-                RawStart2 = x.Data;
-                Models.Repositories.Master.Current.Update(x.Data);
-            });
-            ResourceWriter = new KcsResourceWriter();
-            SortieListener = new SortieDataListener();
+            Master.Current.Init();
+            ResourceWriter = ResourceWriter ?? new KcsResourceWriter();
+            Updater = Updater ?? new EnemyDataUpdater(EnemyDataProvider.Current);
         }
 
         public string Name => "BattleInfo";
 
         // タブ表示するたびに new されてしまうが、今のところ new しないとマルチウィンドウで正常に表示されない
-        public object View => new ToolView {DataContext = this.vm};
+        public object View => new ToolView { DataContext = this.vm };
 
         public event EventHandler<NotifyEventArgs> NotifyRequested;
 

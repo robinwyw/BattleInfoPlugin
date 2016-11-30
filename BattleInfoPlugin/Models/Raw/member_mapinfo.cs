@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace BattleInfoPlugin.Models.Raw
 {
+    public class mapinfo
+    {
+        public member_mapinfo[] api_map_info { get; set; }
+    }
+
     public class member_mapinfo
     {
         public int api_id { get; set; }

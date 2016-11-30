@@ -59,20 +59,18 @@ namespace BattleInfoPlugin.Models
             this.Maximum = maximum;
             this._Current = current;
 
-            if (item == null) return;
+            if (item == null || item == SlotItemInfo.Dummy) return;
 
-            var m = Plugin.RawStart2.api_mst_slotitem.SingleOrDefault(x => x.api_id == item.Id);
-            if (m == null) return;
-            this.Armer = m.api_souk;
-            this.Firepower = m.api_houg;
-            this.Torpedo = m.api_raig;
-            this.Bomb = m.api_baku;
-            this.AA = m.api_tyku;
-            this.ASW = m.api_tais;
-            this.Hit = m.api_houm;
-            this.Evade = m.api_houk;
-            this.LOS = m.api_saku;
-            this.Type2 = (Type2)m.api_type[1];
+            this.Armer = item.Armer;
+            this.Firepower = item.Firepower;
+            this.Torpedo = item.Torpedo;
+            this.Bomb = item.Bomb;
+            this.AA = item.AA;
+            this.ASW = item.ASW;
+            this.Hit = item.Hit;
+            this.Evade = item.Evade;
+            this.LOS = item.RawData.api_saku;
+            this.Type2 = (Type2)item.RawData.api_type[1];
         }
 
         public ShipSlotData(ShipSlot slot)

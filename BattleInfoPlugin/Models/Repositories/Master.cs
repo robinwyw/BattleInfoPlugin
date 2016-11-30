@@ -1,103 +1,141 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Grabacr07.KanColleWrapper.Models.Raw;
 using System.IO;
-using System.Runtime.Serialization.Json;
+using System.Reactive.Linq;
+using BattleInfoPlugin.Models.Raw;
 using BattleInfoPlugin.Models.Settings;
+using Grabacr07.KanColleWrapper;
+using Grabacr07.KanColleWrapper.Models;
 
 namespace BattleInfoPlugin.Models.Repositories
 {
     [DataContract]
     public class Master
     {
-        private static readonly DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(Master));
-        private static readonly object margeLock = new object();
-        private static readonly object saveLoadLock = new object();
+        private static readonly object mergeLock = new object();
 
-        private static Master _Current;
-
-        public static Master Current { get { return _Current = _Current ?? new Master(); } }
+        public static Master Current { get; } = new Master(PluginSettings.Paths.MasterDataFileName);
 
         /// <summary>
         /// すべての海域の定義を取得します。
         /// </summary>
         [DataMember]
-        public ConcurrentDictionary<int, MapArea> MapAreas { get; private set; }
+        public Dictionary<int, MapArea> MapAreas { get; private set; }
 
         /// <summary>
         /// すべてのマップの定義を取得します。
         /// </summary>
         [DataMember]
-        public ConcurrentDictionary<int, MapInfo> MapInfos { get; private set; }
+        public Dictionary<int, MapInfo> MapInfos { get; private set; }
 
         /// <summary>
         /// すべてのセルの定義を取得します。
         /// </summary>
         [DataMember]
-        public ConcurrentDictionary<int, MapCell> MapCells { get; private set; }
+        public Dictionary<int, MapCell> MapCells { get; private set; }
 
-        public Master()
+        private readonly string filePath;
+
+        private Master(string filePath)
         {
-            this.MapAreas = new ConcurrentDictionary<int, MapArea>();
-            this.MapInfos = new ConcurrentDictionary<int, MapInfo>();
-            this.MapCells = new ConcurrentDictionary<int, MapCell>();
-            var obj = PluginSettings.Paths.MasterDataFileName.Deserialize<Master>();
-            if (obj == null) return;
-            this.MapAreas = obj.MapAreas;
-            this.MapInfos = obj.MapInfos;
-            this.MapCells = obj.MapCells;
+            this.filePath = filePath;
+
+            var obj = this.filePath.Deserialize<Master>();
+
+            this.MapAreas = obj?.MapAreas.ValueOrNew();
+            this.MapInfos = obj?.MapInfos.ValueOrNew();
+            this.MapCells = obj?.MapCells.ValueOrNew();
+
+            var proxy = KanColleClient.Current.Proxy;
+            proxy.Observe<kcsapi_start2>("/kcsapi/api_start2")
+                .Subscribe(x => this.Update(x.Data));
+            proxy.Observe<map_start_next>("/kcsapi/api_req_map/start")
+                .Subscribe(this.Update);
+            proxy.Observe<mapinfo>("/kcsapi/api_get_member/mapinfo")
+                .Subscribe(x => this.UpdateMapRank(x.Data.api_map_info));
+            proxy.ApiSessionSource
+                .Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_map/select_eventmap_rank")
+                .TryParse()
+                .Subscribe(x =>
+                    this.UpdateMapRank(
+                        int.Parse(x.Request["api_maparea_id"]),
+                        int.Parse(x.Request["api_map_no"]),
+                        int.Parse(x.Request["api_rank"]))
+                );
+        }
+
+        public void Init()
+        {
+            // Do nothing
         }
 
         public void Update(kcsapi_start2 start2)
         {
-            var areas = start2.api_mst_maparea.Select(x => new MapArea(x)).ToDictionary(x => x.Id, x => x);
-            var infos = start2.api_mst_mapinfo.Select(x => new MapInfo(x)).ToDictionary(x => x.Id, x => x);
-            var cells = start2.api_mst_mapcell.Select(x => new MapCell(x)).ToDictionary(x => x.Id, x => x);
+            var mapAreas = start2.api_mst_maparea.Select(x => new MapArea(x)).ToDictionary(x => x.Id, x => x);
+            var mapInfos = start2.api_mst_mapinfo.Select(x => new MapInfo(x)).ToDictionary(x => x.Id, x => x);
+            this.MapAreas = this.MapAreas.Merge(mapAreas);
+            this.MapInfos = this.MapInfos.Merge(mapInfos);
 
-            foreach (var key in areas.Keys) this.MapAreas.AddOrUpdate(key, areas[key], (k, v) => areas[k]);
-            foreach (var key in infos.Keys) this.MapInfos.AddOrUpdate(key, infos[key], (k, v) => infos[k]);
-            foreach (var key in cells.Keys) this.MapCells.AddOrUpdate(key, cells[key], (k, v) => cells[k]);
-
-            this.Serialize(PluginSettings.Paths.MasterDataFileName);
+            this.Serialize(this.filePath);
         }
 
-        //private static void UpdateMasterTable<T>(IDictionary<int, T> target, Dictionary<int, T> source)
-        //{
-        //    foreach (var sourceKey in source.Keys)
-        //    {
-        //        if (target.ContainsKey(sourceKey))
-        //            target[sourceKey] = source[sourceKey];
-        //        else
-        //            target.Add(sourceKey, source[sourceKey]);
-        //    }
-        //}
-        
-        public Task<bool> Merge(string path)
+        public void Update(SvData<map_start_next> start)
         {
-            return Task.Run(() =>
+            var mapArea = int.Parse(start.Request["api_maparea_id"]);
+            var mapNo = int.Parse(start.Request["api_mapinfo_no"]);
+            var infoId = this.MapAreas[mapArea][mapNo].Id;
+
+            var cells = start.Data.api_cell_data
+                .Select(cell => new MapCell(cell, mapArea, mapNo, infoId))
+                .ToDictionary(x => x.Id, x => x);
+
+            this.MapCells = this.MapCells.Merge(cells);
+            Debug.WriteLine(this.MapCells.Values.Count(c => c.MapAreaId == 36 && c.MapInfoId == 361));
+            this.Serialize(this.filePath);
+        }
+
+        public void UpdateMapRank(member_mapinfo[] mapinfos)
+        {
+            foreach (var mapinfo in mapinfos)
             {
-                if (!File.Exists(path)) return false;
+                this.MapInfos[mapinfo.api_id].Rank = mapinfo.api_eventmap?.api_selected_rank ?? 0;
+            }
+        }
 
-                lock (margeLock)
-                {
-                    using (var stream = Stream.Synchronized(new FileStream(path, FileMode.Open, FileAccess.Read)))
-                    {
-                        var obj = serializer.ReadObject(stream) as Master;
-                        if (obj == null) return false;
-                        this.MapAreas = new ConcurrentDictionary<int, MapArea>(this.MapAreas.Merge(obj.MapAreas));
-                        this.MapInfos = new ConcurrentDictionary<int, MapInfo>(this.MapInfos.Merge(obj.MapInfos));
-                        this.MapCells = new ConcurrentDictionary<int, MapCell>(this.MapCells.Merge(obj.MapCells));
-                    }
-                    this.Serialize(PluginSettings.Paths.MasterDataFileName);
-                }
+        public void UpdateMapRank(int areaId, int mapId, int rank)
+        {
+            this.MapAreas[areaId][mapId].Rank = rank;
+        }
 
-                return true;
-            });
+        public bool Merge(string path)
+        {
+            if (!File.Exists(path)) return false;
+
+            lock (mergeLock)
+            {
+                var obj = path.Deserialize<Master>();
+                if (obj == null) return false;
+
+                this.Merge(obj);
+
+                this.Serialize(this.filePath);
+            }
+
+            return true;
+        }
+
+        private void Merge(Master master)
+        {
+            this.MapAreas = this.MapAreas.Merge(master.MapAreas);
+            this.MapInfos = this.MapInfos.Merge(master.MapInfos);
+            this.MapCells = this.MapCells.Merge(master.MapCells);
         }
     }
 }

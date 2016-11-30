@@ -213,9 +213,7 @@
                 <Setter Property="HorizontalAlignment"
                         Value="Stretch" />
                 <Setter Property="VerticalAlignment"
-                        Value="Stretch" />
-                <Setter Property="Background"
-                        Value="{DynamicResource BorderBrushKey}" />
+                        Value="Center" />
                 <Setter Property="TextAlignment"
                         Value="Center" />
                 <Setter Property="Padding"
@@ -223,18 +221,33 @@
             </Style>
 
             <DataTemplate x:Key="FleetTemplate"
-                          DataType="{x:Type viewModels:FleetViewModel}">
-                <StackPanel>
-
-                    <TextBlock Text="{Binding FleetFormation}"
+                          DataType="{x:Type viewModels:BattleFleetViewModel}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"
+                                       SharedSizeGroup="Formation" />
+                        <RowDefinition Height="Auto"
+                                       SharedSizeGroup="Name" />
+                        <RowDefinition Height="*"
+                                       SharedSizeGroup="Fleets" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Text="{Binding FleetFormation}"
                                Style="{DynamicResource FleetFormationStyleKey}"
-                               Visibility="{Binding DataContext.IsInBattle, ElementName=Control, Converter={StaticResource FalseToHiddenConverter}}" />
+                               Visibility="{Binding DataContext.Battle.IsInBattle, ElementName=Control, Converter={StaticResource FalseToHiddenConverter}}" />
 
-                    <TextBlock Text="{Binding Name}"
-                               Style="{DynamicResource FleetNameStyleKey}"
-                               Visibility="{Binding IsVisible, Converter={StaticResource TrueToVisibleConverter}}" />
+                    <Border Grid.Row="1"
+                            Background="{DynamicResource BorderBrushKey}"
+                            Visibility="{Binding IsVisible, Converter={StaticResource TrueToVisibleConverter}}">
+                        <TextBlock Text="{Binding Name}"
+                                   Style="{DynamicResource FleetNameStyleKey}"
+                                   TextWrapping="Wrap" />
+                    </Border>
 
-                    <ItemsControl ItemsSource="{Binding Fleets}">
+                    <ItemsControl Grid.Row="2"
+                                  x:Name="Fleets"
+                                  ItemsSource="{Binding Fleets}"
+                                  Margin="0,-2,0,0">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Vertical" />
@@ -246,7 +259,7 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                </StackPanel>
+                </Grid>
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -307,7 +320,7 @@
 
         <StackPanel Grid.Row="2"
                     Grid.Column="1"
-                    Visibility="{Binding IsInBattle, Converter={StaticResource TrueToVisibleConverter}}"
+                    Visibility="{Binding Battle.IsInBattle, Converter={StaticResource TrueToVisibleConverter}}"
                     Margin="10,0">
             <TextBlock Text="{Binding BattleSituation, Mode=OneWay}"
                        Style="{DynamicResource EmphaticTextStyleKey}"
@@ -338,22 +351,37 @@
 
                 <TextBlock.ToolTip>
                     <TextBlock>
-                        <Run Text="{Binding FriendLostGauge, Mode=OneWay}"
+                        <Run Text="{Binding Battle.FriendLostGauge, Mode=OneWay, StringFormat=P1}"
                              Style="{DynamicResource EmphaticTextElementStyleKey}"
                              FontSize="12" />
                         <Run Text=" : "
                              Style="{DynamicResource DefaultTextElementStyleKey}" />
-                        <Run Text="{Binding EnemyLostGauge, Mode=OneWay}"
+                        <Run Text="{Binding Battle.EnemyLostGauge, Mode=OneWay, StringFormat=P1}"
                              Style="{DynamicResource EmphaticTextElementStyleKey}"
                              FontSize="12" />
                     </TextBlock>
                 </TextBlock.ToolTip>
             </TextBlock>
 
-            <controls:PlaceHolderTextControl Text="{Binding DropShipName, Mode=OneWay}"
+            <controls:PlaceHolderTextControl Text="{Binding Battle.DropShipName, Mode=OneWay}"
                                              PlaceHolder="ドロップ"
                                              HorizontalAlignment="Center"
-                                             Margin="0,4" />
+                                             Margin="0,4">
+                <controls:PlaceHolderTextControl.Style>
+                    <Style TargetType="controls:PlaceHolderTextControl"
+                           BasedOn="{StaticResource {x:Type controls:PlaceHolderTextControl}}">
+                        <Setter Property="Visibility"
+                                Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Battle.State}"
+                                         Value="InSortie">
+                                <Setter Property="Visibility"
+                                        Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </controls:PlaceHolderTextControl.Style>
+            </controls:PlaceHolderTextControl>
         </StackPanel>
 
         <ContentControl Grid.Row="2"

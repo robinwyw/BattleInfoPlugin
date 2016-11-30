@@ -18,9 +18,9 @@ namespace BattleInfoPlugin.Views
     /// <summary>
     /// NextPointView.xaml 的交互逻辑
     /// </summary>
-    public partial class NextPointInfoView : UserControl
+    public partial class NextCellInfoView : UserControl
     {
-        public NextPointInfoView()
+        public NextCellInfoView()
         {
             InitializeComponent();
         }

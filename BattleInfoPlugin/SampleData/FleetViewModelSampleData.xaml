@@ -1,41 +1,32 @@
-﻿<viewModels:SingleFleetViewModel xmlns:BattleInfoPlugin="clr-namespace:BattleInfoPlugin"
-                           xmlns:Livet="clr-namespace:Livet;assembly=Livet"
-                           xmlns:wrapper="clr-namespace:Grabacr07.KanColleWrapper.Models;assembly=KanColleWrapper"
-                           xmlns:Messaging="clr-namespace:Livet.Messaging;assembly=Livet"
-                           xmlns:models="clr-namespace:BattleInfoPlugin.Models"
-                           xmlns:viewModels="clr-namespace:BattleInfoPlugin.ViewModels"
-                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                           Name="敵艦隊"
-                           FleetFormation="戦闘陣形"
-                           IsVisible="True">
-
-    <viewModels:SingleFleetViewModel.Fleet>
-        <models:FleetData Formation="戦闘陣形" FleetType="Enemy">
-            <models:FleetData.Ships>
-                <x:Array Type="models:MembersShipData">
-                    <models:MembersShipData MaxHP="15" NowHP="83" Name="戦艦水鬼" Situation="Tow" TypeName="つよい" DamageControlled="True">
-                        <models:MembersShipData.HP>
-                            <wrapper:LimitedValue Current="6" Maximum="9" Minimum="0"/>
-                        </models:MembersShipData.HP>
-                    </models:MembersShipData>
-                    <models:MembersShipData MaxHP="20" NowHP="96" Name="ほっぽ" Situation="Evacuation" TypeName="ろり" AdditionalName="elite">
-                        <models:MembersShipData.HP>
-                            <wrapper:LimitedValue Current="71" Maximum="85" Minimum="0"/>
-                        </models:MembersShipData.HP>
-                    </models:MembersShipData>
-                    <models:MembersShipData MaxHP="40" NowHP="0" Name="駆逐ロ級後期型" Situation="HeavilyDamaged" TypeName="きもい" AdditionalName="flagship" IsUsedDamecon="True" DamageControlled="True">
-                        <models:MembersShipData.HP>
-                            <wrapper:LimitedValue Current="0" Maximum="25" Minimum="0"/>
-                        </models:MembersShipData.HP>
-                    </models:MembersShipData>
-                    <models:MembersShipData MaxHP="40" NowHP="1" Name="戦艦レ級後期型改" TypeName="こわい" AdditionalName="flagship" DamageReceived="10">
-                        <models:MembersShipData.HP>
-                            <wrapper:LimitedValue Current="1" Maximum="1" Minimum="0"/>
-                        </models:MembersShipData.HP>
-                    </models:MembersShipData>
-                </x:Array>
-            </models:FleetData.Ships>
-        </models:FleetData>
-    </viewModels:SingleFleetViewModel.Fleet>
-
-</viewModels:SingleFleetViewModel>
+﻿<models:FleetData xmlns:wrapper="clr-namespace:Grabacr07.KanColleWrapper.Models;assembly=KanColleWrapper"
+                  xmlns:models="clr-namespace:BattleInfoPlugin.Models"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <models:FleetData.Ships>
+        <x:Array Type="models:ShipData">
+            <models:ShipData MaxHP="15" NowHP="83" Name="戦艦水鬼" Situation="Tow" TypeName="つよい"
+                             DamageControlled="True">
+                <models:ShipData.HP>
+                    <wrapper:LimitedValue Current="6" Maximum="9" Minimum="0" />
+                </models:ShipData.HP>
+            </models:ShipData>
+            <models:ShipData MaxHP="20" NowHP="96" Name="ほっぽ" Situation="Evacuation" TypeName="ろり"
+                             AdditionalName="elite">
+                <models:ShipData.HP>
+                    <wrapper:LimitedValue Current="71" Maximum="85" Minimum="0" />
+                </models:ShipData.HP>
+            </models:ShipData>
+            <models:ShipData MaxHP="40" NowHP="0" Name="駆逐ロ級後期型" Situation="HeavilyDamaged" TypeName="きもい"
+                             AdditionalName="flagship" IsUsedDamecon="True" DamageControlled="True">
+                <models:ShipData.HP>
+                    <wrapper:LimitedValue Current="0" Maximum="25" Minimum="0" />
+                </models:ShipData.HP>
+            </models:ShipData>
+            <models:ShipData MaxHP="40" NowHP="1" Name="戦艦レ級後期型改" TypeName="こわい" AdditionalName="flagship"
+                             DamageReceived="10">
+                <models:ShipData.HP>
+                    <wrapper:LimitedValue Current="1" Maximum="1" Minimum="0" />
+                </models:ShipData.HP>
+            </models:ShipData>
+        </x:Array>
+    </models:FleetData.Ships>
+</models:FleetData>

@@ -14,14 +14,14 @@ namespace BattleInfoPlugin.Models
 
         public int Id
         {
-            get
-            { return this._Id; }
+            get { return this._Id; }
             set
             {
-                if (this._Id == value)
-                    return;
-                this._Id = value;
-                this.RaisePropertyChanged();
+                if (this._Id != value)
+                {
+                    this._Id = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
         #endregion
@@ -31,14 +31,14 @@ namespace BattleInfoPlugin.Models
 
         public string Name
         {
-            get
-            { return this._Name; }
+            get { return this._Name; }
             set
-            { 
-                if (this._Name == value)
-                    return;
-                this._Name = value;
-                this.RaisePropertyChanged();
+            {
+                if (this._Name != value)
+                {
+                    this._Name = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
         #endregion
@@ -48,14 +48,14 @@ namespace BattleInfoPlugin.Models
 
         public string AdditionalName
         {
-            get
-            { return this._AdditionalName; }
+            get { return this._AdditionalName; }
             set
-            { 
-                if (this._AdditionalName == value)
-                    return;
-                this._AdditionalName = value;
-                this.RaisePropertyChanged();
+            {
+                if (this._AdditionalName != value)
+                {
+                    this._AdditionalName = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
         #endregion
@@ -65,14 +65,14 @@ namespace BattleInfoPlugin.Models
 
         public string TypeName
         {
-            get
-            { return this._TypeName; }
+            get { return this._TypeName; }
             set
-            { 
-                if (this._TypeName == value)
-                    return;
-                this._TypeName = value;
-                this.RaisePropertyChanged();
+            {
+                if (this._TypeName != value)
+                {
+                    this._TypeName = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
         #endregion
@@ -84,10 +84,11 @@ namespace BattleInfoPlugin.Models
             get { return this._Level; }
             set
             {
-                if (this._Level == value)
-                    return;
-                this._Level = value;
-                this.RaisePropertyChanged();
+                if (this._Level != value)
+                {
+                    this._Level = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
         #endregion
@@ -97,14 +98,14 @@ namespace BattleInfoPlugin.Models
 
         public ShipSituation Situation
         {
-            get
-            { return _Situation; }
+            get { return this._Situation; }
             set
-            { 
-                if (_Situation == value)
-                    return;
-                _Situation = value;
-                RaisePropertyChanged();
+            {
+                if (this._Situation != value)
+                {
+                    this._Situation = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
         #endregion
@@ -133,30 +134,36 @@ namespace BattleInfoPlugin.Models
             set
             {
                 value = Math.Max(0, value);
-                if (this._NowHP == value)
-                    return;
-                this._NowHP = value;
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(() => this.HP);
+                if (this._NowHP != value)
+                {
+                    this._NowHP = value;
+                    this.RaisePropertyChanged();
+                    this.RaisePropertyChanged(() => this.HP);
+                }
             }
         }
         #endregion
 
-        private int _OriginalHP;
-
         public abstract int OriginalHP { get; }
+
+        #region DamageReceived
 
         private int _DamageReceived;
 
         public int DamageReceived
         {
             get { return this._DamageReceived; }
-            internal set
+            private set
             {
-                this._DamageReceived = value;
-                this.RaisePropertyChanged();
+                if (this._DamageReceived != value)
+                {
+                    this._DamageReceived = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
+
+        #endregion
 
         #region Firepower 変更通知プロパティ
 
@@ -170,9 +177,11 @@ namespace BattleInfoPlugin.Models
             get { return this._Firepower; }
             set
             {
-                this._Firepower = value;
-                this.RaisePropertyChanged();
-
+                if (this._Firepower != value)
+                {
+                    this._Firepower = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
 
@@ -190,9 +199,11 @@ namespace BattleInfoPlugin.Models
             get { return this._Torpedo; }
             set
             {
-                this._Torpedo = value;
-                this.RaisePropertyChanged();
-
+                if (this._Torpedo != value)
+                {
+                    this._Torpedo = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
 
@@ -210,10 +221,12 @@ namespace BattleInfoPlugin.Models
             get { return this._AA; }
             set
             {
-                this._AA = value;
-                this.RaisePropertyChanged();
+                if (this._AA != value)
+                {
+                    this._AA = value;
+                    this.RaisePropertyChanged();
+                }
             }
-
         }
 
         #endregion
@@ -230,9 +243,11 @@ namespace BattleInfoPlugin.Models
             get { return this._Armer; }
             set
             {
-                this._Armer = value;
-                this.RaisePropertyChanged();
-
+                if (this._Armer != value)
+                {
+                    this._Armer = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
 
@@ -250,8 +265,11 @@ namespace BattleInfoPlugin.Models
             get { return this._Luck; }
             set
             {
-                this._Luck = value;
-                this.RaisePropertyChanged();
+                if (this._Luck != value)
+                {
+                    this._Luck = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
 
@@ -262,14 +280,14 @@ namespace BattleInfoPlugin.Models
 
         public IEnumerable<ShipSlotData> Slots
         {
-            get
-            { return this._Slots; }
+            get { return this._Slots; }
             set
-            { 
-                if (this._Slots == value)
-                    return;
-                this._Slots = value;
-                this.RaisePropertyChanged();
+            {
+                if (this._Slots != value)
+                {
+                    this._Slots = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
         #endregion
@@ -279,14 +297,14 @@ namespace BattleInfoPlugin.Models
 
         public ShipSlotData ExSlot
         {
-            get
-            { return this._ExSlot; }
+            get { return this._ExSlot; }
             set
             {
-                if (this._ExSlot == value)
-                    return;
-                this._ExSlot = value;
-                this.RaisePropertyChanged();
+                if (this._ExSlot != value)
+                {
+                    this._ExSlot = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
         #endregion
@@ -303,8 +321,11 @@ namespace BattleInfoPlugin.Models
             get { return this._IsUsedDamecon; }
             set
             {
-                this._IsUsedDamecon = value;
-                this.RaisePropertyChanged();
+                if (this._IsUsedDamecon != value)
+                {
+                    this._IsUsedDamecon = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
 
@@ -389,7 +410,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._Source; }
             set
-            { 
+            {
                 if (this._Source == value)
                     return;
                 this._Source = value;
@@ -406,7 +427,7 @@ namespace BattleInfoPlugin.Models
         {
         }
 
-        public MembersShipData(Ship ship) : this()
+        public MembersShipData(Ship ship)
         {
             this._Source = ship;
             this.UpdateFromSource();
@@ -446,7 +467,7 @@ namespace BattleInfoPlugin.Models
             get
             { return this._Source; }
             set
-            { 
+            {
                 if (this._Source == value)
                     return;
                 this._Source = value;
@@ -475,8 +496,7 @@ namespace BattleInfoPlugin.Models
             this.Id = this.Source.Id;
             this.Name = this.Source.Name;
             var isEnemyID = 500 < this.Source.Id && this.Source.Id < 901;
-            var m = Plugin.RawStart2.api_mst_ship.Single(x => x.api_id == this.Source.Id);
-            this.AdditionalName = isEnemyID ? m.api_yomi : "";
+            this.AdditionalName = isEnemyID ? this.Source.RawData.api_yomi : "";
             this.TypeName = this.Source.ShipType.Name;
         }
     }

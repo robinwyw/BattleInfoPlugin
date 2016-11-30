@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BattleInfoPlugin.Models
 {
-    public enum BattleResult
+    public enum BattleResultRank
     {
         なし,
         完全勝利S,

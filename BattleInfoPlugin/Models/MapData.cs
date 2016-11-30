@@ -13,7 +13,7 @@ namespace BattleInfoPlugin.Models
 {
     public class MapData
     {
-        public EnemyDataProvider EnemyData { get; } = new EnemyDataProvider();
+        public EnemyDataProvider EnemyData { get; } = EnemyDataProvider.Current;
 
         public IReadOnlyDictionary<MapInfo, Dictionary<MapCell, Dictionary<string, FleetData>>> GetMapEnemies()
         {
@@ -27,12 +27,11 @@ namespace BattleInfoPlugin.Models
 
         public IReadOnlyDictionary<MapCell, CellType> GetCellTypes()
         {
-            var cells = Master.Current.MapCells.Select(c => c.Value);
             var cellDatas = this.EnemyData.GetMapCellDatas();
             return this.EnemyData.GetMapCellBattleTypes()
                 .SelectMany(x => x.Value, (x, y) => new
                 {
-                    cell = cells.Single(c => c.MapInfoId == x.Key && c.IdInEachMapInfo == y.Key),
+                    cell = Master.Current.MapInfos[x.Key][y.Key],
                     type = y.Value,
                 })
                 .Select(x => new
@@ -48,7 +47,7 @@ namespace BattleInfoPlugin.Models
             if (!cellData.ContainsKey(cell.MapInfoId)) return CellType.None;
             var datas = cellData[cell.MapInfoId];
             var data = datas.SingleOrDefault(x => cell.IdInEachMapInfo == x.No);
-            if (data == default(MapCellData)) return CellType.None;
+            if (data == null) return CellType.None;
             return data.EventId.ToCellType();
         }
 
@@ -73,18 +72,24 @@ namespace BattleInfoPlugin.Models
                 };
 
                 var info = new FileInfo(filePath);
+                Func<string, bool> mergeFunc = null;
                 if (info.Name == Path.GetFileName(PluginSettings.Paths.EnemyDataFileName))
                 {
-                    this.EnemyData.Merge(filePath)
-                        .ContinueWith(continuationAction, TaskScheduler.FromCurrentSynchronizationContext());
-                }else if (info.Name == Path.GetFileName(PluginSettings.Paths.MasterDataFileName))
+                    mergeFunc = this.EnemyData.Merge;
+                }
+                else if (info.Name == Path.GetFileName(PluginSettings.Paths.MasterDataFileName))
                 {
-                    Master.Current.Merge(filePath)
+                    mergeFunc = Master.Current.Merge;
+                }
+
+                if (mergeFunc != null)
+                {
+                    Task.Run(() => mergeFunc(filePath))
                         .ContinueWith(continuationAction, TaskScheduler.FromCurrentSynchronizationContext());
                 }
                 else
                 {
-                    MergeResult?.Invoke(false, "マージ対象のファイル名ではありません。");
+                    this.MergeResult?.Invoke(false, "マージ対象のファイル名ではありません。");
                 }
             }
         }

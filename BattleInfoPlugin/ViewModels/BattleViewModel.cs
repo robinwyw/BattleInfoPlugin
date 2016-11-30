@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using BattleInfoPlugin.Models;
 using BattleInfoPlugin.Models.Notifiers;
+using BattleInfoPlugin.Models.Settings;
 using Livet;
 using Livet.EventListeners;
 using Livet.Messaging;
@@ -16,51 +17,51 @@ namespace BattleInfoPlugin.ViewModels
     {
         public static BattleViewModel Current { get; } = new BattleViewModel();
 
-        private BattleData BattleData { get; } = BattleData.Current;
+        public BattleData Battle { get; } = BattleData.Current;
 
-        public bool IsInBattle
-            => this.BattleData.IsInBattle;
+        #region IsShowLandBaseAirStage
+
+        public bool IsShowLandBaseAirStage
+        {
+            get { return PluginSettings.BattleData.IsShowLandBaseAirStage.Value; }
+            set
+            {
+                if (PluginSettings.BattleData.IsShowLandBaseAirStage.Value != value)
+                {
+                    PluginSettings.BattleData.IsShowLandBaseAirStage.Value = value;
+                    this.UpdateLandBaseVisibility(value);
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
 
         public string BattleResultRank
-            => this.BattleData.BattleResult != Models.BattleResult.なし
-                ? this.BattleData.BattleResult.ToString()
+            => this.Battle.BattleResult != Models.BattleResultRank.なし
+                ? this.Battle.BattleResult.ToString()
                 : "";
 
-        public string BattleName
-            => this.BattleData?.Name ?? "";
-
         public string UpdatedTime
-            => this.BattleData != null && this.BattleData.UpdatedTime != default(DateTimeOffset)
-                ? this.BattleData.UpdatedTime.ToString("yyyy/MM/dd HH:mm:ss")
+            => this.Battle != null && this.Battle.UpdatedTime != default(DateTimeOffset)
+                ? this.Battle.UpdatedTime.ToString("yyyy/MM/dd HH:mm:ss")
                 : "No Data";
 
         public string BattleSituation
-            => this.BattleData != null && this.BattleData.BattleSituation != Models.BattleSituation.なし
-                ? this.BattleData.BattleSituation.ToString()
+            => this.Battle != null && this.Battle.BattleSituation != Models.BattleSituation.なし
+                ? this.Battle.BattleSituation.ToString()
                 : "";
 
         public string FriendAirSupremacy
-            => this.BattleData.FriendAirSupremacy != AirSupremacy.航空戦なし
-                ? this.BattleData.FriendAirSupremacy.ToString()
+            => this.Battle.FriendAirSupremacy != AirSupremacy.航空戦なし
+                ? this.Battle.FriendAirSupremacy.ToString()
                 : "";
-
-        public string DropShipName
-            => this.BattleData?.DropShipName;
-
-        public AirCombatResult[] AirCombatResults
-            => this.BattleData?.AirCombatResults ?? new AirCombatResult[0];
-
-        public string FriendLostGauge
-            => this.BattleData.FriendLostGauge.ToString("P1");
-
-        public string EnemyLostGauge
-            => this.BattleData.EnemyLostGauge.ToString("P1");
 
         #region FriendFleet
 
-        private FleetViewModel _FriendFleet;
+        private BattleFleetViewModel _FriendFleet;
 
-        public FleetViewModel FriendFleet
+        public BattleFleetViewModel FriendFleet
         {
             get { return this._FriendFleet; }
             set
@@ -78,9 +79,9 @@ namespace BattleInfoPlugin.ViewModels
 
         #region EnemyFleet
 
-        private FleetViewModel _EnemyFleet;
+        private BattleFleetViewModel _EnemyFleet;
 
-        public FleetViewModel EnemyFleet
+        public BattleFleetViewModel EnemyFleet
         {
             get { return this._EnemyFleet; }
             set
@@ -96,72 +97,18 @@ namespace BattleInfoPlugin.ViewModels
         #endregion
 
 
-        #region FirstFleet変更通知プロパティ
-        private SingleFleetViewModel _FirstFleet;
+        #region NextCellInfo
 
-        public SingleFleetViewModel FirstFleet
+        private NextCellInfoViewModel _nextCellInfo = new NextCellInfoViewModel { IsInSortie = false };
+
+        public NextCellInfoViewModel NextCellInfo
         {
-            get
-            { return this._FirstFleet; }
+            get { return this._nextCellInfo; }
             set
             {
-                if (this._FirstFleet == value)
-                    return;
-                this._FirstFleet = value;
-                this.RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-
-        #region SecondFleet変更通知プロパティ
-        private SingleFleetViewModel _SecondFleet;
-
-        public SingleFleetViewModel SecondFleet
-        {
-            get
-            { return this._SecondFleet; }
-            set
-            {
-                if (this._SecondFleet == value)
-                    return;
-                this._SecondFleet = value;
-                this.RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-
-        #region Enemies変更通知プロパティ
-        private SingleFleetViewModel _Enemies;
-
-        public SingleFleetViewModel Enemies
-        {
-            get
-            { return this._Enemies; }
-            set
-            {
-                if (this._Enemies == value)
-                    return;
-                this._Enemies = value;
-                this.RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-
-        #region NextPointInfo
-
-        private NextPointInfoViewModel _NextPointInfo = new NextPointInfoViewModel { IsInSortie = false };
-
-        public NextPointInfoViewModel NextPointInfo
-        {
-            get { return this._NextPointInfo; }
-            set
-            {
-                if (this._NextPointInfo != value)
+                if (this._nextCellInfo != value)
                 {
-                    this._NextPointInfo = value;
+                    this._nextCellInfo = value;
                     this.RaisePropertyChanged();
                 }
             }
@@ -271,107 +218,57 @@ namespace BattleInfoPlugin.ViewModels
 
         private BattleViewModel()
         {
-            this.FriendFleet = new FleetViewModel();
-            this.EnemyFleet = new FleetViewModel();
+            this.FriendFleet = new BattleFleetViewModel(this.Battle.FriendFleet, "第一艦隊");
+            this.FriendFleet.ObserveUpdate();
+            this.EnemyFleet = new BattleFleetViewModel(this.Battle.EnemyFleet, "敵艦隊");
+            this.EnemyFleet.ObserveUpdate();
 
-            this._FirstFleet = new SingleFleetViewModel("自艦隊");
-            this._SecondFleet = new SingleFleetViewModel("護衛艦隊");
-            this._Enemies = new SingleFleetViewModel("敵艦隊");
-
-            this.CompositeDisposable.Add(new PropertyChangedEventListener(this.BattleData)
+            this.CompositeDisposable.Add(new PropertyChangedEventListener(this.Battle)
             {
                 {
-                    () => this.BattleData.IsInBattle,
-                    (_, __) => this.RaisePropertyChanged(() => this.IsInBattle)
-                },
-                {
-                    nameof(this.FriendLostGauge),
-                    (_, __) => this.RaisePropertyChanged(nameof(this.FriendLostGauge))
-                },
-                {
-                    nameof(this.EnemyLostGauge),
-                    (_, __) => this.RaisePropertyChanged(nameof(this.EnemyLostGauge))
-                },
-                {
-                    () => this.BattleData.BattleResult,
+                    () => this.Battle.BattleResult,
                     (_, __) => this.RaisePropertyChanged(() => this.BattleResultRank)
                 },
                 {
-                    () => this.BattleData.Name,
-                    (_, __) => this.RaisePropertyChanged(() => this.BattleName)
-                },
-                {
-                    () => this.BattleData.UpdatedTime,
+                    () => this.Battle.UpdatedTime,
                     (_, __) => this.RaisePropertyChanged(() => this.UpdatedTime)
                 },
                 {
-                    () => this.BattleData.BattleSituation,
+                    () => this.Battle.BattleSituation,
                     (_, __) => this.RaisePropertyChanged(() => this.BattleSituation)
                 },
                 {
-                    () => this.BattleData.FriendAirSupremacy,
+                    () => this.Battle.FriendAirSupremacy,
                     (_, __) => this.RaisePropertyChanged(() => this.FriendAirSupremacy)
                 },
                 {
-                    () => this.BattleData.LandBaseAirCombatResults,
+                    () => this.Battle.LandBaseAirCombatResults,
                     (_, __) =>
                     {
-                        var landbase = this.BattleData.LandBaseAirCombatResults;
+                        var landbase = this.Battle.LandBaseAirCombatResults;
                         this.UpdateLandBaseVisibility(landbase.Length > 0);
-                        this.FriendLandBaseAirCombatResults = landbase.Select(x => new LandBaseAirCombatResultViewModel(x, FleetType.First)).ToArray();
+                        this.FriendLandBaseAirCombatResults = landbase.Select(x => new LandBaseAirCombatResultViewModel(x, FleetType.Friend)).ToArray();
                         this.EnemyLandBaseAirCombatResults = landbase.Select(x => new LandBaseAirCombatResultViewModel(x, FleetType.Enemy)).ToArray();
                     }
                 },
                 {
-                    () => this.BattleData.AirCombatResults,
+                    () => this.Battle.AirCombatResults,
                     (_, __) =>
                     {
-                        this.RaisePropertyChanged(() => this.AirCombatResults);
-                        this.FriendAirCombatResults = this.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.First)).ToArray();
-                        this.EnemyAirCombatResults = this.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.Enemy)).ToArray();
+                        this.FriendAirCombatResults = this.Battle.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.Friend)).ToArray();
+                        this.EnemyAirCombatResults = this.Battle.AirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.Enemy)).ToArray();
                     }
                 },
                 {
-                    () => this.BattleData.DropShipName,
-                    (_, __) => this.RaisePropertyChanged(() => this.DropShipName)
-                },
-                {
-                    () => this.BattleData.FirstFleet,
+                    () => this.Battle.NextCell,
                     (_, __) =>
                     {
-                        this.FirstFleet.Fleet = this.BattleData.FirstFleet;
-                        this.UpdateFriendFleet();
-                    }
-                },
-                {
-                    () => this.BattleData.SecondFleet,
-                    (_, __) =>
-                    {
-                        this.SecondFleet.Fleet = this.BattleData.SecondFleet;
-                        this.UpdateFriendFleet();
-                    }
-                },
-                {
-                    () => this.BattleData.Enemies,
-                    (_, __) =>
-                    {
-                        this.Enemies.Fleet = this.BattleData.Enemies;
-                        this.UpdateEnemyFleet();
-                    }
-                },
-                {
-                    () => this.BattleData.NextCell,
-                    (_, __) =>
-                    {
-                        var nextCell = this.BattleData.NextCell;
+                        var nextCell = this.Battle.NextCell;
 
                         var getLostItems = new List<GetLostItemViewModel>();
-                        if (nextCell.GetItem != null)
-                            getLostItems.AddRange(nextCell.GetItem.Select(item => new GetLostItemViewModel(item, true)));
-                        if (nextCell.LostItem != null)
-                            getLostItems.Add(new GetLostItemViewModel(nextCell.LostItem, false));
+                        getLostItems.AddRange(nextCell.GetLostItems.Select(item => new GetLostItemViewModel(item)));
 
-                        this.NextPointInfo = new NextPointInfoViewModel
+                        this.NextCellInfo = new NextCellInfoViewModel
                         {
                             MapId = nextCell.MapId.ToString(),
                             Id = ((char) (nextCell.Id - 1 + 'A')).ToString(),
@@ -382,15 +279,10 @@ namespace BattleInfoPlugin.ViewModels
                     }
                 },
                 {
-                    () => this.BattleData.State,
-                    (_, __) => this.NextPointInfo = new NextPointInfoViewModel { IsInSortie = false }
+                    () => this.Battle.State,
+                    (_, __) => this.NextCellInfo = new NextCellInfoViewModel {IsInSortie = false}
                 }
             });
-
-            this.BattleData
-                .Subscribe(nameof(BattleData.IsShowLandBaseAirStage),
-                    () => this.UpdateLandBaseVisibility(this.BattleData.IsShowLandBaseAirStage))
-                .AddTo(this);
         }
 
         private void UpdateLandBaseVisibility(bool visible)
@@ -398,23 +290,6 @@ namespace BattleInfoPlugin.ViewModels
             this.LandBaseVisibility = visible
                 ? Visibility.Visible
                 : Visibility.Collapsed;
-        }
-
-        private void UpdateFriendFleet()
-        {
-            this.FriendFleet.Fleets = this.FilterFleets(this.FirstFleet, this.SecondFleet);
-        }
-
-        private void UpdateEnemyFleet()
-        {
-            this.EnemyFleet.Fleets = this.FilterFleets(this.Enemies);
-        }
-
-        private SingleFleetViewModel[] FilterFleets(params SingleFleetViewModel[] fleets)
-        {
-            return fleets
-                .Where(f => f.IsVisible)
-                .ToArray();
         }
     }
 }

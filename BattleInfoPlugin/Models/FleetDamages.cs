@@ -12,9 +12,13 @@ namespace BattleInfoPlugin.Models
     {
         public int[] Ships { get; }
 
-        public FleetDamages(IEnumerable<int> damages = null)
+        public FleetDamages() : this(new int[6])
         {
-            this.Ships = damages?.ToArray() ?? new int[6];
+        }
+
+        public FleetDamages(IEnumerable<int> damages)
+        {
+            this.Ships = damages.ToArray();
             if (this.Ships.Length != 6) throw new ArgumentException("艦隊ダメージ配列の長さは6である必要があります。");
         }
 
@@ -39,7 +43,11 @@ namespace BattleInfoPlugin.Models
 
         public IEnumerator<int> GetEnumerator() => ((IEnumerable<int>)this.Ships).GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
+        public static FleetDamages EmptyDamage { get; } = new FleetDamages();
+
+        public static FleetDamages[] EmptyDamages { get; } = { };
     }
 
     public static class FleetDamagesExtensions
