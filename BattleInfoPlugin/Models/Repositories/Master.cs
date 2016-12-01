@@ -49,9 +49,9 @@ namespace BattleInfoPlugin.Models.Repositories
 
             var obj = this.filePath.Deserialize<Master>();
 
-            this.MapAreas = obj?.MapAreas.ValueOrNew();
-            this.MapInfos = obj?.MapInfos.ValueOrNew();
-            this.MapCells = obj?.MapCells.ValueOrNew();
+            this.MapAreas = (obj?.MapAreas).ValueOrNew();
+            this.MapInfos = (obj?.MapInfos).ValueOrNew();
+            this.MapCells = (obj?.MapCells).ValueOrNew();
 
             var proxy = KanColleClient.Current.Proxy;
             proxy.Observe<kcsapi_start2>("/kcsapi/api_start2")
