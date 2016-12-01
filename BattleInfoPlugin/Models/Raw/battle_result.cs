@@ -29,7 +29,7 @@ namespace BattleInfoPlugin.Models.Raw
         public int api_get_exmap_rate { get; set; }
         public int api_get_exmap_useitem_id { get; set; }
 
-        public int api_mvp_combined { get; set; }
+        public int? api_mvp_combined { get; set; }
         public int[] api_get_ship_exp_combined { get; set; }
         public int[][] api_get_exp_lvup_combined { get; set; }
         public int api_get_eventflag { get; set; }
