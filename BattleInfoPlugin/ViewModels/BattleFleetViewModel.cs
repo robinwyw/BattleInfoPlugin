@@ -19,9 +19,10 @@ namespace BattleInfoPlugin.ViewModels
 
         public IEnumerable<FleetData> Fleets => this._fleet.Fleets;
 
-        public string Name => this.IsCombined
-            ? this._combinedName
-            : (string.IsNullOrWhiteSpace(this._fleet.Name) ? this._defaultName : this._fleet.Name);
+        public string Name =>
+            string.IsNullOrWhiteSpace(this._fleet.Name)
+                ? (this.IsCombined ? this._combinedName : this._defaultName)
+                : this._fleet.Name;
 
         public bool IsCombined => this._fleet.FleetCount > 1;
 

@@ -768,10 +768,7 @@ namespace BattleInfoPlugin.Models
                 .ToArray()
                 );
 
-            if (fleets.Length == 1)
-            {
-                this.FriendFleet.Name = fleets[0].Name;
-            }
+            this.FriendFleet.Name = fleets.Length == 1 ? fleets[0].Name : "連合艦隊";
         }
 
         private void UpdateFormation(IBattleFormationInfo data)
