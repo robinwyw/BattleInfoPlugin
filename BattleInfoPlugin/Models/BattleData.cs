@@ -14,6 +14,8 @@ namespace BattleInfoPlugin.Models
     {
         public static BattleData Current { get; } = new BattleData();
 
+        private string _practiceEnemyName;
+
         #region State
 
         private BattleState _State;
@@ -307,6 +309,9 @@ namespace BattleInfoPlugin.Models
         {
             var proxy = KanColleClient.Current.Proxy;
 
+
+            proxy.Observe<member_practice_enemyinfo>("/kcsapi/api_req_member/get_practice_enemyinfo")
+                .Subscribe(x => this._practiceEnemyName = x.Data.api_deckname);
 
             #region Start / Next
 
@@ -700,13 +705,10 @@ namespace BattleInfoPlugin.Models
             }
         }
 
-        private void UpdateEnemyFleets(ICommonBattleMembers data)
+        private void UpdateEnemyFleets(ICommonBattleMembers data, string enemyName)
         {
             this.EnemyFleet.Update(data.GetEnemyFleets());
-            if (!string.IsNullOrEmpty(this.NextCell.EnemyName))
-            {
-                this.EnemyFleet.Name = this.NextCell.EnemyName;
-            }
+            this.EnemyFleet.Name = enemyName;
         }
 
         private void Update(Action updateAction, string name, BattleResultType battleResultType = BattleResultType.Normal)
@@ -732,7 +734,7 @@ namespace BattleInfoPlugin.Models
             this.State = BattleState.Practice;
 
             this.UpdateFriendFleets(data.api_dock_id);
-            this.UpdateEnemyFleets(data);
+            this.UpdateEnemyFleets(data, this._practiceEnemyName);
             this.UpdateFleetsHPs(data);
 
             this.UpdateFormation(data);
@@ -748,7 +750,7 @@ namespace BattleInfoPlugin.Models
             this.LandBaseAirCombatResults = new LandBaseAirCombatResult[0];
 
             this.UpdateFriendFleets();
-            this.UpdateEnemyFleets(data);
+            this.UpdateEnemyFleets(data, this.NextCell.EnemyName);
             this.UpdateFleetsHPs(data);
 
             this.UpdateFormation(data);
