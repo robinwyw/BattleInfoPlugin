@@ -227,6 +227,26 @@ namespace BattleInfoPlugin.Models
         #endregion
 
 
+        #region InjectionAirCombatResults
+
+        private AirCombatResult[] _InjectionAirCombatResults = new AirCombatResult[0];
+
+        public AirCombatResult[] InjectionAirCombatResults
+        {
+            get { return this._InjectionAirCombatResults; }
+            set
+            {
+                if (!this._InjectionAirCombatResults.Equals(value))
+                {
+                    this._InjectionAirCombatResults = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
         #region AirCombatResults変更通知プロパティ
         private AirCombatResult[] _AirCombatResults = new AirCombatResult[0];
 
@@ -419,6 +439,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfo(data);
 
+                this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
                 this.Support(data.api_support_info);
@@ -459,6 +480,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfo(data);
 
+                this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
 
                 this.AirCombat(data.api_kouku, "1回目/");
@@ -473,6 +495,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfo(data);
 
+                this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
                 this.Support(data.api_support_info);
@@ -493,6 +516,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfo(data);
 
+                this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
                 this.Support(data.api_support_info);
@@ -535,6 +559,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfoPractice(data);
 
+                this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirCombat(data.api_kouku);
 
                 this.Shelling(data.api_opening_taisen);
@@ -562,6 +587,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfo(data);
 
+                this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku, "1回目/");
                 this.Support(data.api_support_info);
@@ -575,6 +601,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfo(data);
 
+                this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
                 this.Support(data.api_support_info);
@@ -587,6 +614,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfo(data);
 
+                this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
                 this.Support(data.api_support_info);
@@ -599,6 +627,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfo(data);
 
+                this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
                 this.Support(data.api_support_info);
@@ -632,6 +661,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfo(data);
 
+                this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
                 this.Support(data.api_support_info);
@@ -820,8 +850,9 @@ namespace BattleInfoPlugin.Models
 
             this.BattleSituation = BattleSituation.なし;
             this.FriendAirSupremacy = AirSupremacy.航空戦なし;
-            this.AirCombatResults = new AirCombatResult[0];
+            this.InjectionAirCombatResults = new AirCombatResult[0];
             this.LandBaseAirCombatResults = new LandBaseAirCombatResult[0];
+            this.AirCombatResults = new AirCombatResult[0];
             this.FriendFleet.Clear();
             this.EnemyFleet.Clear();
 

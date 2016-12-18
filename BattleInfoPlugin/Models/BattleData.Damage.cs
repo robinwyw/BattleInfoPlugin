@@ -9,6 +9,15 @@ namespace BattleInfoPlugin.Models
 {
     public partial class BattleData
     {
+        private void InjectionAirCombat(Api_Kouku airCombat)
+        {
+            if (airCombat == null) return;
+
+            this.CalDamage(airCombat);
+
+            this.InjectionAirCombatResults = airCombat.ToResult("噴-");
+        }
+
         private void AirBaseAttack(Api_Air_Base_Attack[] attacks)
         {
             if (attacks == null) return;
@@ -29,6 +38,13 @@ namespace BattleInfoPlugin.Models
                 this.FriendAirSupremacy = airCombat.GetAirSupremacy();
             }
 
+            this.CalDamage(airCombat);
+
+            this.AirCombatResults = this.AirCombatResults.Concat(airCombat.ToResult(prefix)).ToArray();
+        }
+
+        private void CalDamage(Api_Kouku airCombat)
+        {
             foreach (var fleet in this.FriendFleet.Fleets)
             {
                 fleet.CalcDamages(airCombat.GetDamages(FleetType.Friend, fleet.Index));
@@ -37,8 +53,6 @@ namespace BattleInfoPlugin.Models
             {
                 fleet.CalcDamages(airCombat.GetDamages(FleetType.Enemy, fleet.Index));
             }
-
-            this.AirCombatResults = this.AirCombatResults.Concat(airCombat.ToResult(prefix)).ToArray();
         }
 
         private void Support(Api_Support_Info support)

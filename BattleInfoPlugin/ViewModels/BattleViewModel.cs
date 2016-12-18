@@ -137,6 +137,46 @@ namespace BattleInfoPlugin.ViewModels
         #endregion
 
 
+        #region FriendInjectionAirCombatResults
+
+        private AirCombatResultViewModel[] _FriendInjectionAirCombatResults;
+
+        public AirCombatResultViewModel[] FriendInjectionAirCombatResults
+        {
+            get { return this._FriendInjectionAirCombatResults; }
+            set
+            {
+                if (this._FriendInjectionAirCombatResults != value)
+                {
+                    this._FriendInjectionAirCombatResults = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region EnemyInjectionAirCombatResults
+
+        private AirCombatResultViewModel[] _EnemyInjectionAirCombatResults;
+
+        public AirCombatResultViewModel[] EnemyInjectionAirCombatResults
+        {
+            get { return this._EnemyInjectionAirCombatResults; }
+            set
+            {
+                if (this._EnemyInjectionAirCombatResults != value)
+                {
+                    this._EnemyInjectionAirCombatResults = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
         #region FriendLandBaseAirCombatResults
 
         private LandBaseAirCombatResultViewModel[] _FriendLandBaseAirCombatResults;
@@ -240,6 +280,14 @@ namespace BattleInfoPlugin.ViewModels
                 {
                     () => this.Battle.FriendAirSupremacy,
                     (_, __) => this.RaisePropertyChanged(() => this.FriendAirSupremacy)
+                },
+                {
+                    () => this.Battle.InjectionAirCombatResults,
+                    (_, __) =>
+                    {
+                        this.FriendInjectionAirCombatResults = this.Battle.InjectionAirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.Friend)).ToArray();
+                        this.EnemyInjectionAirCombatResults = this.Battle.InjectionAirCombatResults.Select(x => new AirCombatResultViewModel(x, FleetType.Enemy)).ToArray();
+                    }
                 },
                 {
                     () => this.Battle.LandBaseAirCombatResults,

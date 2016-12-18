@@ -24,6 +24,7 @@ namespace BattleInfoPlugin.Models.Raw
         public int[][] api_eParam { get; set; }
         public int[][] api_eParam_combined { get; set; }
         public int[] api_formation { get; set; }
+        public Api_Kouku api_injection_kouku { get; set; }
         public Api_Air_Base_Attack[] api_air_base_attack { get; set; }
         public int[] api_stage_flag { get; set; }
         public Api_Kouku api_kouku { get; set; }

@@ -161,7 +161,25 @@
             </viewModels:BattleFleetViewModel.Fleets>
         </viewModels:BattleFleetViewModel>
     </viewModels:BattleViewModel.EnemyFleet>
+    
+    <viewModels:BattleViewModel.FriendInjectionAirCombatResults>
+        <x:Array Type="viewModels:AirCombatResultViewModel">
+            <viewModels:AirCombatResultViewModel Name="噴-空対空"
+                                                 IsHappen="True"
+                                                 Count="90"
+                                                 LostCount="20"
+                                                 RemainingCount="70" />
+            <viewModels:AirCombatResultViewModel Name="噴-空対艦" />
+        </x:Array>
+    </viewModels:BattleViewModel.FriendInjectionAirCombatResults>
 
+    <viewModels:BattleViewModel.EnemyInjectionAirCombatResults>
+        <x:Array Type="viewModels:AirCombatResultViewModel">
+            <viewModels:AirCombatResultViewModel Name="噴-空対空" />
+            <viewModels:AirCombatResultViewModel Name="噴-空対艦" />
+        </x:Array>
+    </viewModels:BattleViewModel.EnemyInjectionAirCombatResults>
+    
     <viewModels:BattleViewModel.FriendAirCombatResults>
         <x:Array Type="viewModels:AirCombatResultViewModel">
             <viewModels:AirCombatResultViewModel Name="空対空"
