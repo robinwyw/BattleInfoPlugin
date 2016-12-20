@@ -258,7 +258,7 @@ namespace BattleInfoPlugin.ViewModels
 
         private BattleViewModel()
         {
-            this.FriendFleet = new BattleFleetViewModel(this.Battle.FriendFleet, "第一艦隊");
+            this.FriendFleet = new BattleFleetViewModel(this.Battle.FriendFleet, "自艦隊");
             this.FriendFleet.ObserveUpdate();
             this.EnemyFleet = new BattleFleetViewModel(this.Battle.EnemyFleet, "敵艦隊");
             this.EnemyFleet.ObserveUpdate();

@@ -13,7 +13,7 @@ namespace BattleInfoPlugin.Models
         {
             if (airCombat == null) return;
 
-            this.CalDamage(airCombat);
+            this.CalcAirCombatDamages(airCombat);
 
             this.InjectionAirCombatResults = airCombat.ToResult("噴-");
         }
@@ -23,10 +23,7 @@ namespace BattleInfoPlugin.Models
             if (attacks == null) return;
 
             this.LandBaseAirCombatResults = attacks.ToResult();
-            foreach (var fleet in this.EnemyFleet.Fleets)
-            {
-                fleet.CalcDamages(attacks.GetDamages(fleet.Index));
-            }
+            this.CalcDamages(attacks.GetDamages());
         }
 
         private void AirCombat(Api_Kouku airCombat, string prefix = "", bool airSupremacy = true)
@@ -38,62 +35,33 @@ namespace BattleInfoPlugin.Models
                 this.FriendAirSupremacy = airCombat.GetAirSupremacy();
             }
 
-            this.CalDamage(airCombat);
+            this.CalcAirCombatDamages(airCombat);
 
             this.AirCombatResults = this.AirCombatResults.Concat(airCombat.ToResult(prefix)).ToArray();
-        }
-
-        private void CalDamage(Api_Kouku airCombat)
-        {
-            foreach (var fleet in this.FriendFleet.Fleets)
-            {
-                fleet.CalcDamages(airCombat.GetDamages(FleetType.Friend, fleet.Index));
-            }
-            foreach (var fleet in this.EnemyFleet.Fleets)
-            {
-                fleet.CalcDamages(airCombat.GetDamages(FleetType.Enemy, fleet.Index));
-            }
         }
 
         private void Support(Api_Support_Info support)
         {
             if (support == null) return;
 
-            if (support.api_support_airatack != null)
-            {
-                foreach (var fleet in this.EnemyFleet.Fleets)
-                {
-                    fleet.CalcDamages(support.api_support_airatack.GetDamages(FleetType.Enemy, fleet.Index));
-                }
-            }
-            else if (support.api_support_hourai?.api_damage != null)
-            {
-                var damages = support.api_support_hourai.api_damage.GetCombinedDamages();
-                foreach (var fleet in this.EnemyFleet.Fleets)
-                {
-                    fleet.CalcDamages(damages[fleet.Index]);
-                }
-            }
+            var damages = support.GetDamages();
+            this.CalcDamages(damages);
         }
 
-        private void Shelling(Hougeki shelling, int friendFleetIndex = 0, int enemyFleetIndex = 0)
+        private void Shelling(Hougeki shelling, int friendFleetIndex = 1, int enemyFleetIndex = 1)
         {
             if (shelling == null) return;
 
-            var friendDamage = shelling.GetFriendDamages();
-            var enemyDamage = shelling.GetEnemyDamages();
-            this.FriendFleet.Fleets[friendFleetIndex].CalcDamages(friendDamage);
-            this.EnemyFleet.Fleets[enemyFleetIndex].CalcDamages(enemyDamage);
+            var damages = shelling.GetDamages(friendFleetIndex, enemyFleetIndex);
+            this.CalcDamages(damages);
         }
 
-        private void Shelling(Midnight_Hougeki shelling, int friendFleetIndex = 0, int enemyFleetIndex = 0)
+        private void Shelling(Midnight_Hougeki shelling, int friendFleetIndex = 1, int enemyFleetIndex = 1)
         {
             if (shelling == null) return;
 
-            var friendDamage = shelling.GetFriendDamages();
-            var enemyDamage = shelling.GetEnemyFirstFleetDamages();
-            this.FriendFleet.Fleets[friendFleetIndex].CalcDamages(friendDamage);
-            this.EnemyFleet.Fleets[enemyFleetIndex].CalcDamages(enemyDamage);
+            var damages = shelling.GetDamages(friendFleetIndex, enemyFleetIndex);
+            this.CalcDamages(damages);
         }
 
         private void Shelling(Enemy_Combined_Hougeki shelling)
@@ -101,43 +69,59 @@ namespace BattleInfoPlugin.Models
             if (shelling == null) return;
 
             var damages = shelling.GetDamages();
-
-            foreach (var damage in damages[0])
-            {
-                this.FriendFleet.Fleets[damage.Key].CalcDamages(damage.Value.ToArray());
-            }
-
-            foreach (var damage in damages[1])
-            {
-                this.EnemyFleet.Fleets[damage.Key].CalcDamages(damage.Value.ToArray());
-            }
+            this.CalcDamages(damages);
         }
 
-        private void Torpedo(Raigeki torpedo, int friendFleetIndex = 0, int enemyFleetIndex = 0)
+        private void Torpedo(Raigeki torpedo, int friendFleetIndex = 1, int enemyFleetIndex = 1)
         {
             if (torpedo == null) return;
 
-            var friendDamage = torpedo.GetFriendDamages();
-            var enemyDamage = torpedo.GetEnemyDamages();
-            this.FriendFleet.Fleets[friendFleetIndex].CalcDamages(friendDamage);
-            this.EnemyFleet.Fleets[enemyFleetIndex].CalcDamages(enemyDamage);
+            var friendDamages = torpedo.GetFriendDamages(friendFleetIndex, enemyFleetIndex);
+            var enemyDamages = torpedo.GetEnemyDamages(friendFleetIndex, enemyFleetIndex);
+
+            this.CalcDamages(friendDamages);
+            this.CalcDamages(enemyDamages);
         }
 
-        private void TorpedoCombined(Raigeki torpedo)
+
+        private void CalcAirCombatDamages(Api_Kouku airCombat)
         {
-            if (torpedo == null) return;
+            this.CalcDamages(airCombat.GetDamages(FleetType.Friend));
+            this.CalcDamages(airCombat.GetDamages(FleetType.Enemy));
+        }
 
-            var friendDamages = torpedo.GetFriendDamagesCombined();
-            var enemyDamages = torpedo.GetEnemyDamagesCombined();
-            for (var i = 0; i < friendDamages.Length; i++)
-            {
-                this.FriendFleet.Fleets[i].CalcDamages(friendDamages[i]);
-            }
+        private void CalcDamages(IEnumerable<ShipDamage> damages)
+        {
+            if (damages == null) return;
 
-            for (var i = 0; i < enemyDamages.Length; i++)
+            foreach (var damage in damages)
             {
-                this.EnemyFleet.Fleets[i].CalcDamages(enemyDamages[i]);
+                var source = this.GetShip(damage.Source);
+                if (source != null)
+                {
+                    source.AttackDamage += damage.Damage;
+                }
+
+                var target = this.GetShip(damage.Target);
+                if (target != null)
+                {
+                    target.ReceiveDamage(damage.Damage);
+
+                    if (this.State == BattleState.InSortie)
+                    {
+                        target.CheckDamageControl();
+                    }
+                }
             }
+        }
+
+        private ShipData GetShip(int index)
+        {
+            if (index == 0) return null;
+
+            return index > 0
+                ? this.FriendFleet.GetShip(index)
+                : this.EnemyFleet.GetShip(-index);
         }
     }
 }

@@ -149,15 +149,12 @@
     <Compile Include="Models\AirCombatResult.cs" />
     <Compile Include="Models\AirSupremacy.cs" />
     <Compile Include="Models\AttackType.cs" />
-    <Compile Include="Models\BattleDamage.cs" />
     <Compile Include="Models\BattleData.cs" />
     <Compile Include="Models\BattleFleet.cs" />
     <Compile Include="Models\BattleResultRank.cs" />
     <Compile Include="Models\BattleData.Result.cs" />
     <Compile Include="Models\BattleSituation.cs" />
     <Compile Include="Models\CellType.cs" />
-    <Compile Include="Models\FleetDamages.cs" />
-    <Compile Include="Models\FleetDamagesCombined.cs" />
     <Compile Include="Models\FleetData.cs" />
     <Compile Include="Models\FleetType.cs" />
     <Compile Include="Models\Formation.cs" />
@@ -193,6 +190,7 @@
     <Compile Include="Models\Settings\SettingsHelper.cs" />
     <Compile Include="Models\BattleState.cs" />
     <Compile Include="Models\Settings\_PathsSettings.cs" />
+    <Compile Include="Models\ShipDamage.cs" />
     <Compile Include="NotificationType.cs" />
     <Compile Include="Models\Raw\battle_midnight_battle.cs" />
     <Compile Include="Models\Raw\battle_midnight_sp_midnight.cs" />

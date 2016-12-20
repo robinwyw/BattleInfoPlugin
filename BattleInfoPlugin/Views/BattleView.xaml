@@ -140,56 +140,6 @@
                         </StackPanel>
                     </ContentControl.ToolTip>
                 </ContentControl>
-                <!--<Grid ToolTipService.ShowDuration="60000">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"
-                                          SharedSizeGroup="AirCombatName" />
-                        <ColumnDefinition Width="Auto"
-                                          SharedSizeGroup="AirCombatValue" />
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.ToolTip>
-                        <StackPanel>
-                            <ItemsControl ItemsSource="{Binding Squadrons}"
-                                          ItemTemplate="{StaticResource SquadronTemplate}" />
-                            <ContentControl Content="{Binding Stage1}"
-                                            ContentTemplate="{StaticResource AirCombatTemplate}" />
-                            <ContentControl Content="{Binding Stage2}"
-                                            ContentTemplate="{StaticResource AirCombatTemplate}" />
-                        </StackPanel>
-                    </Grid.ToolTip>
-
-                    <TextBlock Grid.Column="0"
-                               Text="{Binding Name, StringFormat={}{0}:}"
-                               Style="{DynamicResource AirStageStyleKey2}"
-                               HorizontalAlignment="Left" />
-
-                    <Grid Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"
-                                              SharedSizeGroup="Current" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto"
-                                              SharedSizeGroup="Origin" />
-                            <ColumnDefinition Width="Auto"
-                                              SharedSizeGroup="Lost" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0"
-                                   Text="{Binding RemainingCount}"
-                                   Style="{DynamicResource AirStageStyleKey}"
-                                   Margin="5,0" />
-                        <TextBlock Grid.Column="1"
-                                   Text="/"
-                                   Style="{DynamicResource AirStageStyleKey2}" />
-                        <TextBlock Grid.Column="2"
-                                   Text="{Binding Count}"
-                                   Style="{DynamicResource AirStageStyleKey}"
-                                   Margin="5,0" />
-                        <TextBlock Grid.Column="3"
-                                   Text="{Binding LostCount, StringFormat={}(-{0})}"
-                                   Style="{DynamicResource AirStageStyleKey2}" />
-                    </Grid>
-                </Grid>-->
             </DataTemplate>
 
             <Style x:Key="FleetFormationStyleKey"

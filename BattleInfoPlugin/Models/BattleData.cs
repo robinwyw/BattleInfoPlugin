@@ -329,10 +329,6 @@ namespace BattleInfoPlugin.Models
         {
             var proxy = KanColleClient.Current.Proxy;
 
-
-            proxy.Observe<member_practice_enemyinfo>("/kcsapi/api_req_member/get_practice_enemyinfo")
-                .Subscribe(x => this._practiceEnemyName = x.Data.api_deckname);
-
             #region Start / Next
 
             proxy.Observe<map_start_next>("/kcsapi/api_req_map/start")
@@ -344,6 +340,9 @@ namespace BattleInfoPlugin.Models
             #endregion
 
             #region Practice
+
+            proxy.Observe<member_practice_enemyinfo>("/kcsapi/api_req_member/get_practice_enemyinfo")
+                .Subscribe(x => this._practiceEnemyName = x.Data.api_deckname);
 
             proxy.Observe<practice_battle>("/kcsapi/api_req_practice/battle")
                 .Subscribe(x => this.Update(x.Data));
@@ -408,6 +407,9 @@ namespace BattleInfoPlugin.Models
                 .Subscribe(x => this.Update(x.Data));
 
             #region Result
+
+            proxy.Observe<battle_result>("/kcsapi/api_req_practice/battle_result")
+                .Subscribe(x => this.UpdateBattleResult(x.Data));
 
             proxy.Observe<battle_result>("/kcsapi/api_req_sortie/battleresult")
                 .Subscribe(x => this.UpdateBattleResult(x.Data));
@@ -501,12 +503,12 @@ namespace BattleInfoPlugin.Models
                 this.Support(data.api_support_info);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack, 1, 0);
+                this.Torpedo(data.api_opening_atack, 2, 1);
 
-                this.Shelling(data.api_hougeki1, 1, 0);
-                this.Torpedo(data.api_raigeki, 1, 0);
-                this.Shelling(data.api_hougeki2, 0, 0);
-                this.Shelling(data.api_hougeki3, 0, 0);
+                this.Shelling(data.api_hougeki1, 2, 1);
+                this.Torpedo(data.api_raigeki, 2, 1);
+                this.Shelling(data.api_hougeki2, 1, 1);
+                this.Shelling(data.api_hougeki3, 1, 1);
             }, "連合艦隊 - 機動部隊 - 昼戦");
         }
 
@@ -522,12 +524,12 @@ namespace BattleInfoPlugin.Models
                 this.Support(data.api_support_info);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack, 1, 0);
+                this.Torpedo(data.api_opening_atack, 2, 1);
 
-                this.Shelling(data.api_hougeki1, 0, 0);
-                this.Shelling(data.api_hougeki2, 0, 0);
-                this.Shelling(data.api_hougeki3, 1, 0);
-                this.Torpedo(data.api_raigeki, 1, 0);
+                this.Shelling(data.api_hougeki1, 1, 1);
+                this.Shelling(data.api_hougeki2, 1, 1);
+                this.Shelling(data.api_hougeki3, 2, 1);
+                this.Torpedo(data.api_raigeki, 2, 1);
             }, "連合艦隊 - 水上部隊 - 昼戦");
         }
 
@@ -537,9 +539,8 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateFleetsHPs(data);
 
-                this.Shelling(data.api_hougeki, 1, 0);
+                this.Shelling(data.api_hougeki, 2, 1);
             }, "連合艦隊 - 夜戦");
-
         }
 
         public void Update(combined_battle_sp_midnight data)
@@ -548,7 +549,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateInfo(data);
 
-                this.Shelling(data.api_hougeki, 1, 0);
+                this.Shelling(data.api_hougeki, 2, 1);
             }, "連合艦隊 - 開幕夜戦");
         }
 
@@ -634,10 +635,10 @@ namespace BattleInfoPlugin.Models
 
                 // TODO unknown opening_taisen
                 //this.Shelling(data.api_opening_taisen);
-                this.TorpedoCombined(data.api_opening_atack);
+                this.Torpedo(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
-                this.TorpedoCombined(data.api_raigeki);
+                this.Torpedo(data.api_raigeki);
                 this.Shelling(data.api_hougeki2);
                 this.Shelling(data.api_hougeki3);
             }, "敵連合艦隊 - 昼戦");
@@ -649,8 +650,8 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateFleetsHPsEc(data);
 
-                var friendFleetIndex = data.api_active_deck[0] - 1;
-                var enemyFleetIndex = data.api_active_deck[1] - 1;
+                var friendFleetIndex = data.api_active_deck[0];
+                var enemyFleetIndex = data.api_active_deck[1];
                 this.Shelling(data.api_hougeki, friendFleetIndex, enemyFleetIndex);
             }, "敵連合艦隊 - 夜戦");
         }
@@ -668,11 +669,11 @@ namespace BattleInfoPlugin.Models
 
                 // TODO unknown opening_taisen
                 //this.Shelling(data.api_opening_taisen);
-                this.TorpedoCombined(data.api_opening_atack);
+                this.Torpedo(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
                 this.Shelling(data.api_hougeki2);
-                this.TorpedoCombined(data.api_raigeki);
+                this.Torpedo(data.api_raigeki);
                 this.Shelling(data.api_hougeki3);
             }, "連合艦隊 - 敵連合艦隊 - 昼戦");
         }
@@ -794,11 +795,11 @@ namespace BattleInfoPlugin.Models
 
             this.FriendFleet.Update(
                 fleets
-                .Select(f => new FleetData(f.Ships.Select(s => new MembersShipData(s))))
-                .ToArray()
-                );
+                    .Select(f => new FleetData(f.Ships.Select(s => new MembersShipData(s))))
+                    .ToArray()
+            );
 
-            this.FriendFleet.Name = fleets.Length == 1 ? fleets[0].Name : "連合艦隊";
+            this.FriendFleet.Name = fleets.Length == 1 ? fleets[0].Name : "";
         }
 
         private void UpdateFormation(IBattleFormationInfo data)
@@ -813,32 +814,32 @@ namespace BattleInfoPlugin.Models
 
         private void UpdateFleetsHPs(ICommonBattleMembers data)
         {
-            this.FriendFleet.Fleets[0].UpdateHPs(data.api_maxhps.GetFriendData(), data.api_nowhps.GetFriendData());
-            this.EnemyFleet.Fleets[0].UpdateHPs(data.api_maxhps.GetEnemyData(), data.api_nowhps.GetEnemyData());
+            this.FriendFleet.Fleets[1].UpdateHPs(data.api_maxhps.GetFriendData(), data.api_nowhps.GetFriendData());
+            this.EnemyFleet.Fleets[1].UpdateHPs(data.api_maxhps.GetEnemyData(), data.api_nowhps.GetEnemyData());
 
             if (this.FriendFleet.FleetCount > 1)
             {
-                this.FriendFleet.Fleets[1].UpdateHPs(data.api_maxhps_combined.GetFriendData(), data.api_nowhps_combined.GetFriendData());
+                this.FriendFleet.Fleets[2].UpdateHPs(data.api_maxhps_combined.GetFriendData(), data.api_nowhps_combined.GetFriendData());
             }
             if (this.EnemyFleet.FleetCount > 1)
             {
-                this.EnemyFleet.Fleets[1].UpdateHPs(data.api_maxhps_combined.GetEnemyData(), data.api_nowhps_combined.GetEnemyData());
+                this.EnemyFleet.Fleets[2].UpdateHPs(data.api_maxhps_combined.GetEnemyData(), data.api_nowhps_combined.GetEnemyData());
             }
         }
 
         private void UpdateFleetsHPsEc(ICommonBattleMembers data)
         {
-            this.FriendFleet.Fleets[0].UpdateHPs(data.api_maxhps.GetFriendData(), data.api_nowhps.GetFriendData());
-            this.EnemyFleet.Fleets[0].UpdateHPs(data.api_maxhps.GetEnemyData(), data.api_nowhps.GetEnemyData());
+            this.FriendFleet.Fleets[1].UpdateHPs(data.api_maxhps.GetFriendData(), data.api_nowhps.GetFriendData());
+            this.EnemyFleet.Fleets[1].UpdateHPs(data.api_maxhps.GetEnemyData(), data.api_nowhps.GetEnemyData());
 
             if (this.FriendFleet.FleetCount > 1)
             {
                 // each_battle->ec_midnight_battle api_maxhp_combined[1..6]==api_nowhp_combined[1..6]
-                this.FriendFleet.Fleets[1].UpdateNowHPs(data.api_nowhps_combined.GetFriendData());
+                this.FriendFleet.Fleets[2].UpdateNowHPs(data.api_nowhps_combined.GetFriendData());
             }
             if (this.EnemyFleet.FleetCount > 1)
             {
-                this.EnemyFleet.Fleets[1].UpdateHPs(data.api_maxhps_combined.GetEnemyData(), data.api_nowhps_combined.GetEnemyData());
+                this.EnemyFleet.Fleets[2].UpdateHPs(data.api_maxhps_combined.GetEnemyData(), data.api_nowhps_combined.GetEnemyData());
             }
         }
 

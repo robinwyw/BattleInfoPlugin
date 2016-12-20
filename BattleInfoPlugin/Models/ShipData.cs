@@ -146,6 +146,26 @@ namespace BattleInfoPlugin.Models
 
         public abstract int OriginalHP { get; }
 
+        #region AttackDamage
+
+        private int _AttackDamage;
+
+        // stage3?
+        public int AttackDamage
+        {
+            get { return this._AttackDamage; }
+            internal set
+            {
+                if (this._AttackDamage != value)
+                {
+                    this._AttackDamage = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
         #region DamageReceived
 
         private int _DamageReceived;
@@ -396,6 +416,46 @@ namespace BattleInfoPlugin.Models
                 .Where(x => x.Source.Type == SlotItemType.水上偵察機
                             || x.Source.Type == SlotItemType.水上爆撃機)
                 .Any(x => 0 < x.Current);
+        }
+
+        public static void CheckDamageControl(this ShipData ship)
+        {
+            if (ship.NowHP > 0) return;
+
+            // ダメコンによる回復処理。同一戦闘で2度目が発生する事はないという前提……
+            var damageControl = ship.FirstDamageControlOrNull();
+
+            if (damageControl == null) return;
+
+            ship.IsUsedDamecon = true;
+            if (damageControl.IsDamecon())
+            {
+                ship.NowHP = (int)Math.Floor(ship.MaxHP * 0.2);
+            }
+            else
+            {
+                ship.NowHP = ship.MaxHP;
+            }
+        }
+
+        private static bool IsDamecon(this ShipSlotData info)
+        {
+            return info?.Source?.Id == 42;
+        }
+
+        private static bool IsMegami(this ShipSlotData info)
+        {
+            return info?.Source?.Id == 43;
+        }
+
+        private static ShipSlotData FirstDamageControlOrNull(this ShipData ship)
+        {
+            // ダメコン優先度: 拡張スロット＞インデックス順
+            if (ship.ExSlot.IsDamecon() || ship.ExSlot.IsMegami())
+            {
+                return ship.ExSlot;
+            }
+            return ship.Slots?.FirstOrDefault(x => x.IsDamecon() || x.IsMegami());
         }
     }
 
