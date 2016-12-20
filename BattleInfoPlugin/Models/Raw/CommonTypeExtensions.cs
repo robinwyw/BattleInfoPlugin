@@ -108,7 +108,7 @@ namespace BattleInfoPlugin.Models.Raw
             var selector = Stage3DamageSelector[type];
             return selector(kouku.api_stage3)
                 .Concat(selector(kouku.api_stage3_combined))
-                .GetDamages(type);
+                .GetDamages(type, 0);
         }
 
         public static bool IsEnabled(this Api_Kouku kouku)
@@ -220,10 +220,11 @@ namespace BattleInfoPlugin.Models.Raw
         /// </summary>
         /// <param name="damages">api_fdam/api_edam</param>
         /// <param name="type">friend/enemy</param>
+        /// <param name="skip">skip first n</param>
         /// <returns></returns>
-        public static IEnumerable<ShipDamage> GetDamages(this IEnumerable<double> damages, FleetType type)
+        public static IEnumerable<ShipDamage> GetDamages(this IEnumerable<double> damages, FleetType type, int skip = 1)
             => damages
-                .GetData()
+                .GetData(skip)
                 .Select((x, i) => new ShipDamage(0, ToIndex(i + 1, type), Convert.ToInt32(x)))
                 .Where(d => d.Damage > 0);
 
