@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using BattleInfoPlugin.Models.Raw;
-using BattleInfoPlugin.Models.Repositories;
-using BattleInfoPlugin.Models.Settings;
 using Grabacr07.KanColleWrapper;
 using Livet;
 
@@ -92,7 +89,6 @@ namespace BattleInfoPlugin.Models
 
         #endregion
 
-        //FIXME 敵の開幕雷撃&連合艦隊がまだ不明(とりあえず第二艦隊が受けるようにしてる)
 
         #region Name変更通知プロパティ
         private string _Name;
@@ -420,18 +416,6 @@ namespace BattleInfoPlugin.Models
             #endregion
         }
 
-        public void UpdateBattle()
-        {
-            this.IsInBattle = true;
-            this.State = BattleState.InSortie;
-        }
-
-        public void UpdatePractice()
-        {
-            this.IsInBattle = true;
-            this.State = BattleState.Practice;
-        }
-
         #region Update From Battle SvData
 
 
@@ -444,7 +428,7 @@ namespace BattleInfoPlugin.Models
                 this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
-                this.Support(data.api_support_info);
+                this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
                 this.Torpedo(data.api_opening_atack);
@@ -486,7 +470,7 @@ namespace BattleInfoPlugin.Models
                 this.AirBaseAttack(data.api_air_base_attack);
 
                 this.AirCombat(data.api_kouku, "1回目/");
-                this.Support(data.api_support_info);
+                this.Support(data.api_support_info, data.api_support_flag);
                 this.AirCombat(data.api_kouku2, "2回目/", false);
             }, "連合艦隊 - 航空戦 - 昼戦");
         }
@@ -500,7 +484,7 @@ namespace BattleInfoPlugin.Models
                 this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
-                this.Support(data.api_support_info);
+                this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
                 this.Torpedo(data.api_opening_atack, 2, 1);
@@ -521,7 +505,7 @@ namespace BattleInfoPlugin.Models
                 this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
-                this.Support(data.api_support_info);
+                this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
                 this.Torpedo(data.api_opening_atack, 2, 1);
@@ -591,7 +575,7 @@ namespace BattleInfoPlugin.Models
                 this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku, "1回目/");
-                this.Support(data.api_support_info);
+                this.Support(data.api_support_info, data.api_support_flag);
                 this.AirCombat(data.api_kouku2, "2回目/", false);
             }, "航空戦 - 昼戦");
         }
@@ -605,7 +589,7 @@ namespace BattleInfoPlugin.Models
                 this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
-                this.Support(data.api_support_info);
+                this.Support(data.api_support_info, data.api_support_flag);
             }, "空襲戦 - 昼戦", BattleResultType.LdAirBattle);
         }
 
@@ -618,7 +602,7 @@ namespace BattleInfoPlugin.Models
                 this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
-                this.Support(data.api_support_info);
+                this.Support(data.api_support_info, data.api_support_flag);
             }, "連合艦隊 - 空襲戦 - 昼戦", BattleResultType.LdAirBattle);
         }
 
@@ -631,7 +615,7 @@ namespace BattleInfoPlugin.Models
                 this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
-                this.Support(data.api_support_info);
+                this.Support(data.api_support_info, data.api_support_flag);
 
                 // TODO unknown opening_taisen
                 //this.Shelling(data.api_opening_taisen);
@@ -665,7 +649,7 @@ namespace BattleInfoPlugin.Models
                 this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
                 this.AirCombat(data.api_kouku);
-                this.Support(data.api_support_info);
+                this.Support(data.api_support_info, data.api_support_flag);
 
                 // TODO unknown opening_taisen
                 //this.Shelling(data.api_opening_taisen);

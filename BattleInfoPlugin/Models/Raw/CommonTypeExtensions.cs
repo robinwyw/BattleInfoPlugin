@@ -6,88 +6,119 @@ namespace BattleInfoPlugin.Models.Raw
 {
     public static class CommonTypeExtensions
     {
-        private static readonly IEnumerable<ShipDamage> EmptyDamages = new ShipDamage[0];
+        private static readonly IEnumerable<Attack> EmptyDamages = new Attack[0];
 
         #region 支援
 
-        public static IEnumerable<ShipDamage> GetDamages(this Api_Support_Info support)
+        public static IEnumerable<Attack> GetDamages(this Api_Support_Info support, int supportType)
             => support.api_support_airatack?.GetDamages(FleetType.Enemy)
-               ?? support.api_support_hourai?.api_damage.GetDamages(FleetType.Enemy)
+               ?? support.api_support_hourai?.GetDamages(supportType)
                ?? EmptyDamages;
+
+        public static IEnumerable<Attack> GetDamages(this Api_Support_Hourai support, int supportType)
+        {
+            // supportType = 2 -> isCritical = 1
+            // supportType = 3 -> isCritical = 2
+            var criticalFlag = supportType - 1;
+            return support.api_damage
+                .Select((damage, index) => new
+                {
+                    target = ToIndex(index, FleetType.Enemy),
+                    damage = Convert.ToInt32(damage),
+                    critical = support.api_cl_list[index]
+                })
+                .GetData()
+                .Select((x, i) => new Attack(0, x.target, x.damage, x.critical == criticalFlag));
+        }
 
         #endregion
 
         #region 砲撃
 
-        public static IEnumerable<ShipDamage> GetDamages(this Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
+        public static IEnumerable<Attack> GetDamages(this Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
         {
-            return hougeki.api_damage.GetDamages(hougeki.api_at_list, hougeki.api_df_list, friendFleetIndex, enemyFleetIndex);
+            return hougeki.api_damage.GetDamages(hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex);
         }
 
-        public static IEnumerable<ShipDamage> GetDamages(this Midnight_Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
+        public static IEnumerable<Attack> GetDamages(this Midnight_Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
         {
-            return hougeki.api_damage.GetDamages(hougeki.api_at_list, hougeki.api_df_list, friendFleetIndex, enemyFleetIndex);
+            return hougeki.api_damage.GetDamages(hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex);
         }
 
-        public static IEnumerable<ShipDamage> GetDamages(this Enemy_Combined_Hougeki hougeki)
+        public static IEnumerable<Attack> GetDamages(this Enemy_Combined_Hougeki hougeki)
         {
             var flags = hougeki.api_at_eflag.GetData().ToArray();
             var sources = hougeki.api_at_list.GetData().ToArray();
-            var targets = hougeki.api_df_list.GetData().Cast<object[]>().Select(x => Convert.ToInt32(x[0])).ToArray();
-            var damages = hougeki.api_damage.GetData().Cast<object[]>().Select(x => x.Sum(Convert.ToInt32)).ToArray();
+            var targets = hougeki.api_df_list.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
+            var damages = hougeki.api_damage.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
+            var criticals = hougeki.api_cl_list.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
             for (var i = 0; i < flags.Length; i++)
             {
-                int source, target;
+                FleetType sourceType, targetType;
 
                 // 0: f->e; 1: e->f
                 if (flags[i] == 0)
                 {
-                    source = ToIndex(sources[i], FleetType.Friend);
-                    target = ToIndex(targets[i], FleetType.Enemy);
+                    sourceType = FleetType.Friend;
+                    targetType = FleetType.Enemy;
                 }
                 else
                 {
-                    source = ToIndex(sources[i], FleetType.Enemy);
-                    target = ToIndex(targets[i], FleetType.Friend);
+                    sourceType = FleetType.Enemy;
+                    targetType = FleetType.Friend;
                 }
 
-                yield return new ShipDamage(source, target, damages[i]);
+                var source = ToIndex(sources[i], sourceType);
+                var attackDamages = damages[i].Select((damage, index) =>
+                            new Damage(ToIndex(targets[i][index], targetType), damage, criticals[i][index] == 2))
+                    .ToArray();
+
+                yield return new Attack(source, attackDamages);
             }
         }
 
-        public static IEnumerable<ShipDamage> GetDamages(
+        public static IEnumerable<Attack> GetDamages(
             this object[] apiDamage,
             int[] apiAtList,
             object[] apiDfList,
-            int frientFleetIndex,
+            object[] apiClList,
+            int friendFleetIndex,
             int enemyFleetIndex)
         {
             var sources = apiAtList.GetData().ToArray();
-            var targets = apiDfList.GetData().Cast<object[]>().Select(x => Convert.ToInt32(x[0])).ToArray();
-            var damages = apiDamage.GetData().Cast<object[]>().Select(x => x.Sum(Convert.ToInt32)).ToArray();
+            var targets = apiDfList.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
+            var damages = apiDamage.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
+            var criticals = apiClList.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
             for (var i = 0; i < targets.Length; i++)
             {
                 // 1 ~ 12
-                var source = sources[i];
-                var target = targets[i];
+                var rawSource = sources[i];
+                var attackTargets = targets[i];
+                var critical = criticals[i];
 
-                // 1 ~ 6: e->f; 7 ~ 12: f->e
-                var isFriendAttack = source <= 6;
+                // 1 ~ 6: f->e; 7 ~ 12: e->f
+                var isFriendAttack = rawSource <= 6;
 
-                source = source.To6BasedIndex();
-                target = target.To6BasedIndex();
+                int sourceFleetIndex, targetFleetIndex;
                 if (isFriendAttack)
                 {
-                    source = ToIndex(frientFleetIndex, source, FleetType.Friend);
-                    target = ToIndex(enemyFleetIndex, target, FleetType.Enemy);
-                    yield return new ShipDamage(source, target, damages[i]);
+                    sourceFleetIndex = friendFleetIndex;
+                    targetFleetIndex = enemyFleetIndex;
                 }
                 else
                 {
-                    source = ToIndex(enemyFleetIndex, source, FleetType.Enemy);
-                    target = ToIndex(frientFleetIndex, target, FleetType.Friend);
-                    yield return new ShipDamage(source, target, damages[i]);
+                    sourceFleetIndex = enemyFleetIndex;
+                    targetFleetIndex = friendFleetIndex;
                 }
+
+                var source = ToHougekiIndex(sourceFleetIndex, rawSource);
+                var attackDamages = damages[i].Select((damage, index) =>
+                {
+                    var target = ToHougekiIndex(targetFleetIndex, attackTargets[index]);
+                    return new Damage(target, damage, critical[index] == 2);
+                });
+
+                yield return new Attack(source, attackDamages);
             }
         }
 
@@ -96,19 +127,33 @@ namespace BattleInfoPlugin.Models.Raw
 
         #region 航空戦
 
-        private static readonly Dictionary<FleetType, Func<Api_Stage3, IEnumerable<double>>> Stage3DamageSelector =
-           new Dictionary<FleetType, Func<Api_Stage3, IEnumerable<double>>>
+        private static readonly Dictionary<FleetType, Func<Api_Stage3, IEnumerable<Tuple<int, int, int, int>>>> Stage3DamageSelector =
+           new Dictionary<FleetType, Func<Api_Stage3, IEnumerable<Tuple<int, int, int, int>>>>
            {
-               [FleetType.Friend] = stage3 => stage3?.api_fdam.GetData() ?? Enumerable.Empty<double>(),
-               [FleetType.Enemy] = stage3 => stage3?.api_edam.GetData() ?? Enumerable.Empty<double>()
+               [FleetType.Friend] = stage3 => stage3?.api_fdam
+                                                 .Select((x, i) => new Tuple<int, int, int, int>(stage3.api_frai_flag[i], stage3.api_fbak_flag[i], Convert.ToInt32(x), stage3.api_fcl_flag[i]))
+                                                 .GetData()
+                                             ?? Enumerable.Empty<Tuple<int, int, int, int>>(),
+               [FleetType.Enemy] = stage3 => stage3?.api_edam
+                                                 .Select((x, i) => new Tuple<int, int, int, int>(stage3.api_erai_flag[i], stage3.api_ebak_flag[i], Convert.ToInt32(x), stage3.api_ecl_flag[i]))
+                                                 .GetData()
+                                             ?? Enumerable.Empty<Tuple<int, int, int, int>>()
            };
 
-        public static IEnumerable<ShipDamage> GetDamages(this Api_Kouku kouku, FleetType type)
+        public static IEnumerable<Attack> GetDamages(this Api_Kouku kouku, FleetType type)
         {
             var selector = Stage3DamageSelector[type];
             return selector(kouku.api_stage3)
                 .Concat(selector(kouku.api_stage3_combined))
-                .GetDamages(type, 0);
+                .Select((x, i) => new
+                {
+                    target = i + 1,
+                    happened = x.Item1 == 1 || x.Item2 == 1,
+                    damage = x.Item3,
+                    isCriticalHit = x.Item4 == 1
+                })
+                .Where(x => x.happened)
+                .Select(x => new Attack(0, x.target, x.damage, x.isCriticalHit));
         }
 
         public static bool IsEnabled(this Api_Kouku kouku)
@@ -117,10 +162,9 @@ namespace BattleInfoPlugin.Models.Raw
                 .Any(arr => arr.Any(n => n != -1))
                ?? false;
 
-        public static IEnumerable<ShipDamage> GetDamages(this Api_Air_Base_Attack[] attacks)
+        public static IEnumerable<Attack> GetDamages(this Api_Air_Base_Attack[] attacks)
         {
-            return attacks?.Where(x => x?.api_stage3?.api_edam != null)
-                       .SelectMany(kouku => kouku.GetDamages(FleetType.Enemy))
+            return attacks?.SelectMany(kouku => kouku.GetDamages(FleetType.Enemy))
                    ?? EmptyDamages;
         }
 
@@ -168,15 +212,46 @@ namespace BattleInfoPlugin.Models.Raw
 
         #region 雷撃戦
 
-        public static IEnumerable<ShipDamage> GetFriendDamages(this Raigeki raigeki, int friendFleetIndex, int enemyFleetIndex)
+        public static IEnumerable<Attack> GetFriendDamages(this Raigeki raigeki, int friendFleetIndex, int enemyFleetIndex)
             => raigeki?.api_eydam?
-                   .GetDamages(raigeki.api_erai, enemyFleetIndex, friendFleetIndex, FleetType.Enemy, FleetType.Friend)
+                   .GetDamages(raigeki.api_erai, raigeki.api_ecl, enemyFleetIndex, friendFleetIndex, FleetType.Enemy, FleetType.Friend)
                ?? EmptyDamages;
 
-        public static IEnumerable<ShipDamage> GetEnemyDamages(this Raigeki raigeki, int friendFleetIndex, int enemyFleetIndex)
+        public static IEnumerable<Attack> GetEnemyDamages(this Raigeki raigeki, int friendFleetIndex, int enemyFleetIndex)
             => raigeki?.api_fydam?
-                   .GetDamages(raigeki.api_frai, friendFleetIndex, enemyFleetIndex, FleetType.Friend, FleetType.Enemy)
+                   .GetDamages(raigeki.api_frai, raigeki.api_fcl, friendFleetIndex, enemyFleetIndex, FleetType.Friend, FleetType.Enemy)
                ?? EmptyDamages;
+
+        /// <summary>
+        /// 雷撃戦ダメージリスト算出
+        /// </summary>
+        /// <param name="damages">api_fydam/api_eydam</param>
+        /// <param name="targets">api_frai/api_erai</param>
+        /// <param name="criticals">api_fcl/api_ecl</param>
+        /// <param name="sourceFleetIndex">index of source fleet(start from 1)</param>
+        /// <param name="targetFleetIndex">index of target fleet(start from 1)</param>
+        /// <param name="sourceFleetType">friend/enemy</param>
+        /// <param name="targetFleetType">enemy/friend</param>
+        /// <returns></returns>
+        public static IEnumerable<Attack> GetDamages(
+        this double[] damages,
+        int[] targets,
+        int[] criticals,
+        int sourceFleetIndex,
+        int targetFleetIndex,
+        FleetType sourceFleetType,
+        FleetType targetFleetType)
+    => targets
+        .Select((target, index) => new
+        {
+            source = ToIndex(sourceFleetIndex, index, sourceFleetType),
+            target = ToIndex(targetFleetIndex, target, targetFleetType),
+            damage = Convert.ToInt32(damages[index]),
+            isCritical = criticals[index] > 0
+        })
+        .GetData()
+        .Where(x => x.target != 0)
+        .Select(x => new Attack(x.source, x.target, x.damage, x.isCritical));
 
         #endregion
 
@@ -215,45 +290,6 @@ namespace BattleInfoPlugin.Models.Raw
         public static IEnumerable<T> GetEnemyData<T>(this IEnumerable<T> source, int origin = 1)
             => source.GetSection(1, origin);
 
-        /// <summary>
-        /// 航空戦ダメージリスト算出
-        /// </summary>
-        /// <param name="damages">api_fdam/api_edam</param>
-        /// <param name="type">friend/enemy</param>
-        /// <param name="skip">skip first n</param>
-        /// <returns></returns>
-        public static IEnumerable<ShipDamage> GetDamages(this IEnumerable<double> damages, FleetType type, int skip = 1)
-            => damages
-                .GetData(skip)
-                .Select((x, i) => new ShipDamage(0, ToIndex(i + 1, type), Convert.ToInt32(x)))
-                .Where(d => d.Damage > 0);
-
-        /// <summary>
-        /// 雷撃戦ダメージリスト算出
-        /// </summary>
-        /// <param name="damages">api_fydam/api_eydam</param>
-        /// <param name="targets">api_frai/api_erai</param>
-        /// <param name="sourceFleetIndex">index of source fleet(start from 1)</param>
-        /// <param name="targetFleetIndex">index of target fleet(start from 1)</param>
-        /// <param name="sourceFleetType">friend/enemy</param>
-        /// <param name="targetFleetType">enemy/friend</param>
-        /// <returns></returns>
-        public static IEnumerable<ShipDamage> GetDamages(
-                this double[] damages,
-                int[] targets,
-                int sourceFleetIndex,
-                int targetFleetIndex,
-                FleetType sourceFleetType,
-                FleetType targetFleetType)
-            => damages
-                .Zip(targets, (damage, target) => new { target, damage })
-                .GetData()
-                .Select((x, i) => new ShipDamage(
-                    ToIndex(sourceFleetIndex, i + 1, sourceFleetType),
-                    ToIndex(targetFleetIndex, x.target, targetFleetType),
-                    Convert.ToInt32(x.damage)))
-                .Where(d => d.Target != 0);
-
         #endregion
 
         private static int To6BasedIndex(this int index)
@@ -271,6 +307,18 @@ namespace BattleInfoPlugin.Models.Raw
         {
             index = Math.Abs(index);
             return type == FleetType.Friend ? index : -index;
+        }
+
+        private static int ToHougekiIndex(int fleetIndex, int shipIndex)
+        {
+            // 1 ~ 6: friend; 6 ~ 12 : enemy
+            var fleetType = shipIndex <= 6 ? FleetType.Friend : FleetType.Enemy;
+            return ToIndex(fleetIndex, shipIndex.To6BasedIndex(), fleetType);
+        }
+
+        private static int[] ToInt32Array(this object objArr)
+        {
+            return ((object[])objArr).Select(Convert.ToInt32).ToArray();
         }
     }
 }

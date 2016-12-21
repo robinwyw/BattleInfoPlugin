@@ -190,7 +190,7 @@
     <Compile Include="Models\Settings\SettingsHelper.cs" />
     <Compile Include="Models\BattleState.cs" />
     <Compile Include="Models\Settings\_PathsSettings.cs" />
-    <Compile Include="Models\ShipDamage.cs" />
+    <Compile Include="Models\Attack.cs" />
     <Compile Include="NotificationType.cs" />
     <Compile Include="Models\Raw\battle_midnight_battle.cs" />
     <Compile Include="Models\Raw\battle_midnight_sp_midnight.cs" />

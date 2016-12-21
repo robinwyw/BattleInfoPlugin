@@ -40,11 +40,11 @@ namespace BattleInfoPlugin.Models
             this.AirCombatResults = this.AirCombatResults.Concat(airCombat.ToResult(prefix)).ToArray();
         }
 
-        private void Support(Api_Support_Info support)
+        private void Support(Api_Support_Info support, int supportType)
         {
             if (support == null) return;
 
-            var damages = support.GetDamages();
+            var damages = support.GetDamages(supportType);
             this.CalcDamages(damages);
         }
 
@@ -90,26 +90,29 @@ namespace BattleInfoPlugin.Models
             this.CalcDamages(airCombat.GetDamages(FleetType.Enemy));
         }
 
-        private void CalcDamages(IEnumerable<ShipDamage> damages)
+        private void CalcDamages(IEnumerable<Attack> attacks)
         {
-            if (damages == null) return;
+            if (attacks == null) return;
 
-            foreach (var damage in damages)
+            foreach (var attack in attacks)
             {
-                var source = this.GetShip(damage.Source);
+                var source = this.GetShip(attack.Source);
                 if (source != null)
                 {
-                    source.AttackDamage += damage.Damage;
+                    source.AttackDamage += attack.TotalDamage;
                 }
 
-                var target = this.GetShip(damage.Target);
-                if (target != null)
+                foreach (var damage in attack.Damages)
                 {
-                    target.ReceiveDamage(damage.Damage);
-
-                    if (this.State == BattleState.InSortie)
+                    var target = this.GetShip(damage.Target);
+                    if (target != null)
                     {
-                        target.CheckDamageControl();
+                        target.ReceiveDamage(damage.Value);
+
+                        if (this.State == BattleState.InSortie)
+                        {
+                            target.CheckDamageControl();
+                        }
                     }
                 }
             }
