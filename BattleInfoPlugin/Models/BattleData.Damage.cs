@@ -23,7 +23,10 @@ namespace BattleInfoPlugin.Models
             if (attacks == null) return;
 
             this.LandBaseAirCombatResults = attacks.ToResult();
-            this.CalcDamages(attacks.GetDamages());
+            foreach (var attack in attacks)
+            {
+                this.CalcAirCombatDamages(attack);
+            }
         }
 
         private void AirCombat(Api_Kouku airCombat, string prefix = "", bool airSupremacy = true)
@@ -45,7 +48,7 @@ namespace BattleInfoPlugin.Models
             if (support == null) return;
 
             var damages = support.GetDamages(supportType);
-            this.CalcDamages(damages);
+            this.CalcDamages(damages, true);
         }
 
         private void Shelling(Hougeki shelling, int friendFleetIndex = 1, int enemyFleetIndex = 1)
@@ -79,21 +82,22 @@ namespace BattleInfoPlugin.Models
             var friendDamages = torpedo.GetFriendDamages(friendFleetIndex, enemyFleetIndex);
             var enemyDamages = torpedo.GetEnemyDamages(friendFleetIndex, enemyFleetIndex);
 
-            this.CalcDamages(friendDamages);
-            this.CalcDamages(enemyDamages);
+            this.CalcDamages(friendDamages, true);
+            this.CalcDamages(enemyDamages, true);
         }
 
 
         private void CalcAirCombatDamages(Api_Kouku airCombat)
         {
-            this.CalcDamages(airCombat.GetDamages(FleetType.Friend));
-            this.CalcDamages(airCombat.GetDamages(FleetType.Enemy));
+            this.CalcDamages(airCombat.GetDamages(FleetType.Friend), true);
+            this.CalcDamages(airCombat.GetDamages(FleetType.Enemy), true);
         }
 
-        private void CalcDamages(IEnumerable<Attack> attacks)
+        private void CalcDamages(IEnumerable<Attack> attacks, bool checkDamageControlAfterAllAttacks = false)
         {
             if (attacks == null) return;
 
+            var allTargets = new HashSet<ShipData>();
             foreach (var attack in attacks)
             {
                 var source = this.GetShip(attack.Source);
@@ -102,19 +106,27 @@ namespace BattleInfoPlugin.Models
                     source.AttackDamage += attack.TotalDamage;
                 }
 
+                var targets = new HashSet<ShipData>();
                 foreach (var damage in attack.Damages)
                 {
                     var target = this.GetShip(damage.Target);
                     if (target != null)
                     {
+                        targets.Add(target);
+                        allTargets.Add(target);
                         target.ReceiveDamage(damage.Value);
-
-                        if (this.State == BattleState.InSortie)
-                        {
-                            target.CheckDamageControl();
-                        }
                     }
                 }
+
+                if (!checkDamageControlAfterAllAttacks)
+                {
+                    this.CheckDamageControl(allTargets);
+                }
+            }
+
+            if (checkDamageControlAfterAllAttacks)
+            {
+                this.CheckDamageControl(allTargets);
             }
         }
 
@@ -125,6 +137,17 @@ namespace BattleInfoPlugin.Models
             return index > 0
                 ? this.FriendFleet.GetShip(index)
                 : this.EnemyFleet.GetShip(-index);
+        }
+
+        private void CheckDamageControl(IEnumerable<ShipData> ships)
+        {
+            if (this.State == BattleState.InSortie)
+            {
+                foreach (var ship in ships)
+                {
+                    ship.CheckDamageControl();
+                }
+            }
         }
     }
 }
