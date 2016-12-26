@@ -147,7 +147,7 @@ namespace BattleInfoPlugin.Models.Raw
                 .Concat(selector(kouku.api_stage3_combined))
                 .Select((x, i) => new
                 {
-                    target = i + 1,
+                    target = ToIndex(i + 1, type),
                     happened = x.Item1 == 1 || x.Item2 == 1,
                     damage = x.Item3,
                     isCriticalHit = x.Item4 == 1
