@@ -351,6 +351,25 @@ namespace BattleInfoPlugin.Models
 
         #endregion
 
+        #region IsMVP
+
+        private bool _IsMVP;
+
+        public bool IsMVP
+        {
+            get { return this._IsMVP; }
+            set
+            {
+                if (this._IsMVP != value)
+                {
+                    this._IsMVP = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
         public virtual bool DamageControlled => this.Situation.HasFlag(ShipSituation.DamageControlled);
 
         public int SlotsFirepower => this.Slots.Sum(x => x.Firepower);

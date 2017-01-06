@@ -138,5 +138,21 @@ namespace BattleInfoPlugin.Models
         {
             fleet.Ships.SetValues(nowhps, (s, v) => s.NowHP = v);
         }
+
+        internal static void UpdateMVP(this FleetData fleet, int? mvpIndex)
+        {
+            if (mvpIndex.HasValue && mvpIndex.Value != 0)
+            {
+                fleet.UpdateMVP(mvpIndex.Value);
+            }
+        }
+
+        internal static void UpdateMVP(this FleetData fleet, int mvpIndex)
+        {
+            for (var i = 1; i <= fleet.ShipCount; i++)
+            {
+                fleet.Ships[i].IsMVP = (i == mvpIndex);
+            }
+        }
     }
 }

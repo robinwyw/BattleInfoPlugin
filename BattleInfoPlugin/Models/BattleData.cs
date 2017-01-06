@@ -692,6 +692,9 @@ namespace BattleInfoPlugin.Models
                     this.BattleResult = BattleResultRank.敗北E;
                     break;
             }
+
+            this.FriendFleet.Fleets[1].UpdateMVP(data.api_mvp);
+            this.FriendFleet.Fleets[2]?.UpdateMVP(data.api_mvp_combined);
         }
 
         private void UpdateFleetsByStartNext(map_start_next startNext, string api_deck_id = null)

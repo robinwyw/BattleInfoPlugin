@@ -22,7 +22,7 @@
                 </models:ShipData.HP>
             </models:ShipData>
             <models:ShipData MaxHP="40" NowHP="1" Name="戦艦レ級後期型改" TypeName="こわい" AdditionalName="flagship"
-                             DamageReceived="10">
+                             DamageReceived="10" IsMVP="True">
                 <models:ShipData.HP>
                     <wrapper:LimitedValue Current="1" Maximum="1" Minimum="0" />
                 </models:ShipData.HP>
