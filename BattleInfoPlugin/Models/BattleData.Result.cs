@@ -15,7 +15,7 @@ namespace BattleInfoPlugin.Models
             LdAirBattle
         }
 
-        private BattleResultRank GetBattleResult()
+        private BattleResultRank PredictResult()
         {
             if (!this.IsInBattle) return BattleResultRank.なし;
 
@@ -84,7 +84,7 @@ namespace BattleInfoPlugin.Models
 
         }
 
-        private BattleResultRank GetBattleResult2()
+        private BattleResultRank PredictResult2()
         {
             this.FriendFleetStatus = this.FriendFleet.GetStatus();
             this.EnemyFleetStatus = this.EnemyFleet.GetStatus();

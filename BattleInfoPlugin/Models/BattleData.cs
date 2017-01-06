@@ -737,11 +737,11 @@ namespace BattleInfoPlugin.Models
 
             if (battleResultType == BattleResultType.Normal)
             {
-                this.BattleResult = this.GetBattleResult();
+                this.BattleResult = this.PredictResult();
             }
             else
             {
-                this.BattleResult = this.GetBattleResult2();
+                this.BattleResult = this.PredictResult2();
             }
         }
 
