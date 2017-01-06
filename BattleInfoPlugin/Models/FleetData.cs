@@ -141,7 +141,7 @@ namespace BattleInfoPlugin.Models
 
         internal static void UpdateMVP(this FleetData fleet, int? mvpIndex)
         {
-            if (mvpIndex.HasValue && mvpIndex.Value != 0)
+            if (mvpIndex.HasValue)
             {
                 fleet.UpdateMVP(mvpIndex.Value);
             }
