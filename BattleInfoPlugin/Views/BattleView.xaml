@@ -306,15 +306,16 @@
                 </TextBlock.Style>
 
                 <TextBlock.ToolTip>
-                    <TextBlock>
-                        <Run Text="{Binding Battle.FriendLostGauge, Mode=OneWay, StringFormat=P1}"
+                    <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
+                        <Run Text="{Binding Battle.FriendFleetStatus.LostGauge, Mode=OneWay, StringFormat=P1}"
                              Style="{DynamicResource EmphaticTextElementStyleKey}"
                              FontSize="12" />
-                        <Run Text=" : "
-                             Style="{DynamicResource DefaultTextElementStyleKey}" />
-                        <Run Text="{Binding Battle.EnemyLostGauge, Mode=OneWay, StringFormat=P1}"
+                        <Run Text="{Binding Battle.FriendFleetStatus.TotalLostHP, Mode=OneWay, StringFormat={}(-{0})}" />
+                        <Run Text=" : " />
+                        <Run Text="{Binding Battle.EnemyFleetStatus.LostGauge, Mode=OneWay, StringFormat=P1}"
                              Style="{DynamicResource EmphaticTextElementStyleKey}"
                              FontSize="12" />
+                        <Run Text="{Binding Battle.EnemyFleetStatus.TotalLostHP, Mode=OneWay, StringFormat={}(-{0})}" />
                     </TextBlock>
                 </TextBlock.ToolTip>
             </TextBlock>

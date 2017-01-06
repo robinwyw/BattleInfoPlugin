@@ -279,18 +279,18 @@ namespace BattleInfoPlugin.Models
         #endregion
 
 
-        #region FriendLostGauge
+        #region FriendFleetStatus
 
-        private double _FriendLostGauge;
+        private FleetStatus _FriendFleetStatus;
 
-        public double FriendLostGauge
+        public FleetStatus FriendFleetStatus
         {
-            get { return this._FriendLostGauge; }
+            get { return this._FriendFleetStatus; }
             set
             {
-                if (this._FriendLostGauge != value)
+                if (this._FriendFleetStatus != value)
                 {
-                    this._FriendLostGauge = value;
+                    this._FriendFleetStatus = value;
                     this.RaisePropertyChanged();
                 }
             }
@@ -299,18 +299,19 @@ namespace BattleInfoPlugin.Models
         #endregion
 
 
-        #region EnemyLostGauge
+        #region EnemyFleetStatus
 
-        private double _EnemyLostGauge;
+        private FleetStatus _EnemyFleetStatus;
 
-        public double EnemyLostGauge
+        public FleetStatus EnemyFleetStatus
         {
-            get { return this._EnemyLostGauge; }
+            get { return this._EnemyFleetStatus; }
             set
             {
-                if (this._EnemyLostGauge != value)
+                if (this._EnemyFleetStatus != value)
                 {
-                    this._EnemyLostGauge = value;
+                    var st = new FleetStatus();
+                    this._EnemyFleetStatus = value;
                     this.RaisePropertyChanged();
                 }
             }
@@ -671,7 +672,7 @@ namespace BattleInfoPlugin.Models
             switch (data.api_win_rank)
             {
                 case "S":
-                    this.BattleResult = this.FriendLostGauge > 0
+                    this.BattleResult = this.FriendFleetStatus.LostGauge > 0
                             ? BattleResultRank.勝利S
                             : BattleResultRank.完全勝利S;
                     break;

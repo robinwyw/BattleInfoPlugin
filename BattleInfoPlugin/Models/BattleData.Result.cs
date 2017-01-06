@@ -19,33 +19,26 @@ namespace BattleInfoPlugin.Models
         {
             if (!this.IsInBattle) return BattleResultRank.なし;
 
-            var friendShips = this.FriendFleet.Fleets
-                .SelectMany(f => f.Ships)
-                .ToArray();
+            this.FriendFleetStatus = this.FriendFleet.GetStatus();
+            this.EnemyFleetStatus = this.EnemyFleet.GetStatus();
 
-            var enemyShips = this.EnemyFleet.Fleets
-                .SelectMany(f => f.Ships)
-                .ToArray();
-
-            var friendGuageRate = friendShips.GetHpLostPercent();
-            var enemyGuageRate = enemyShips.GetHpLostPercent();
-
-            this.FriendLostGauge = friendGuageRate;
-            this.EnemyLostGauge = enemyGuageRate;
+            var friendGuageRate = this.FriendFleetStatus.LostGauge;
+            var enemyGuageRate = this.EnemyFleetStatus.LostGauge;
 
             var hpLostRatio = enemyGuageRate > 0 ? (friendGuageRate > 0 ? enemyGuageRate / friendGuageRate : 10) : 0;
 
-            var friendLostCount = friendShips.GetLostCount();
-            var friendCount = friendShips.Length;
+            var friendLostCount = this.FriendFleetStatus.LostCount;
+            var friendCount = this.FriendFleetStatus.ShipCount;
 
-            var enemyLostCount = enemyShips.GetLostCount();
-            var enemyCount = enemyShips.Length;
+            var enemyLostCount = this.EnemyFleetStatus.LostCount;
+            var enemyCount = this.EnemyFleetStatus.ShipCount;
 
-            var isEnemyFlagshipSunk = enemyShips.First().NowHP <= 0;
+            var isEnemyFlagshipSunk = this.EnemyFleet.GetShip(1).NowHP <= 0;
+
 
             //SS or S
-            if (enemyLostCount == enemyCount)
-                if (friendGuageRate <= 0) return BattleResultRank.完全勝利S;
+            if (this.EnemyFleetStatus.LostCount == this.EnemyFleetStatus.ShipCount)
+                if (this.FriendFleetStatus.LostGauge <= 0) return BattleResultRank.完全勝利S;
                 else if (friendLostCount == 0) return BattleResultRank.勝利S;
 
 
@@ -93,10 +86,10 @@ namespace BattleInfoPlugin.Models
 
         private BattleResultRank GetBattleResult2()
         {
-            this.FriendLostGauge = this.GetFriendHpLostPercent();
-            this.EnemyLostGauge = this.GetEnemyHpLostPercent();
+            this.FriendFleetStatus = this.FriendFleet.GetStatus();
+            this.EnemyFleetStatus = this.EnemyFleet.GetStatus();
 
-            var gauge = this.FriendLostGauge;
+            var gauge = this.FriendFleetStatus.LostGauge;
             if (gauge <= 0)
                 return BattleResultRank.完全勝利S;
             if (gauge < 0.1)
@@ -111,37 +104,5 @@ namespace BattleInfoPlugin.Models
             return BattleResultRank.敗北E;
         }
 
-        
-    }
-
-    internal static class BattleResultHelper
-    {
-        public static double GetFriendHpLostPercent(this BattleData battleData)
-        {
-            return battleData.FriendFleet.Fleets
-                .SelectMany(f => f.Ships)
-                .GetHpLostPercent();
-        }
-
-        public static double GetEnemyHpLostPercent(this BattleData battleData)
-        {
-            return battleData.EnemyFleet.Fleets
-                .SelectMany(f => f.Ships)
-                .GetHpLostPercent();
-        }
-
-        public static double GetHpLostPercent(this IEnumerable<ShipData> data)
-        {
-            var ships = data.Where(s => !s.IsInEvacuationOrTow()).ToArray();
-            var totalOriginalHp = ships.Sum(s => s.OriginalHP);
-            var totalNowHp = ships.Sum(s => s.NowHP);
-
-            return 1.0 - (double)totalNowHp / totalOriginalHp;
-        }
-
-        public static int GetLostCount(this ShipData[] data) => data.Count(s => s.NowHP <= 0);
-
-        public static bool IsInEvacuationOrTow(this ShipData data) =>
-            data.Situation.HasFlag(ShipSituation.Evacuation) || data.Situation.HasFlag(ShipSituation.Tow);
     }
 }
