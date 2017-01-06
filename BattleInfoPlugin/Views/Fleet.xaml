@@ -367,10 +367,12 @@
                                 <RotateTransform Angle="20" />
                             </Grid.RenderTransform>
                             <Border Background="#A00000"
-                                    Opacity=".4" />
+                                    Opacity=".4"
+                                    IsHitTestVisible="False" />
                             <TextBlock Text="撃沈"
                                        Style="{DynamicResource EmphaticTextStyleKey}"
-                                       Margin="16,4" />
+                                       Margin="16,4"
+                                       IsHitTestVisible="False" />
                         </Grid>
                     </Grid>
 
