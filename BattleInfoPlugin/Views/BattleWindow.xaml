@@ -11,8 +11,8 @@
                    xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
                    mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance viewModels:BattleWindowViewModel}"
-                   Title="{Binding Title}"
-                   Height="450"
+                   Title="{Binding Battle.Name}"
+                   Height="550"
                    Width="500"
                    Background="{DynamicResource ThemeBrushKey}"
                    Foreground="{DynamicResource ActiveForegroundBrushKey}"
@@ -69,7 +69,7 @@
             </StackPanel>
 
             <TextBlock Grid.Column="1"
-                       Text="{Binding Title}"
+                       Text="{Binding Battle.Name}"
                        Style="{DynamicResource CaptionTextStyleKey}"
                        Margin="2,0,8,0" />
         </Grid>

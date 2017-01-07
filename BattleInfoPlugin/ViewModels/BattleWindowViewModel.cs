@@ -10,9 +10,6 @@ namespace BattleInfoPlugin.ViewModels
 {
     public class BattleWindowViewModel : ViewModel
     {
-        public string Title => "戦闘情報";
-
-
         public bool TopMost
         {
             get { return PluginSettings.BattleWindow.TopMost; }

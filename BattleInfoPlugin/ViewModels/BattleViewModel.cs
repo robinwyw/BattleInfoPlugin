@@ -37,6 +37,11 @@ namespace BattleInfoPlugin.ViewModels
 
         #endregion
 
+        public string Name
+            => string.IsNullOrEmpty(this.Battle.Name)
+                ? "戦闘情報"
+                : this.Battle.Name;
+
         public string BattleResultRank
             => this.Battle.BattleResult != Models.BattleResultRank.なし
                 ? this.Battle.BattleResult.ToString()
@@ -265,6 +270,10 @@ namespace BattleInfoPlugin.ViewModels
 
             this.CompositeDisposable.Add(new PropertyChangedEventListener(this.Battle)
             {
+                {
+                    () => this.Battle.Name,
+                    (_, __) => this.RaisePropertyChanged(() => this.Name)
+                },
                 {
                     () => this.Battle.BattleResult,
                     (_, __) => this.RaisePropertyChanged(() => this.BattleResultRank)

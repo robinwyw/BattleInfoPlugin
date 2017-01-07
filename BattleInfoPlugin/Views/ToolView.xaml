@@ -51,7 +51,7 @@
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0">
-                <TextBlock Text="戦闘情報"
+                <TextBlock Text="{Binding Battle.Name}"
                            VerticalAlignment="Top"
                            Style="{DynamicResource HeaderTextStyleKey}"
                            Margin="0,5,10,0"/>
