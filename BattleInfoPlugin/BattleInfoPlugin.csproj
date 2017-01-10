@@ -181,6 +181,7 @@
     <Compile Include="Models\Raw\sortie_ld_airbattle.cs" />
     <Compile Include="Models\Repositories\EnemyData.cs" />
     <Compile Include="Models\Repositories\EnemyDataUpdater.cs" />
+    <Compile Include="Models\Repositories\MapCellMapping.cs" />
     <Compile Include="Models\Settings\BattleDataSettings.cs" />
     <Compile Include="Models\Settings\BattleWindowSettings.cs" />
     <Compile Include="Models\CellTypeConverter.cs" />

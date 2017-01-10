@@ -752,6 +752,8 @@ namespace BattleInfoPlugin.Models
         {
             this.State = BattleState.Practice;
 
+            this.NextCell = null;
+
             this.UpdateFriendFleets(data.api_dock_id);
             this.UpdateEnemyFleets(data, this._practiceEnemyName);
             this.UpdateFleetsHPs(data);
