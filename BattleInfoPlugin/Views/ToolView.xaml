@@ -4,11 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:BattleInfoPlugin.Views"
-             xmlns:converters="clr-namespace:BattleInfoPlugin.Views.Converters"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-             xmlns:models="clr-namespace:BattleInfoPlugin.Models"
              xmlns:viewModels="clr-namespace:BattleInfoPlugin.ViewModels"
              Background="{DynamicResource ThemeBrushKey}"
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
@@ -40,66 +38,107 @@
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Auto"
-                  PanningMode="Both">
-        <Grid Margin="8,4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <DockPanel Grid.Row="0">
-                <TextBlock Text="{Binding Battle.Name}"
-                           VerticalAlignment="Top"
-                           Style="{DynamicResource HeaderTextStyleKey}"
-                           Margin="0,5,10,0"/>
+        <DockPanel Grid.Row="0">
+            <TextBlock Text="{Binding Battle.Name}"
+                       Style="{DynamicResource HeaderTextStyleKey}"
+                       Margin="10,5" />
 
-                <views:NextCellInfoView DataContext="{Binding Battle.NextCellInfo}" />
+            <Button Content="既知の敵一覧"
+                    DockPanel.Dock="Right"
+                    HorizontalAlignment="Right"
+                    Margin="2">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <ei:CallMethodAction TargetObject="{Binding}"
+                                             MethodName="OpenEnemyWindow" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Content="在新窗口中显示"
+                    DockPanel.Dock="Right"
+                    HorizontalAlignment="Right"
+                    Margin="2">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <ei:CallMethodAction TargetObject="{Binding}"
+                                             MethodName="OpenBattleWindow" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <views:NextCellInfoView DataContext="{Binding Battle.NextCellInfo}" />
 
-                <Button Content="既知の敵一覧"
-                        DockPanel.Dock="Right"
-                        VerticalAlignment="Stretch"
-                        HorizontalAlignment="Right"
-                        Margin="4,3">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <ei:CallMethodAction TargetObject="{Binding}"
-                                                 MethodName="OpenEnemyWindow" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-                <Button Content="在新窗口中显示"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Stretch"
-                        Margin="7,3">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <ei:CallMethodAction TargetObject="{Binding}"
-                                                 MethodName="OpenBattleWindow" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-            </DockPanel>
-
-            <views:BattleView Grid.Row="1"
-                              DataContext="{Binding Battle}"
+        </DockPanel>
+        <ScrollViewer Grid.Row="1"
+                      x:Name="Main"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      PanningMode="Both">
+            <views:BattleView DataContext="{Binding Battle}"
                               d:DataContext="{d:DesignData /SampleData/BattleViewModelSampleData.xaml}" />
+        </ScrollViewer>
 
-            <StackPanel Grid.Row="2"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Right">
+        <ToggleButton Grid.Row="1"
+                      x:Name="SettingsToggleButton"
+                      IsChecked="True">
+            <ToggleButton.Style>
+                <Style TargetType="{x:Type ToggleButton}"
+                       BasedOn="{StaticResource SettingsPanelToggleButtonStyle}">
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ComputedHorizontalScrollBarVisibility, ElementName=Main}"
+                                           Value="Visible" />
+                                <Condition Binding="{Binding ComputedVerticalScrollBarVisibility, ElementName=Main}"
+                                           Value="Collapsed" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Margin">
+                                <Setter.Value>
+                                    <Thickness Bottom="17" />
+                                </Setter.Value>
+                            </Setter>
+                        </MultiDataTrigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ComputedHorizontalScrollBarVisibility, ElementName=Main}"
+                                           Value="Collapsed" />
+                                <Condition Binding="{Binding ComputedVerticalScrollBarVisibility, ElementName=Main}"
+                                           Value="Visible" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Margin">
+                                <Setter.Value>
+                                    <Thickness Right="17" />
+                                </Setter.Value>
+                            </Setter>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ToggleButton.Style>
+        </ToggleButton>
+
+        <StackPanel Grid.Row="2"
+                    Visibility="{Binding IsChecked, ElementName=SettingsToggleButton, Converter={StaticResource TrueToVisibleConverter}}"
+                    Background="{DynamicResource BackgroundBrushKey}">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="2">
                 <CheckBox Content="显示陆基航空队Stage信息"
-                          IsChecked="{Binding IsShowLandBaseAirStage}"
+                          IsChecked="{Binding Battle.IsShowLandBaseAirStage}"
                           Margin="0,0,10,0" />
                 <CheckBox Content="戦闘終了通知"
-                          IsChecked="{Binding IsNotifierEnabled}"
-                          Margin="0,0,10,0"/>
+                          IsChecked="{Binding Notifier.IsEnabled}"
+                          Margin="0,0,10,0" />
                 <CheckBox Content="非アクティブ時のみ通知"
-                          IsChecked="{Binding IsNotifyOnlyWhenInactive}"
-                          Margin="0,0,10,0"/>
+                          IsChecked="{Binding Notifier.IsNotifyOnlyWhenInactive}"
+                          Margin="0,0,10,0" />
             </StackPanel>
-        </Grid>
-    </ScrollViewer>
+        </StackPanel>
+    </Grid>
 </UserControl>

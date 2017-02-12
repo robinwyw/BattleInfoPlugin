@@ -39,4 +39,79 @@
                                          Background2="{StaticResource SemiactiveBackgroundBrushKey}" />
     <converters:UnknownValueConverter x:Key="UnknownValueConverter" />
     <converters1:HasFlagConverter x:Key="HasFlagConverter" />
+
+    <Style TargetType="{x:Type ToggleButton}"
+           x:Key="SettingsPanelToggleButtonStyle">
+        <Setter Property="FontFamily"
+                Value="Segoe MDL2 Assets, Segoe UI Symbol" />
+        <Setter Property="FontSize"
+                Value="11" />
+        <Setter Property="Content"
+                Value="&#xE098;" />
+        <Setter Property="Background"
+                Value="{DynamicResource BackgroundBrushKey}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource ActiveForegroundBrushKey}" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Width"
+                Value="{Binding Source={x:Static SystemParameters.VerticalScrollBarWidth}}" />
+        <Setter Property="Height"
+                Value="{Binding Source={x:Static SystemParameters.HorizontalScrollBarHeight}}" />
+        <Setter Property="HorizontalAlignment"
+                Value="Right" />
+        <Setter Property="VerticalAlignment"
+                Value="Bottom" />
+        <Setter Property="FocusVisualStyle"
+                Value="{DynamicResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter x:Name="contentPresenter"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsChecked"
+                     Value="True">
+                <Setter Property="Content"
+                        Value="&#xE099;" />
+                <Setter Property="Background"
+                        Value="{DynamicResource BackgroundBrushKey}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource ActiveBackgroundBrushKey}" />
+                <Setter Property="BorderBrush"
+                        Value="{DynamicResource ActiveBorderBrushKey}" />
+            </Trigger>
+            <Trigger Property="IsPressed"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource AccentBrushKey}" />
+                <Setter Property="BorderBrush"
+                        Value="{DynamicResource ActiveBorderBrushKey}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource AccentForegroundBrushKey}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{DynamicResource InactiveBackgroundBrushKey}" />
+                <Setter Property="BorderBrush"
+                        Value="{DynamicResource InactiveBorderBrushKey}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource InactiveForegroundBrushKey}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

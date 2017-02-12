@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BattleInfoPlugin.Models.Notifiers;
 using BattleInfoPlugin.Models.Settings;
 using Livet;
 
@@ -24,5 +25,7 @@ namespace BattleInfoPlugin.ViewModels
         }
 
         public BattleViewModel Battle { get; } = BattleViewModel.Current;
+
+        public BattleEndNotifier Notifier { get; set; }
     }
 }

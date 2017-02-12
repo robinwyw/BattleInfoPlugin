@@ -39,6 +39,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid metro:MetroWindow.IsCaptionBar="True">
@@ -86,11 +87,68 @@
         </Grid>
 
         <ScrollViewer Grid.Row="1"
+                      x:Name="Main"
                       HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto"
                       PanningMode="Both">
             <views:BattleView DataContext="{Binding Battle}"
                               d:DataContext="{d:DesignData /SampleData/BattleViewModelSampleData.xaml}" />
         </ScrollViewer>
+
+        <ToggleButton Grid.Row="1"
+                      x:Name="SettingsToggleButton">
+            <ToggleButton.Style>
+                <Style TargetType="{x:Type ToggleButton}"
+                       BasedOn="{StaticResource SettingsPanelToggleButtonStyle}">
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ComputedHorizontalScrollBarVisibility, ElementName=Main}"
+                                           Value="Visible" />
+                                <Condition Binding="{Binding ComputedVerticalScrollBarVisibility, ElementName=Main}"
+                                           Value="Collapsed" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Margin">
+                                <Setter.Value>
+                                    <Thickness Bottom="17" />
+                                </Setter.Value>
+                            </Setter>
+                        </MultiDataTrigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ComputedHorizontalScrollBarVisibility, ElementName=Main}"
+                                           Value="Collapsed" />
+                                <Condition Binding="{Binding ComputedVerticalScrollBarVisibility, ElementName=Main}"
+                                           Value="Visible" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Margin">
+                                <Setter.Value>
+                                    <Thickness Right="17" />
+                                </Setter.Value>
+                            </Setter>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ToggleButton.Style>
+        </ToggleButton>
+
+        <StackPanel Grid.Row="2"
+                    Visibility="{Binding IsChecked, ElementName=SettingsToggleButton, Converter={StaticResource TrueToVisibleConverter}}"
+                    Background="{DynamicResource BackgroundBrushKey}">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,2">
+                <CheckBox Content="显示陆基航空队Stage信息"
+                            IsChecked="{Binding Battle.IsShowLandBaseAirStage}"
+                            Margin="0,0,10,0" />
+                <CheckBox Content="戦闘終了通知"
+                            IsChecked="{Binding Notifier.IsEnabled}"
+                            Margin="0,0,10,0" />
+                <CheckBox Content="非アクティブ時のみ通知"
+                            IsChecked="{Binding Notifier.IsNotifyOnlyWhenInactive}"
+                            Margin="0,0,10,0" />
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </metro:MetroWindow>

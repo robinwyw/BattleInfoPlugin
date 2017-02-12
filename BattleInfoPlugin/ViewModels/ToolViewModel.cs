@@ -10,7 +10,7 @@ namespace BattleInfoPlugin.ViewModels
 {
     public class ToolViewModel : ViewModel
     {
-        private readonly BattleEndNotifier notifier;
+        public BattleEndNotifier Notifier { get; }
 
         #region Battle
 
@@ -31,62 +31,9 @@ namespace BattleInfoPlugin.ViewModels
 
         #endregion
 
-
-        #region IsShowLandBaseAirStage
-
-        public bool IsShowLandBaseAirStage
-        {
-            get { return this.Battle.IsShowLandBaseAirStage; }
-            set
-            {
-                if (this.Battle.IsShowLandBaseAirStage != value)
-                {
-                    this.Battle.IsShowLandBaseAirStage = value;
-                    this.RaisePropertyChanged();
-                }
-            }
-        }
-
-        #endregion
-
-
-        #region IsNotifierEnabled変更通知プロパティ
-        // ここ以外で変更しないのでModel変更通知は受け取らない雑対応
-        public bool IsNotifierEnabled
-        {
-            get
-            { return this.notifier.IsEnabled; }
-            set
-            {
-                if (this.notifier.IsEnabled == value)
-                    return;
-                this.notifier.IsEnabled = value;
-                this.RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-
-        #region IsNotifyOnlyWhenInactive変更通知プロパティ
-        // ここ以外で変更しないのでModel変更通知は受け取らない雑対応
-        public bool IsNotifyOnlyWhenInactive
-        {
-            get
-            { return this.notifier.IsNotifyOnlyWhenInactive; }
-            set
-            {
-                if (this.notifier.IsNotifyOnlyWhenInactive == value)
-                    return;
-                this.notifier.IsNotifyOnlyWhenInactive = value;
-                this.RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-
         public ToolViewModel(Plugin plugin)
         {
-            this.notifier = new BattleEndNotifier(plugin);
+            this.Notifier = new BattleEndNotifier(plugin);
             this.Battle = BattleViewModel.Current;
         }
 
@@ -103,7 +50,7 @@ namespace BattleInfoPlugin.ViewModels
         {
             var message = new TransitionMessage("Show/BattleWindow")
             {
-                TransitionViewModel = new BattleWindowViewModel()
+                TransitionViewModel = new BattleWindowViewModel { Notifier = this.Notifier }
             };
             this.Messenger.RaiseAsync(message);
         }
