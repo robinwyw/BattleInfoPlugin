@@ -130,11 +130,11 @@ namespace BattleInfoPlugin.Models.Raw
         private static readonly Dictionary<FleetType, Func<Api_Stage3, IEnumerable<Tuple<int, int, int, int>>>> Stage3DamageSelector =
            new Dictionary<FleetType, Func<Api_Stage3, IEnumerable<Tuple<int, int, int, int>>>>
            {
-               [FleetType.Friend] = stage3 => stage3?.api_fdam
+               [FleetType.Friend] = stage3 => stage3?.api_fdam?
                                                  .Select((x, i) => new Tuple<int, int, int, int>(stage3.api_frai_flag[i], stage3.api_fbak_flag[i], Convert.ToInt32(x), stage3.api_fcl_flag[i]))
                                                  .GetData()
                                              ?? Enumerable.Empty<Tuple<int, int, int, int>>(),
-               [FleetType.Enemy] = stage3 => stage3?.api_edam
+               [FleetType.Enemy] = stage3 => stage3?.api_edam?
                                                  .Select((x, i) => new Tuple<int, int, int, int>(stage3.api_erai_flag[i], stage3.api_ebak_flag[i], Convert.ToInt32(x), stage3.api_ecl_flag[i]))
                                                  .GetData()
                                              ?? Enumerable.Empty<Tuple<int, int, int, int>>()
