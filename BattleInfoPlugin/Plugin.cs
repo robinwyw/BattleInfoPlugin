@@ -26,11 +26,12 @@ namespace BattleInfoPlugin
             this.vm = new ToolViewModel(this);
         }
 
-        public void Initialize()
+        public async void Initialize()
         {
             Master.Current.Init();
             ResourceWriter = ResourceWriter ?? new KcsResourceWriter();
             Updater = Updater ?? new EnemyDataUpdater(EnemyDataProvider.Current);
+            await MapCellMapping.Current.UpdateData();
         }
 
         public string Name => "BattleInfo";
