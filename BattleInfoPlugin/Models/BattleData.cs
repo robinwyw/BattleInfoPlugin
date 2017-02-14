@@ -618,8 +618,8 @@ namespace BattleInfoPlugin.Models
                 this.AirCombat(data.api_kouku);
                 this.Support(data.api_support_info, data.api_support_flag);
 
-                // TODO unknown opening_taisen
-                //this.Shelling(data.api_opening_taisen);
+                // guess
+                this.Shelling(data.api_opening_taisen);
                 this.Torpedo(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
@@ -652,8 +652,7 @@ namespace BattleInfoPlugin.Models
                 this.AirCombat(data.api_kouku);
                 this.Support(data.api_support_info, data.api_support_flag);
 
-                // TODO unknown opening_taisen
-                //this.Shelling(data.api_opening_taisen);
+                this.Shelling(data.api_opening_taisen);
                 this.Torpedo(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
