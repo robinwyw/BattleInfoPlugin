@@ -403,6 +403,9 @@ namespace BattleInfoPlugin.Models
             proxy.Observe<combined_battle_each_battle>("/kcsapi/api_req_combined_battle/each_battle")
                 .Subscribe(x => this.Update(x.Data));
 
+            proxy.Observe<combined_battle_each_battle_water>("/kcsapi/api_req_combined_battle/each_battle_water")
+                .Subscribe(x => this.Update(x.Data));
+
             #region Result
 
             proxy.Observe<battle_result>("/kcsapi/api_req_practice/battle_result")
@@ -659,7 +662,28 @@ namespace BattleInfoPlugin.Models
                 this.Shelling(data.api_hougeki2);
                 this.Torpedo(data.api_raigeki);
                 this.Shelling(data.api_hougeki3);
-            }, "連合艦隊 - 敵連合艦隊 - 昼戦");
+            }, "機動部隊 - 敵連合艦隊 - 昼戦");
+        }
+
+        private void Update(combined_battle_each_battle_water data)
+        {
+            this.Update(() =>
+            {
+                this.UpdateInfo(data);
+
+                this.InjectionAirCombat(data.api_injection_kouku);
+                this.AirBaseAttack(data.api_air_base_attack);
+                this.AirCombat(data.api_kouku);
+                this.Support(data.api_support_info, data.api_support_flag);
+
+                this.Shelling(data.api_opening_taisen);
+                this.Torpedo(data.api_opening_atack);
+
+                this.Shelling(data.api_hougeki1);
+                this.Shelling(data.api_hougeki2);
+                this.Shelling(data.api_hougeki3);
+                this.Torpedo(data.api_raigeki);
+            }, "水上部隊 - 敵連合艦隊 - 昼戦");
         }
 
         #endregion

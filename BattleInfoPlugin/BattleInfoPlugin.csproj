@@ -163,6 +163,7 @@
     <Compile Include="Models\LandBaseAirCombatResult.cs" />
     <Compile Include="Models\MapCellInfo.cs" />
     <Compile Include="Models\Raw\combined_battle_each_battle.cs" />
+    <Compile Include="Models\Raw\combined_battle_each_battle_water.cs" />
     <Compile Include="Models\Raw\combined_battle_ec_battle.cs" />
     <Compile Include="Models\Raw\combined_battle_ec_midnight_battle.cs" />
     <Compile Include="Models\MapArea.cs" />
