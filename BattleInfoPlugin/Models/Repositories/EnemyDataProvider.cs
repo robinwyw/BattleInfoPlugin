@@ -242,6 +242,8 @@ namespace BattleInfoPlugin.Models.Repositories
                         baseIndex += x.Length;
                         return x.Select((id, j) =>
                         {
+                            // enemy id now start from 1501
+                            id = id > 1500 ? id : id + 1000;
                             var param = shipParam[index + j];
                             return new MastersShipData(shipInfos[id])
                             {
