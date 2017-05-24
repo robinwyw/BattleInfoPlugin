@@ -8,6 +8,7 @@
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:viewModels="clr-namespace:BattleInfoPlugin.ViewModels"
+             xmlns:models="clr-namespace:BattleInfoPlugin.Models"
              Background="{DynamicResource ThemeBrushKey}"
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
              mc:Ignorable="d"
@@ -50,7 +51,7 @@
                        Style="{DynamicResource HeaderTextStyleKey}"
                        Margin="10,5" />
 
-            <Button Content="既知の敵一覧"
+            <Button Content="{Binding Resources.Enemy_Fleet_Button, Source={x:Static models:ResourceService.Current}, Mode=OneWay}"
                     DockPanel.Dock="Right"
                     HorizontalAlignment="Right"
                     Margin="2">
@@ -61,7 +62,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-            <Button Content="在新窗口中显示"
+            <Button Content="{Binding Resources.New_Window_Button, Source={x:Static models:ResourceService.Current}, Mode=OneWay}"
                     DockPanel.Dock="Right"
                     HorizontalAlignment="Right"
                     Margin="2">
@@ -129,13 +130,13 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         Margin="2">
-                <CheckBox Content="显示陆基航空队Stage信息"
+                <CheckBox Content="{Binding Resources.Show_LBAS_Check, Source={x:Static models:ResourceService.Current}, Mode=OneWay}"
                           IsChecked="{Binding Battle.IsShowLandBaseAirStage}"
                           Margin="0,0,10,0" />
-                <CheckBox Content="戦闘終了通知"
+                <CheckBox Content="{Binding Resources.Notify_Battle_End, Source={x:Static models:ResourceService.Current}, Mode=OneWay}"
                           IsChecked="{Binding Notifier.IsEnabled}"
                           Margin="0,0,10,0" />
-                <CheckBox Content="非アクティブ時のみ通知"
+                <CheckBox Content="{Binding Resources.Notify_Inactive, Source={x:Static models:ResourceService.Current}, Mode=OneWay}"
                           IsChecked="{Binding Notifier.IsNotifyOnlyWhenInactive}"
                           Margin="0,0,10,0" />
             </StackPanel>

@@ -6,6 +6,8 @@ using BattleInfoPlugin.Models;
 using BattleInfoPlugin.Models.Notifiers;
 using BattleInfoPlugin.Models.Repositories;
 using BattleInfoPlugin.Models.Settings;
+using BattleInfoPlugin.Models.Localization;
+using BattleInfoPlugin.Properties;
 using Livet;
 using Livet.EventListeners;
 using Livet.Messaging;
@@ -40,7 +42,7 @@ namespace BattleInfoPlugin.ViewModels
 
         public string Name
             => string.IsNullOrEmpty(this.Battle.Name)
-                ? "戦闘情報"
+                ? Resources.Battle_Info
                 : this.Battle.Name;
 
         public string BattleResultRank
@@ -55,12 +57,14 @@ namespace BattleInfoPlugin.ViewModels
 
         public string BattleSituation
             => this.Battle != null && this.Battle.BattleSituation != Models.BattleSituation.なし
-                ? this.Battle.BattleSituation.ToString()
+                ? BattleSituationLocalization.GetResource(this.Battle.BattleSituation)
+                //? this.Battle.BattleSituation.ToString()
                 : "";
 
         public string FriendAirSupremacy
             => this.Battle.FriendAirSupremacy != AirSupremacy.航空戦なし
-                ? this.Battle.FriendAirSupremacy.ToString()
+                ? AirSupremacyLocalization.GetResource(this.Battle.FriendAirSupremacy)
+                //? this.Battle.FriendAirSupremacy.ToString()
                 : "";
 
         #region FriendFleet

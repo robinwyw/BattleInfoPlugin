@@ -161,6 +161,9 @@
     <Compile Include="Models\Formation.cs" />
     <Compile Include="Models\ItemType.cs" />
     <Compile Include="Models\LandBaseAirCombatResult.cs" />
+    <Compile Include="Models\Localization\AirSupremacyLocalization.cs" />
+    <Compile Include="Models\Localization\BattleSituationLocalization.cs" />
+    <Compile Include="Models\Localization\FormationLocalization.cs" />
     <Compile Include="Models\MapCellInfo.cs" />
     <Compile Include="Models\Raw\combined_battle_each_battle.cs" />
     <Compile Include="Models\Raw\combined_battle_each_battle_water.cs" />
@@ -183,6 +186,7 @@
     <Compile Include="Models\Repositories\EnemyData.cs" />
     <Compile Include="Models\Repositories\EnemyDataUpdater.cs" />
     <Compile Include="Models\Repositories\MapCellMapping.cs" />
+    <Compile Include="Models\ResourceService.cs" />
     <Compile Include="Models\Settings\BattleDataSettings.cs" />
     <Compile Include="Models\Settings\BattleWindowSettings.cs" />
     <Compile Include="Models\CellTypeConverter.cs" />
@@ -345,8 +349,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.en.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <Compile Include="Models\BattleData.Damage.cs" />

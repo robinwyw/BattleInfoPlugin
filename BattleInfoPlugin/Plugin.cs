@@ -3,10 +3,12 @@ using System.ComponentModel.Composition;
 using BattleInfoPlugin.Models.Repositories;
 using BattleInfoPlugin.ViewModels;
 using BattleInfoPlugin.Views;
+using BattleInfoPlugin.Models;
 using Grabacr07.KanColleViewer.Composition;
 
 namespace BattleInfoPlugin
 {
+    [Export(typeof(ILocalizable))]
     [Export(typeof(IPlugin))]
     [Export(typeof(ITool))]
     [Export(typeof(IRequestNotify))]
@@ -15,7 +17,7 @@ namespace BattleInfoPlugin
     [ExportMetadata("Description", "戦闘情報を表示します。")]
     [ExportMetadata("Version", "1.7.0")]
     [ExportMetadata("Author", "@veigr")]
-    public class Plugin : IPlugin, ITool, IRequestNotify
+    public class Plugin : IPlugin, ITool, IRequestNotify, ILocalizable
     {
         private readonly ToolViewModel vm;
         internal static KcsResourceWriter ResourceWriter { get; private set; }
@@ -42,5 +44,7 @@ namespace BattleInfoPlugin
         public event EventHandler<NotifyEventArgs> NotifyRequested;
 
         public void InvokeNotifyRequested(NotifyEventArgs e) => this.NotifyRequested?.Invoke(this, e);
+
+        public void ChangeCulture(string cultureName) => ResourceService.Current.ChangeCulture(cultureName);
     }
 }
