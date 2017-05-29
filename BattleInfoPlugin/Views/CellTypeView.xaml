@@ -100,7 +100,7 @@
                         </Style>
                     </Border.Style>
                     <TextBlock Margin="9,2"
-                               Text="{Binding CellType, Mode=OneWay}"
+                               Text="{Binding CellString, Mode=OneWay}"
                                HorizontalAlignment="Center"
                                Style="{StaticResource DefaultTextStyleKey}"
                                Foreground="White" />

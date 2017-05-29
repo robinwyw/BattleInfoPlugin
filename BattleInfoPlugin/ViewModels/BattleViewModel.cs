@@ -47,7 +47,8 @@ namespace BattleInfoPlugin.ViewModels
 
         public string BattleResultRank
             => this.Battle.BattleResult != Models.BattleResultRank.なし
-                ? this.Battle.BattleResult.ToString()
+                ? BattleResultRankLocalization.GetResource(this.Battle.BattleResult)
+                //? this.Battle.BattleResult.ToString()
                 : "";
 
         public string UpdatedTime

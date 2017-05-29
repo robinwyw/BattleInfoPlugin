@@ -115,11 +115,101 @@ namespace BattleInfoPlugin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 空対空.
+        /// </summary>
+        public static string Air_To_Air {
+            get {
+                return ResourceManager.GetString("Air_To_Air", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 空対艦.
+        /// </summary>
+        public static string Air_To_Ship {
+            get {
+                return ResourceManager.GetString("Air_To_Ship", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 戦闘情報.
         /// </summary>
         public static string Battle_Info {
             get {
                 return ResourceManager.GetString("Battle_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 勝利A,.
+        /// </summary>
+        public static string Battle_Rank_A {
+            get {
+                return ResourceManager.GetString("Battle_Rank_A", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 戦術的勝利B,.
+        /// </summary>
+        public static string Battle_Rank_B {
+            get {
+                return ResourceManager.GetString("Battle_Rank_B", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 戦術的敗北C,.
+        /// </summary>
+        public static string Battle_Rank_C {
+            get {
+                return ResourceManager.GetString("Battle_Rank_C", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 敗北D,.
+        /// </summary>
+        public static string Battle_Rank_D {
+            get {
+                return ResourceManager.GetString("Battle_Rank_D", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 敗北E,.
+        /// </summary>
+        public static string Battle_Rank_E {
+            get {
+                return ResourceManager.GetString("Battle_Rank_E", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to なし,.
+        /// </summary>
+        public static string Battle_Rank_None {
+            get {
+                return ResourceManager.GetString("Battle_Rank_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 完全勝利S,.
+        /// </summary>
+        public static string Battle_Rank_Perfect {
+            get {
+                return ResourceManager.GetString("Battle_Rank_Perfect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 勝利S,.
+        /// </summary>
+        public static string Battle_Rank_S {
+            get {
+                return ResourceManager.GetString("Battle_Rank_S", resourceCulture);
             }
         }
         
@@ -178,6 +268,51 @@ namespace BattleInfoPlugin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 空襲.
+        /// </summary>
+        public static string Cell_Type_Air_Raid {
+            get {
+                return ResourceManager.GetString("Cell_Type_Air_Raid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 戦闘.
+        /// </summary>
+        public static string Cell_Type_Battle {
+            get {
+                return ResourceManager.GetString("Cell_Type_Battle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ボス.
+        /// </summary>
+        public static string Cell_Type_Boss {
+            get {
+                return ResourceManager.GetString("Cell_Type_Boss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 気のせい.
+        /// </summary>
+        public static string Cell_Type_Imagination {
+            get {
+                return ResourceManager.GetString("Cell_Type_Imagination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string Cell_Type_None {
+            get {
+                return ResourceManager.GetString("Cell_Type_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap ConfirmPursuit {
@@ -193,6 +328,24 @@ namespace BattleInfoPlugin.Properties {
         public static string Enemy_Fleet_Button {
             get {
                 return ResourceManager.GetString("Enemy_Fleet_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 退避.
+        /// </summary>
+        public static string Fleet_Escape {
+            get {
+                return ResourceManager.GetString("Fleet_Escape", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 撃沈.
+        /// </summary>
+        public static string Fleet_Sunk {
+            get {
+                return ResourceManager.GetString("Fleet_Sunk", resourceCulture);
             }
         }
         
@@ -319,6 +472,69 @@ namespace BattleInfoPlugin.Properties {
         public static string Notify_Inactive {
             get {
                 return ResourceManager.GetString("Notify_Inactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 対空.
+        /// </summary>
+        public static string Ship_AA {
+            get {
+                return ResourceManager.GetString("Ship_AA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 装甲.
+        /// </summary>
+        public static string Ship_Armor {
+            get {
+                return ResourceManager.GetString("Ship_Armor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 対潜.
+        /// </summary>
+        public static string Ship_ASW {
+            get {
+                return ResourceManager.GetString("Ship_ASW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 回避.
+        /// </summary>
+        public static string Ship_Evade {
+            get {
+                return ResourceManager.GetString("Ship_Evade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 火力.
+        /// </summary>
+        public static string Ship_Firepower {
+            get {
+                return ResourceManager.GetString("Ship_Firepower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 命中 .
+        /// </summary>
+        public static string Ship_Hit {
+            get {
+                return ResourceManager.GetString("Ship_Hit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 雷装.
+        /// </summary>
+        public static string Ship_Torpedo {
+            get {
+                return ResourceManager.GetString("Ship_Torpedo", resourceCulture);
             }
         }
         

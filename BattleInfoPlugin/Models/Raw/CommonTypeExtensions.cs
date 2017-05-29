@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BattleInfoPlugin.Properties;
 
 namespace BattleInfoPlugin.Models.Raw
 {
@@ -178,8 +179,8 @@ namespace BattleInfoPlugin.Models.Raw
             return kouku.IsEnabled()
                 ? new[]
                 {
-                    kouku.api_stage1.ToResult($"{prefixName}空対空"),
-                    kouku.api_stage2.ToResult($"{prefixName}空対艦")
+                    kouku.api_stage1.ToResult($"{prefixName}" + Resources.Air_To_Air),
+                    kouku.api_stage2.ToResult($"{prefixName}" + Resources.Air_To_Ship)
                 }
                 : new AirCombatResult[0];
         }
@@ -197,8 +198,8 @@ namespace BattleInfoPlugin.Models.Raw
 
                     return new LandBaseAirCombatResult(
                         $"陸{attack.api_base_id.ToString()}-{index.ToString()}",
-                        attack.api_stage1.ToResult("空対空"),
-                        attack.api_stage2.ToResult("空対艦"),
+                        attack.api_stage1.ToResult(Resources.Air_To_Air),
+                        attack.api_stage2.ToResult(Resources.Air_To_Ship),
                         attack.api_squadron_plane);
                 })
                 .ToArray();

@@ -574,7 +574,7 @@ namespace BattleInfoPlugin.Models
         {
             this.Id = this.Source.Id;
             this.Name = this.Source.Name;
-            var isEnemyID = 500 < this.Source.Id && this.Source.Id < 901;
+            var isEnemyID = 1500 < this.Source.Id && this.Source.Id < 1901;
             this.AdditionalName = isEnemyID ? this.Source.RawData.api_yomi : "";
             this.TypeName = this.Source.ShipType.Name;
         }

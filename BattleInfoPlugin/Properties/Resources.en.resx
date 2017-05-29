@@ -135,8 +135,38 @@
   <data name="Air_Supremacy_Supremacy" xml:space="preserve">
     <value>Air Supremacy (AS)</value>
   </data>
+  <data name="Air_To_Air" xml:space="preserve">
+    <value>Fighters</value>
+  </data>
+  <data name="Air_To_Ship" xml:space="preserve">
+    <value>Bombers</value>
+  </data>
   <data name="Battle_Info" xml:space="preserve">
     <value>Battle Info</value>
+  </data>
+  <data name="Battle_Rank_A" xml:space="preserve">
+    <value>A (Victory)</value>
+  </data>
+  <data name="Battle_Rank_B" xml:space="preserve">
+    <value>B (Tatical Victory)</value>
+  </data>
+  <data name="Battle_Rank_C" xml:space="preserve">
+    <value>C (Tactical Defeat)</value>
+  </data>
+  <data name="Battle_Rank_D" xml:space="preserve">
+    <value>D (Defeat)</value>
+  </data>
+  <data name="Battle_Rank_E" xml:space="preserve">
+    <value>E (Defeat)</value>
+  </data>
+  <data name="Battle_Rank_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Battle_Rank_Perfect" xml:space="preserve">
+    <value>S+ (Perfect Victory)</value>
+  </data>
+  <data name="Battle_Rank_S" xml:space="preserve">
+    <value>S (Victory)</value>
   </data>
   <data name="Battle_Situation" xml:space="preserve">
     <value>Engagement Form:</value>
@@ -158,6 +188,12 @@
   </data>
   <data name="Enemy_Fleet_Button" xml:space="preserve">
     <value>Known Enemy Formations</value>
+  </data>
+  <data name="Fleet_Escape" xml:space="preserve">
+    <value>Escaped</value>
+  </data>
+  <data name="Fleet_Sunk" xml:space="preserve">
+    <value>Sunk</value>
   </data>
   <data name="Formation_Combined_Anti_Sub" xml:space="preserve">
     <value>Combined Anti-Sub</value>
@@ -201,7 +237,43 @@
   <data name="Notify_Inactive" xml:space="preserve">
     <value>Notify Only if Inactive</value>
   </data>
+  <data name="Ship_AA" xml:space="preserve">
+    <value>AA</value>
+  </data>
+  <data name="Ship_Armor" xml:space="preserve">
+    <value>Armor</value>
+  </data>
+  <data name="Ship_ASW" xml:space="preserve">
+    <value>ASW</value>
+  </data>
+  <data name="Ship_Evade" xml:space="preserve">
+    <value>Evasion</value>
+  </data>
+  <data name="Ship_Firepower" xml:space="preserve">
+    <value>Firepower</value>
+  </data>
+  <data name="Ship_Hit" xml:space="preserve">
+    <value>Accuracy</value>
+  </data>
+  <data name="Ship_Torpedo" xml:space="preserve">
+    <value>Torpedo</value>
+  </data>
   <data name="Show_LBAS_Check" xml:space="preserve">
     <value>Show LBAS Combat Stage</value>
+  </data>
+  <data name="Cell_Type_Air_Raid" xml:space="preserve">
+    <value>Air Raid</value>
+  </data>
+  <data name="Cell_Type_Battle" xml:space="preserve">
+    <value>Battle</value>
+  </data>
+  <data name="Cell_Type_Boss" xml:space="preserve">
+    <value>Boss</value>
+  </data>
+  <data name="Cell_Type_Imagination" xml:space="preserve">
+    <value>Imagination</value>
+  </data>
+  <data name="Cell_Type_None" xml:space="preserve">
+    <value>None</value>
   </data>
 </root>

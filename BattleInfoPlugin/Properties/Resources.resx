@@ -135,8 +135,38 @@
   <data name="Air_Supremacy_Supremacy" xml:space="preserve">
     <value>制空権確保</value>
   </data>
+  <data name="Air_To_Air" xml:space="preserve">
+    <value>空対空</value>
+  </data>
+  <data name="Air_To_Ship" xml:space="preserve">
+    <value>空対艦</value>
+  </data>
   <data name="Battle_Info" xml:space="preserve">
     <value>戦闘情報</value>
+  </data>
+  <data name="Battle_Rank_A" xml:space="preserve">
+    <value>勝利A,</value>
+  </data>
+  <data name="Battle_Rank_B" xml:space="preserve">
+    <value>戦術的勝利B,</value>
+  </data>
+  <data name="Battle_Rank_C" xml:space="preserve">
+    <value>戦術的敗北C,</value>
+  </data>
+  <data name="Battle_Rank_D" xml:space="preserve">
+    <value>敗北D,</value>
+  </data>
+  <data name="Battle_Rank_E" xml:space="preserve">
+    <value>敗北E,</value>
+  </data>
+  <data name="Battle_Rank_None" xml:space="preserve">
+    <value>なし,</value>
+  </data>
+  <data name="Battle_Rank_Perfect" xml:space="preserve">
+    <value>完全勝利S,</value>
+  </data>
+  <data name="Battle_Rank_S" xml:space="preserve">
+    <value>勝利S,</value>
   </data>
   <data name="Battle_Situation" xml:space="preserve">
     <value>交戦形態:</value>
@@ -162,6 +192,12 @@
   </data>
   <data name="Enemy_Fleet_Button" xml:space="preserve">
     <value>既知の敵一覧</value>
+  </data>
+  <data name="Fleet_Escape" xml:space="preserve">
+    <value>退避</value>
+  </data>
+  <data name="Fleet_Sunk" xml:space="preserve">
+    <value>撃沈</value>
   </data>
   <data name="Formation_Combined_Anti_Sub" xml:space="preserve">
     <value>対潜陣形</value>
@@ -205,7 +241,43 @@
   <data name="Notify_Inactive" xml:space="preserve">
     <value>非アクティブ時のみ通知</value>
   </data>
+  <data name="Ship_AA" xml:space="preserve">
+    <value>対空</value>
+  </data>
+  <data name="Ship_Armor" xml:space="preserve">
+    <value>装甲</value>
+  </data>
+  <data name="Ship_ASW" xml:space="preserve">
+    <value>対潜</value>
+  </data>
+  <data name="Ship_Evade" xml:space="preserve">
+    <value>回避</value>
+  </data>
+  <data name="Ship_Firepower" xml:space="preserve">
+    <value>火力</value>
+  </data>
+  <data name="Ship_Hit" xml:space="preserve">
+    <value>命中 </value>
+  </data>
+  <data name="Ship_Torpedo" xml:space="preserve">
+    <value>雷装</value>
+  </data>
   <data name="Show_LBAS_Check" xml:space="preserve">
     <value>显示陆基航空队Stage信息</value>
+  </data>
+  <data name="Cell_Type_Air_Raid" xml:space="preserve">
+    <value>空襲</value>
+  </data>
+  <data name="Cell_Type_Battle" xml:space="preserve">
+    <value>戦闘</value>
+  </data>
+  <data name="Cell_Type_Boss" xml:space="preserve">
+    <value>ボス</value>
+  </data>
+  <data name="Cell_Type_Imagination" xml:space="preserve">
+    <value>気のせい</value>
+  </data>
+  <data name="Cell_Type_None" xml:space="preserve">
+    <value>None</value>
   </data>
 </root>

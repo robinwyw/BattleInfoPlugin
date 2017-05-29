@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BattleInfoPlugin.Models;
+using BattleInfoPlugin.Models.Localization;
 using Livet;
 
 namespace BattleInfoPlugin.ViewModels
@@ -11,6 +12,8 @@ namespace BattleInfoPlugin.ViewModels
     public class CellTypeViewModel : ViewModel
     {
         private CellType _CellType;
+
+        private string _CellString;
 
         public CellTypeViewModel[] SigleCellTypes
         {
@@ -40,9 +43,32 @@ namespace BattleInfoPlugin.ViewModels
             }
         }
 
+        public string CellString
+        {
+            get { return this._CellString; }
+            set
+            {
+                if (this._CellString != value)
+                {
+                    this._CellString = value;
+                    this.RaisePropertyChanged();
+                    this.RaisePropertyChanged(nameof(this.SigleCellTypes));
+                }
+            }
+        }
+
         public CellTypeViewModel(CellType type)
         {
             this.CellType = type;
+            if(this.CellType != Models.CellType.None)
+            {
+                CellString = CellTypeLocalization.GetResource(this.CellType);                
+            }
+            else
+            {
+                CellString = "None";
+            }
+                
         }
 
         public static implicit operator CellType(CellTypeViewModel vm) => vm.CellType;

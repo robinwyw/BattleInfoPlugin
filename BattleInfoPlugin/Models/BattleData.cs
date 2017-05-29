@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BattleInfoPlugin.Models.Raw;
 using Grabacr07.KanColleWrapper;
+using Grabacr07.KanColleWrapper.Models.Raw;
+using Grabacr07.KanColleWrapper.Models.Translations;
 using Livet;
 
 namespace BattleInfoPlugin.Models
@@ -408,13 +410,13 @@ namespace BattleInfoPlugin.Models
 
             #region Result
 
-            proxy.Observe<battle_result>("/kcsapi/api_req_practice/battle_result")
+            proxy.Observe<kcsapi_combined_battle_battleresult>("/kcsapi/api_req_practice/battle_result")
                 .Subscribe(x => this.UpdateBattleResult(x.Data));
 
-            proxy.Observe<battle_result>("/kcsapi/api_req_sortie/battleresult")
+            proxy.Observe<kcsapi_combined_battle_battleresult>("/kcsapi/api_req_sortie/battleresult")
                 .Subscribe(x => this.UpdateBattleResult(x.Data));
 
-            proxy.Observe<battle_result>("/kcsapi/api_req_combined_battle/battleresult")
+            proxy.Observe<kcsapi_combined_battle_battleresult>("/kcsapi/api_req_combined_battle/battleresult")
                 .Subscribe(x => this.UpdateBattleResult(x.Data));
 
             #endregion
@@ -688,9 +690,10 @@ namespace BattleInfoPlugin.Models
 
         #endregion
 
-        public void UpdateBattleResult(battle_result data)
+        public void UpdateBattleResult(kcsapi_combined_battle_battleresult data)
         {
-            this.DropShipName = data.api_get_ship?.api_ship_name;
+            this.DropShipName = KanColleClient.Current.Translations.Lookup(TranslationType.DropShip, data) ?? data.api_get_ship?.api_ship_name;
+            //this.DropShipName = data.api_get_ship?.api_ship_name;
 
             switch (data.api_win_rank)
             {
