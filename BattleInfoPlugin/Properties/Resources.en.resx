@@ -276,4 +276,28 @@
   <data name="Cell_Type_None" xml:space="preserve">
     <value>None</value>
   </data>
+  <data name="Cell_Type_Branch" xml:space="preserve">
+    <value>Branch Node</value>
+  </data>
+  <data name="Cell_Type_Dogfight" xml:space="preserve">
+    <value>Aerial Battle/Dogfight</value>
+  </data>
+  <data name="Cell_Type_Empty" xml:space="preserve">
+    <value>No Event</value>
+  </data>
+  <data name="Cell_Type_Homeport" xml:space="preserve">
+    <value>Homeport</value>
+  </data>
+  <data name="Cell_Type_Landing" xml:space="preserve">
+    <value>Landing Point</value>
+  </data>
+  <data name="Cell_Type_Night" xml:space="preserve">
+    <value>Night Battle</value>
+  </data>
+  <data name="Cell_Type_Recon" xml:space="preserve">
+    <value>Aerial Recon</value>
+  </data>
+  <data name="Cell_Type_Whirlpool" xml:space="preserve">
+    <value>Whirlpool</value>
+  </data>
 </root>

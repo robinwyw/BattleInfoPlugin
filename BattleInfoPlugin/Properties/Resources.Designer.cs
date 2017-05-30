@@ -295,6 +295,42 @@ namespace BattleInfoPlugin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 能動分岐.
+        /// </summary>
+        public static string Cell_Type_Branch {
+            get {
+                return ResourceManager.GetString("Cell_Type_Branch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 航空戦.
+        /// </summary>
+        public static string Cell_Type_Dogfight {
+            get {
+                return ResourceManager.GetString("Cell_Type_Dogfight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to イベント無し.
+        /// </summary>
+        public static string Cell_Type_Empty {
+            get {
+                return ResourceManager.GetString("Cell_Type_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 母港.
+        /// </summary>
+        public static string Cell_Type_Homeport {
+            get {
+                return ResourceManager.GetString("Cell_Type_Homeport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 気のせい.
         /// </summary>
         public static string Cell_Type_Imagination {
@@ -304,11 +340,47 @@ namespace BattleInfoPlugin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 揚陸地点.
+        /// </summary>
+        public static string Cell_Type_Landing {
+            get {
+                return ResourceManager.GetString("Cell_Type_Landing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 夜戦.
+        /// </summary>
+        public static string Cell_Type_Night {
+            get {
+                return ResourceManager.GetString("Cell_Type_Night", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to None.
         /// </summary>
         public static string Cell_Type_None {
             get {
                 return ResourceManager.GetString("Cell_Type_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 航空偵察.
+        /// </summary>
+        public static string Cell_Type_Recon {
+            get {
+                return ResourceManager.GetString("Cell_Type_Recon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 渦潮.
+        /// </summary>
+        public static string Cell_Type_Whirlpool {
+            get {
+                return ResourceManager.GetString("Cell_Type_Whirlpool", resourceCulture);
             }
         }
         

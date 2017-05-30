@@ -280,4 +280,28 @@
   <data name="Cell_Type_None" xml:space="preserve">
     <value>None</value>
   </data>
+  <data name="Cell_Type_Branch" xml:space="preserve">
+    <value>能動分岐</value>
+  </data>
+  <data name="Cell_Type_Dogfight" xml:space="preserve">
+    <value>航空戦</value>
+  </data>
+  <data name="Cell_Type_Empty" xml:space="preserve">
+    <value>イベント無し</value>
+  </data>
+  <data name="Cell_Type_Homeport" xml:space="preserve">
+    <value>母港</value>
+  </data>
+  <data name="Cell_Type_Landing" xml:space="preserve">
+    <value>揚陸地点</value>
+  </data>
+  <data name="Cell_Type_Night" xml:space="preserve">
+    <value>夜戦</value>
+  </data>
+  <data name="Cell_Type_Recon" xml:space="preserve">
+    <value>航空偵察</value>
+  </data>
+  <data name="Cell_Type_Whirlpool" xml:space="preserve">
+    <value>渦潮</value>
+  </data>
 </root>

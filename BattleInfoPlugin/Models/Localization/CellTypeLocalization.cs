@@ -18,6 +18,22 @@ namespace BattleInfoPlugin.Models.Localization
                     return Resources.Cell_Type_Imagination;
                 case CellType.ボス:
                     return Resources.Cell_Type_Boss;
+                case CellType.航空戦:
+                    return Resources.Cell_Type_Dogfight;
+                case CellType.イベント無し:
+                    return Resources.Cell_Type_Empty;
+                case CellType.渦潮:
+                    return Resources.Cell_Type_Whirlpool;
+                case CellType.母港:
+                    return Resources.Cell_Type_Homeport;
+                case CellType.揚陸地点:
+                    return Resources.Cell_Type_Landing;
+                case CellType.夜戦:
+                    return Resources.Cell_Type_Night;
+                case CellType.能動分岐:
+                    return Resources.Cell_Type_Branch;
+                case CellType.航空偵察:
+                    return Resources.Cell_Type_Recon;
             }
             return "";
         }
