@@ -148,7 +148,7 @@
     <value>A (Victory)</value>
   </data>
   <data name="Battle_Rank_B" xml:space="preserve">
-    <value>B (Tatical Victory)</value>
+    <value>B (Tactical Victory)</value>
   </data>
   <data name="Battle_Rank_C" xml:space="preserve">
     <value>C (Tactical Defeat)</value>
