@@ -130,10 +130,10 @@
     <value>Air Parity (AP)</value>
   </data>
   <data name="Air_Supremacy_Superiority" xml:space="preserve">
-    <value>Air Superiority (AS+)</value>
+    <value>Air Supremacy (AS+)</value>
   </data>
   <data name="Air_Supremacy_Supremacy" xml:space="preserve">
-    <value>Air Supremacy (AS)</value>
+    <value>Air Superiority (AS)</value>
   </data>
   <data name="Air_To_Air" xml:space="preserve">
     <value>Fighters</value>
