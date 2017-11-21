@@ -148,7 +148,7 @@ namespace BattleInfoPlugin.Models.Raw
                 .Concat(selector(kouku.api_stage3_combined))
                 .Select((x, i) => new
                 {
-                    target = ToIndex(i + 1, type),
+                    target = ToIndex(i - 2, type),
                     happened = x.Item1 == 1 || x.Item2 == 1,
                     damage = x.Item3,
                     isCriticalHit = x.Item4 == 1
@@ -242,26 +242,41 @@ namespace BattleInfoPlugin.Models.Raw
         int targetFleetIndex,
         FleetType sourceFleetType,
         FleetType targetFleetType)
-    => targets
-        .Select((target, index) => new
         {
-            source = ToIndex(sourceFleetIndex, index, sourceFleetType),
-            target = ToIndex(targetFleetIndex, target, targetFleetType),
-            damage = Convert.ToInt32(damages[index]),
-            isCritical = criticals[index] > 0
-        })
-        .GetData()
-        .Where(x => x.target != 0)
-        .Select(x => new Attack(x.source, x.target, x.damage, x.isCritical));
+            HashSet<Attack> output = new HashSet<Attack>();
+            for (int index = 0; index < damages.Length; index++)
+            {
+                if (targets[index] != -1)
+                {
+                    int source = sourceFleetType == FleetType.Friend ? index : -index; 
+                    int target = sourceFleetType == FleetType.Enemy ? targets[index] + 1 : -targets[index] - 1;
+                    int damage = Convert.ToInt32(damages[index]);
+                    bool isCritical = criticals[index] > 0;
+                    output.Add(new Attack(source, target, damage, isCritical));
+                }
+            }
+            return output.AsEnumerable<Attack>();
+        }
+    //=> targets
+    //    .Select((target, index) => new
+    //    {
+    //        source = ToIndex(sourceFleetIndex, index, sourceFleetType),
+    //        target = ToIndex(targetFleetIndex, target, targetFleetType),
+    //        damage = Convert.ToInt32(damages[index]),
+    //        isCritical = criticals[index] > 0
+    //    })
+    //    .GetData()
+    //    .Where(x => x.target != -1)
+    //    .Select(x => new Attack(x.source, x.target, x.damage, x.isCritical));
 
         #endregion
 
         #region ダメージ計算
 
-        public static IEnumerable<T> GetData<T>(this IEnumerable<T> source, int origin = 1)
+        public static IEnumerable<T> GetData<T>(this IEnumerable<T> source, int origin = 0)
             => source.Skip(origin);
 
-        public static IEnumerable<T> GetSection<T>(this IEnumerable<T> source, int section, int origin = 1)
+        public static IEnumerable<T> GetSection<T>(this IEnumerable<T> source, int section, int origin = 0)
         {
             return source.GetData(origin).Section(section);
         }
@@ -278,7 +293,7 @@ namespace BattleInfoPlugin.Models.Raw
         /// <param name="source"></param>
         /// <param name="origin">ゴミ-1が付いてる場合1オリジン</param>
         /// <returns></returns>
-        public static IEnumerable<T> GetFriendData<T>(this IEnumerable<T> source, int origin = 1)
+        public static IEnumerable<T> GetFriendData<T>(this IEnumerable<T> source, int origin = 0)
             => source.GetSection(0, origin);
 
         /// <summary>
@@ -288,8 +303,8 @@ namespace BattleInfoPlugin.Models.Raw
         /// <param name="source"></param>
         /// <param name="origin">ゴミ-1が付いてる場合1オリジン</param>
         /// <returns></returns>
-        public static IEnumerable<T> GetEnemyData<T>(this IEnumerable<T> source, int origin = 1)
-            => source.GetSection(1, origin);
+        public static IEnumerable<T> GetEnemyData<T>(this IEnumerable<T> source, int origin = 0)
+            => source.GetSection(0, origin);
 
         #endregion
 

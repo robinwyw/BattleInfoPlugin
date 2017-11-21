@@ -698,7 +698,7 @@ namespace BattleInfoPlugin.Models
             switch (data.api_win_rank)
             {
                 case "S":
-                    this.BattleResult = this.FriendFleetStatus.LostGauge > 0
+                    this.BattleResult = this.FriendFleetStatus.LostGauge > 0 
                             ? BattleResultRank.勝利S
                             : BattleResultRank.完全勝利S;
                     break;
@@ -797,7 +797,7 @@ namespace BattleInfoPlugin.Models
             this.LandBaseAirCombatResults = new LandBaseAirCombatResult[0];
 
             this.UpdateFriendFleets();
-            this.UpdateEnemyFleets(data, this.NextCell.EnemyName);
+            this.UpdateEnemyFleets(data, this.NextCell?.EnemyName);
             this.UpdateFleetsHPs(data);
 
             this.UpdateFormation(data);
@@ -830,32 +830,32 @@ namespace BattleInfoPlugin.Models
 
         private void UpdateFleetsHPs(ICommonBattleMembers data)
         {
-            this.FriendFleet.Fleets[1].UpdateHPs(data.api_maxhps.GetFriendData(), data.api_nowhps.GetFriendData());
-            this.EnemyFleet.Fleets[1].UpdateHPs(data.api_maxhps.GetEnemyData(), data.api_nowhps.GetEnemyData());
+            this.FriendFleet.Fleets[1].UpdateHPs(data.api_f_maxhps.GetFriendData(), data.api_f_nowhps.GetFriendData());
+            this.EnemyFleet.Fleets[1].UpdateHPs(data.api_e_maxhps.GetEnemyData(), data.api_e_nowhps.GetEnemyData());
 
             if (this.FriendFleet.FleetCount > 1)
             {
-                this.FriendFleet.Fleets[2].UpdateHPs(data.api_maxhps_combined.GetFriendData(), data.api_nowhps_combined.GetFriendData());
+                this.FriendFleet.Fleets[2].UpdateHPs(data.api_f_maxhps_combined.GetFriendData(), data.api_f_nowhps_combined.GetFriendData());
             }
             if (this.EnemyFleet.FleetCount > 1)
             {
-                this.EnemyFleet.Fleets[2].UpdateHPs(data.api_maxhps_combined.GetEnemyData(), data.api_nowhps_combined.GetEnemyData());
+                this.EnemyFleet.Fleets[2].UpdateHPs(data.api_e_maxhps_combined.GetEnemyData(), data.api_e_nowhps_combined.GetEnemyData());
             }
         }
 
         private void UpdateFleetsHPsEc(ICommonBattleMembers data)
         {
-            this.FriendFleet.Fleets[1].UpdateHPs(data.api_maxhps.GetFriendData(), data.api_nowhps.GetFriendData());
-            this.EnemyFleet.Fleets[1].UpdateHPs(data.api_maxhps.GetEnemyData(), data.api_nowhps.GetEnemyData());
+            this.FriendFleet.Fleets[1].UpdateHPs(data.api_f_maxhps.GetFriendData(), data.api_f_nowhps.GetFriendData());
+            this.EnemyFleet.Fleets[1].UpdateHPs(data.api_e_maxhps.GetEnemyData(), data.api_e_nowhps.GetEnemyData());
 
             if (this.FriendFleet.FleetCount > 1)
             {
                 // each_battle->ec_midnight_battle api_maxhp_combined[1..6]==api_nowhp_combined[1..6]
-                this.FriendFleet.Fleets[2].UpdateNowHPs(data.api_nowhps_combined.GetFriendData());
+                this.FriendFleet.Fleets[2].UpdateNowHPs(data.api_f_nowhps_combined.GetFriendData());
             }
             if (this.EnemyFleet.FleetCount > 1)
             {
-                this.EnemyFleet.Fleets[2].UpdateHPs(data.api_maxhps_combined.GetEnemyData(), data.api_nowhps_combined.GetEnemyData());
+                this.EnemyFleet.Fleets[2].UpdateHPs(data.api_e_maxhps_combined.GetEnemyData(), data.api_e_nowhps_combined.GetEnemyData());
             }
         }
 

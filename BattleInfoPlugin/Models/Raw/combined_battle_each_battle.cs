@@ -13,10 +13,10 @@ namespace BattleInfoPlugin.Models.Raw
         public int[] api_ship_ke_combined { get; set; }
         public int[] api_ship_lv { get; set; }
         public int[] api_ship_lv_combined { get; set; }
-        public int[] api_nowhps { get; set; }
-        public int[] api_maxhps { get; set; }
-        public int[] api_nowhps_combined { get; set; }
-        public int[] api_maxhps_combined { get; set; }
+        public int[] api_f_nowhps { get; set; }
+        public int[] api_f_maxhps { get; set; }
+        public int[] api_f_nowhps_combined { get; set; }
+        public int[] api_f_maxhps_combined { get; set; }
         public int[][] api_eSlot { get; set; }
         public int[][] api_eSlot_combined { get; set; }
         public int[][] api_eKyouka { get; set; }
@@ -40,5 +40,10 @@ namespace BattleInfoPlugin.Models.Raw
         public Raigeki api_raigeki { get; set; }
         public Enemy_Combined_Hougeki api_hougeki2 { get; set; }
         public Enemy_Combined_Hougeki api_hougeki3 { get; set; }
+
+        public int[] api_e_nowhps { get; set; }
+        public int[] api_e_maxhps { get; set; }
+        public int[] api_e_nowhps_combined { get; set; }
+        public int[] api_e_maxhps_combined { get; set; }
     }
 }
