@@ -38,12 +38,12 @@ namespace BattleInfoPlugin.Models.Raw
 
         public static IEnumerable<Attack> GetDamages(this Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
         {
-            return hougeki.api_damage.GetDamages(hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex);
+            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex);
         }
 
         public static IEnumerable<Attack> GetDamages(this Midnight_Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
         {
-            return hougeki.api_damage.GetDamages(hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex);
+            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex);
         }
 
         public static IEnumerable<Attack> GetDamages(this Enemy_Combined_Hougeki hougeki)
@@ -69,9 +69,10 @@ namespace BattleInfoPlugin.Models.Raw
                     targetType = FleetType.Friend;
                 }
 
-                var source = ToIndex(sources[i], sourceType);
+                var source = sourceType == FleetType.Enemy ? -sources[i] - 1 : sources[i] + 1;
+                    //ToIndex(sources[i], sourceType);
                 var attackDamages = damages[i].Select((damage, index) =>
-                            new Damage(ToIndex(targets[i][index], targetType), damage, criticals[i][index] == 2))
+                            new Damage(targetType == FleetType.Enemy ? -targets[i][index] -1 : targets[i][index] + 1, damage, criticals[i][index] == 2))
                     .ToArray();
 
                 yield return new Attack(source, attackDamages);
@@ -80,47 +81,79 @@ namespace BattleInfoPlugin.Models.Raw
 
         public static IEnumerable<Attack> GetDamages(
             this object[] apiDamage,
+            int[] apiAtFlags,
             int[] apiAtList,
             object[] apiDfList,
             object[] apiClList,
             int friendFleetIndex,
             int enemyFleetIndex)
         {
+            var flags = apiAtFlags.GetData().ToArray();
             var sources = apiAtList.GetData().ToArray();
             var targets = apiDfList.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
             var damages = apiDamage.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
             var criticals = apiClList.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
-            for (var i = 0; i < targets.Length; i++)
+
+            for (var i = 0; i < flags.Length; i++)
             {
-                // 1 ~ 12
-                var rawSource = sources[i];
-                var attackTargets = targets[i];
-                var critical = criticals[i];
+                FleetType sourceType, targetType;
 
-                // 1 ~ 6: f->e; 7 ~ 12: e->f
-                var isFriendAttack = rawSource <= 6;
-
-                int sourceFleetIndex, targetFleetIndex;
-                if (isFriendAttack)
+                // 0: f->e; 1: e->f
+                if (flags[i] == 0)
                 {
-                    sourceFleetIndex = friendFleetIndex;
-                    targetFleetIndex = enemyFleetIndex;
+                    sourceType = FleetType.Friend;
+                    targetType = FleetType.Enemy;
                 }
                 else
                 {
-                    sourceFleetIndex = enemyFleetIndex;
-                    targetFleetIndex = friendFleetIndex;
+                    sourceType = FleetType.Enemy;
+                    targetType = FleetType.Friend;
                 }
 
-                var source = ToHougekiIndex(sourceFleetIndex, rawSource);
+                var source = sourceType == FleetType.Enemy ? -sources[i] - 1 : sources[i] + 1;
+                //ToIndex(sources[i], sourceType);
                 var attackDamages = damages[i].Select((damage, index) =>
-                {
-                    var target = ToHougekiIndex(targetFleetIndex, attackTargets[index]);
-                    return new Damage(target, damage, critical[index] == 2);
-                });
+                            new Damage(targetType == FleetType.Enemy ? -targets[i][index] - 1 : targets[i][index] + 1, damage, criticals[i][index] == 2))
+                    .ToArray();
 
                 yield return new Attack(source, attackDamages);
             }
+
+            //var sources = apiAtList.GetData().ToArray();
+            //var targets = apiDfList.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
+            //var damages = apiDamage.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
+            //var criticals = apiClList.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
+            //for (var i = 0; i < targets.Length; i++)
+            //{
+            //    // 1 ~ 12
+            //    var rawSource = sources[i];
+            //    var attackTargets = targets[i];
+            //    var critical = criticals[i];
+
+            //    // 1 ~ 6: f->e; 7 ~ 12: e->f
+            //    var isFriendAttack = rawSource <= 6;
+
+            //    int sourceFleetIndex, targetFleetIndex;
+            //    if (isFriendAttack)
+            //    {
+            //        sourceFleetIndex = friendFleetIndex;
+            //        targetFleetIndex = enemyFleetIndex;
+            //    }
+            //    else
+            //    {
+            //        sourceFleetIndex = enemyFleetIndex;
+            //        targetFleetIndex = friendFleetIndex;
+            //    }
+
+            //    var source = ToHougekiIndex(sourceFleetIndex, rawSource);
+            //    var attackDamages = damages[i].Select((damage, index) =>
+            //    {
+            //        var target = ToHougekiIndex(targetFleetIndex, attackTargets[index]);
+            //        return new Damage(target, damage, critical[index] == 2);
+            //    });
+
+            //    yield return new Attack(source, attackDamages);
+        //}
         }
 
         #endregion
@@ -132,11 +165,11 @@ namespace BattleInfoPlugin.Models.Raw
            new Dictionary<FleetType, Func<Api_Stage3, IEnumerable<Tuple<int, int, int, int>>>>
            {
                [FleetType.Friend] = stage3 => stage3?.api_fdam?
-                                                 .Select((x, i) => new Tuple<int, int, int, int>(stage3.api_frai_flag[i], stage3.api_fbak_flag[i], Convert.ToInt32(x), stage3.api_fcl_flag[i]))
+                                                 .Select((x, i) => new Tuple<int, int, int, int>(Convert.ToInt32(stage3.api_frai_flag[i]), Convert.ToInt32(stage3.api_fbak_flag[i]), Convert.ToInt32(x), Convert.ToInt32(stage3.api_fcl_flag[i])))
                                                  .GetData()
                                              ?? Enumerable.Empty<Tuple<int, int, int, int>>(),
                [FleetType.Enemy] = stage3 => stage3?.api_edam?
-                                                 .Select((x, i) => new Tuple<int, int, int, int>(stage3.api_erai_flag[i], stage3.api_ebak_flag[i], Convert.ToInt32(x), stage3.api_ecl_flag[i]))
+                                                 .Select((x, i) => new Tuple<int, int, int, int>(Convert.ToInt32(stage3.api_erai_flag[i]), Convert.ToInt32(stage3.api_ebak_flag[i]), Convert.ToInt32(x), Convert.ToInt32(stage3.api_ecl_flag[i])))
                                                  .GetData()
                                              ?? Enumerable.Empty<Tuple<int, int, int, int>>()
            };
@@ -148,7 +181,7 @@ namespace BattleInfoPlugin.Models.Raw
                 .Concat(selector(kouku.api_stage3_combined))
                 .Select((x, i) => new
                 {
-                    target = ToIndex(i - 2, type),
+                    target = type == FleetType.Enemy ? ToIndex(i, type) -1  : ToIndex(i , type) + 1,
                     happened = x.Item1 == 1 || x.Item2 == 1,
                     damage = x.Item3,
                     isCriticalHit = x.Item4 == 1
