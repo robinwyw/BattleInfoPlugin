@@ -341,6 +341,11 @@ namespace BattleInfoPlugin.Models.Raw
 
         #endregion
 
+        private static int FleetOffset(int index, int fleetIndex, FleetType type)
+        {
+            return type == FleetType.Friend ? ((fleetIndex - 1) * BattleData.Current.FriendFleet.Fleets[0].Ships.Count) + index : ((fleetIndex - 1) * BattleData.Current.FriendFleet.Fleets[0].Ships.Count) + index;
+        }
+
         private static int To6BasedIndex(this int index)
         {
             return (index - 1) % 6 + 1;
