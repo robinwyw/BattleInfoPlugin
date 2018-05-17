@@ -280,6 +280,24 @@ namespace BattleInfoPlugin.Models
         }
         #endregion
 
+        #region ItemDropName
+        private string _ItemDropName;
+
+        public string ItemDropName
+        {
+            get
+            { return this._ItemDropName; }
+            set
+            {
+                if (this._ItemDropName == value)
+                    return;
+                this._ItemDropName = value;
+                this.RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+
 
         #region FriendFleetStatus
 
@@ -717,6 +735,18 @@ namespace BattleInfoPlugin.Models
                 case "E":
                     this.BattleResult = BattleResultRank.敗北E;
                     break;
+            }
+
+            if(data.api_get_useitem != null)
+            {
+                ItemDropName = "";
+                if(data.api_get_exmap_useitem_id != 0)
+                {
+                    string exname = KanColleClient.Current.Master.UseItems[data.api_get_exmap_useitem_id].Name;
+                    this.ItemDropName = (exname == "勲章" ? "Medal" : exname) + "/n";
+                }
+                string name = KanColleClient.Current.Master.UseItems[data.api_get_useitem.api_useitem_id].Name;
+                this.ItemDropName = ItemDropName + (name == "お米" ? "Rice" : (name == "梅干" ? "Umeboshi" : (name == "海苔" ? "Nori" : (name == "お茶" ? "Tea" : (name == "勲章" ? "Medal" : name)))));
             }
 
             this.FriendFleet.Fleets[1].UpdateMVP(data.api_mvp);

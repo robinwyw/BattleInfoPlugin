@@ -7,7 +7,7 @@ namespace BattleInfoPlugin.Models.Raw
     /// </summary>
     public class sortie_ld_airbattle : ICommonBattleMembers, IBattleFormationInfo, ICommonFirstBattleMembers
     {
-        private int _apiDeckId;
+        //private int _apiDeckId;
 
         //public dynamic api_dock_id
         //{

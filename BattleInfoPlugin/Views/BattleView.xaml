@@ -321,7 +321,27 @@
             </TextBlock>
 
             <controls:PlaceHolderTextControl Text="{Binding Battle.DropShipName, Mode=OneWay}"
-                                             PlaceHolder="ドロップ"
+                                             PlaceHolder="Drop"
+                                             HorizontalAlignment="Center"
+                                             Margin="0,4">
+                <controls:PlaceHolderTextControl.Style>
+                    <Style TargetType="controls:PlaceHolderTextControl"
+                           BasedOn="{StaticResource {x:Type controls:PlaceHolderTextControl}}">
+                        <Setter Property="Visibility"
+                                Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Battle.State}"
+                                         Value="InSortie">
+                                <Setter Property="Visibility"
+                                        Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </controls:PlaceHolderTextControl.Style>
+            </controls:PlaceHolderTextControl>
+
+            <controls:PlaceHolderTextControl Text="{Binding Battle.ItemDropName, Mode=OneWay}"
+                                             PlaceHolder="Item Drop"
                                              HorizontalAlignment="Center"
                                              Margin="0,4">
                 <controls:PlaceHolderTextControl.Style>
@@ -340,6 +360,8 @@
                 </controls:PlaceHolderTextControl.Style>
             </controls:PlaceHolderTextControl>
         </StackPanel>
+        
+        
 
         <ContentControl Grid.Row="2"
                         Grid.Column="0"
