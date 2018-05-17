@@ -746,7 +746,7 @@ namespace BattleInfoPlugin.Models
                     this.ItemDropName = (exname == "勲章" ? "Medal" : exname) + "/n";
                 }
                 string name = KanColleClient.Current.Master.UseItems[data.api_get_useitem.api_useitem_id].Name;
-                this.ItemDropName = ItemDropName + (name == "お米" ? "Rice" : (name == "梅干" ? "Umeboshi" : (name == "海苔" ? "Nori" : (name == "お茶" ? "Tea" : (name == "勲章" ? "Medal" : name)))));
+                this.ItemDropName = ItemDropName + (name == "お米" ? "Rice" : (name == "梅干" ? "Umeboshi" : (name == "海苔" ? "Nori" : (name == "お茶" ? "Tea" : name))));
             }
 
             this.FriendFleet.Fleets[1].UpdateMVP(data.api_mvp);
@@ -894,6 +894,7 @@ namespace BattleInfoPlugin.Models
             this.UpdatedTime = DateTimeOffset.Now;
             this.Name = "";
             this.DropShipName = "";
+            this.ItemDropName = "";
 
             this.BattleSituation = BattleSituation.なし;
             this.FriendAirSupremacy = AirSupremacy.航空戦なし;
