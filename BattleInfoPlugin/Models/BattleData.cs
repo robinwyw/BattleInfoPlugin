@@ -660,6 +660,8 @@ namespace BattleInfoPlugin.Models
 
                 var friendFleetIndex = data.api_active_deck[0];
                 var enemyFleetIndex = data.api_active_deck[1];
+
+                this.Shelling(data.api_friendly_battle?.api_hougeki, friendFleetIndex, enemyFleetIndex);
                 this.Shelling(data.api_hougeki, friendFleetIndex, enemyFleetIndex);
             }, "敵連合艦隊 - 夜戦");
         }

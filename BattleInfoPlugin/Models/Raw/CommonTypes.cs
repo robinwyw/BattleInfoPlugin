@@ -1,6 +1,29 @@
 ﻿namespace BattleInfoPlugin.Models.Raw
 {
 
+    #region Friendly Fleet
+
+    public class Friendly_Info
+    {
+        public int api_production_type { get; set; }
+        public int[] api_ship_id { get; set; }
+        public int[] api_ship_lv { get; set; }
+        public int[] api_nowhps { get; set; }
+        public int[] api_maxhps { get; set; }
+        public int[][] api_Slot { get; set; }
+        public int[][] api_Param { get; set; }
+        public int[] api_voice_id { get; set; }
+        public int[] api_voice_p_no { get; set; }
+    }
+
+    public class Friendly_Battle
+    {
+        public int[] api_flare_pos { get; set; }
+        public Hougeki api_hougeki { get; set; }
+    }
+
+    #endregion
+
     #region 航空戦
 
     public class Api_Kouku
