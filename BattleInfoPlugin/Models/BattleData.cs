@@ -186,6 +186,25 @@ namespace BattleInfoPlugin.Models
 
         #endregion
 
+        #region FriendSupportFleet
+
+        private BattleFleet _FriendSupportFleet = new BattleFleet(FleetType.Support);
+
+        public BattleFleet FriendSupportFleet
+        {
+            get { return this._FriendSupportFleet; }
+            private set
+            {
+                if (this._FriendSupportFleet != value)
+                {
+                    this._FriendSupportFleet = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
 
         #region FriendAirSupremacy変更通知プロパティ
         private AirSupremacy _FriendAirSupremacy = AirSupremacy.航空戦なし;
@@ -656,10 +675,18 @@ namespace BattleInfoPlugin.Models
         {
             this.Update(() =>
             {
+
+                if (data.api_friendly_info != null)
+                {
+                    this.UpdateFriendSuportFleet(data.api_friendly_info);
+                }
+
                 this.UpdateFleetsHPsEc(data);
 
                 var friendFleetIndex = data.api_active_deck[0];
                 var enemyFleetIndex = data.api_active_deck[1];
+
+                this.Shelling(data.api_friendly_battle?.api_hougeki, friendFleetIndex, enemyFleetIndex);
                 this.Shelling(data.api_hougeki, friendFleetIndex, enemyFleetIndex);
             }, "敵連合艦隊 - 夜戦");
         }
@@ -786,6 +813,24 @@ namespace BattleInfoPlugin.Models
             this.EnemyFleet.Name = enemyName;
         }
 
+        private void UpdateFriendSuportFleet(Friendly_Info data)
+        {
+            this.FriendSupportFleet.Update(new FleetData(GetFriendSupportFleet(data)));
+            this.FriendSupportFleet.Fleets[1].UpdateHPs(data.api_maxhps, data.api_nowhps);
+            this.FriendSupportFleet.Name = "Friendly Support";
+        }
+
+        private MastersShipData[] GetFriendSupportFleet(Friendly_Info data)
+        {
+            return data.api_ship_id
+                .ToMastersShipDataArray(
+                    data.api_ship_lv,
+                    data.api_maxhps,
+                    data.api_nowhps,
+                    data.api_Param,
+                    data.api_Slot);
+        }
+
         private void Update(Action updateAction, string name, BattleResultType battleResultType = BattleResultType.Normal)
         {
             this.Name = name;
@@ -903,6 +948,7 @@ namespace BattleInfoPlugin.Models
             this.AirCombatResults = new AirCombatResult[0];
             this.FriendFleet.Clear();
             this.EnemyFleet.Clear();
+            this.FriendSupportFleet.Clear();
 
             this.BattleResult = BattleResultRank.なし;
         }

@@ -16,7 +16,7 @@
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
              mc:Ignorable="d"
              d:DesignHeight="530"
-             d:DesignWidth="800"
+             d:DesignWidth="1080"
              d:DataContext="{d:DesignData /SampleData/BattleViewModelSampleData.xaml}">
 
     <UserControl.Resources>
@@ -232,6 +232,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*"
                               MinWidth="10" />
             <ColumnDefinition Width="Auto" />
@@ -254,13 +255,13 @@
 
 
         <TextBlock Grid.Row="0"
-                   Grid.Column="1"
+                   Grid.Column="2"
                    Text="{Binding FriendAirSupremacy, Mode=OneWay}"
                    Style="{DynamicResource EmphaticTextStyleKey}"
                    HorizontalAlignment="Center" />
 
         <StackPanel Grid.Row="0"
-                    Grid.Column="2"
+                    Grid.Column="3"
                     HorizontalAlignment="Center"
                     Grid.IsSharedSizeScope="True">
             <ItemsControl ItemsSource="{Binding EnemyInjectionAirCombatResults}"
@@ -275,7 +276,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="2"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Visibility="{Binding Battle.IsInBattle, Converter={StaticResource TrueToVisibleConverter}}"
                     Margin="10,0">
             <TextBlock Text="{Binding BattleSituation, Mode=OneWay}"
@@ -369,7 +370,14 @@
                         ContentTemplate="{StaticResource FleetTemplate}" />
 
         <ContentControl Grid.Row="2"
-                        Grid.Column="2"
+                        Grid.Column="1"
+                        Content="{Binding FriendSupportFleet}"
+                        ContentTemplate="{StaticResource FleetTemplate}" 
+                        Margin="15,0,0,0"
+                        Visibility="{Binding FriendSupportFleet.IsVisible, Converter={StaticResource FalseToHiddenConverter}}"/>
+
+        <ContentControl Grid.Row="2"
+                        Grid.Column="3"
                         Content="{Binding EnemyFleet}"
                         ContentTemplate="{StaticResource FleetTemplate}" />
     </Grid>

@@ -57,22 +57,22 @@ namespace BattleInfoPlugin.Models
             if (cell != null)
             {
                 var rank = info.Rank;
-                this.KnownEnemies = EnemyDataProvider.Current
-                    .GetMapEnemiesNew()
-                    .GetOrAddNew(info)
-                    .GetOrAddNew(cell).Values
-                    .Where(f => f.Rank?.Contains(rank) ?? false)
-                    .ToArray();
+                //this.KnownEnemies = EnemyDataProvider.Current
+                //    .GetMapEnemiesNew()
+                //    .GetOrAddNew(info)
+                //    .GetOrAddNew(cell).Values
+                //    .Where(f => f.Rank?.Contains(rank) ?? false)
+                //    .ToArray();
             }
             else
             {
                 this.KnownEnemies = new BattleFleet[0];
             }
 
-            if (this.KnownEnemies.Length > 0)
-            {
-                this.EnemyName = this.KnownEnemies[0].Name;
-            }
+            //if (this.KnownEnemies.Length > 0)
+            //{
+            //    this.EnemyName = this.KnownEnemies[0].Name;
+            //}
         }
     }
 

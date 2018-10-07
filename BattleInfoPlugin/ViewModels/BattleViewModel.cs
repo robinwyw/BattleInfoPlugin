@@ -108,6 +108,26 @@ namespace BattleInfoPlugin.ViewModels
         #endregion
 
 
+        #region FriendSupportFleet
+
+        private BattleFleetViewModel _FriendSupportFleet;
+
+        public BattleFleetViewModel FriendSupportFleet
+        {
+            get { return this._FriendSupportFleet; }
+            set
+            {
+                if (this._FriendSupportFleet != value)
+                {
+                    this._FriendSupportFleet = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+
         #region NextCellInfo
 
         private NextCellInfoViewModel _nextCellInfo = new NextCellInfoViewModel { IsInSortie = false };
@@ -273,6 +293,8 @@ namespace BattleInfoPlugin.ViewModels
             this.FriendFleet.ObserveUpdate();
             this.EnemyFleet = new BattleFleetViewModel(this.Battle.EnemyFleet, "敵艦隊");
             this.EnemyFleet.ObserveUpdate();
+            this.FriendSupportFleet = new BattleFleetViewModel(this.Battle.FriendSupportFleet, "Friendly Support");
+            this.FriendSupportFleet.ObserveUpdate();
 
             this.CompositeDisposable.Add(new PropertyChangedEventListener(this.Battle)
             {

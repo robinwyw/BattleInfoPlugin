@@ -9,6 +9,7 @@ namespace BattleInfoPlugin.Models
     public enum FleetType
     {
         Friend,
-        Enemy
+        Enemy,
+        Support
     }
 }
