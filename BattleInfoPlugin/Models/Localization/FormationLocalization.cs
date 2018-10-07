@@ -23,6 +23,8 @@ namespace BattleInfoPlugin.Models.Localization
                     return Resources.Formation_Echelon;
                 case Formation.単横陣:
                     return Resources.Formation_Line_Abreast;
+                case Formation.警戒陣:
+                    return Resources.Formation_Vanguard;
                 case Formation.対潜陣形:
                     return Resources.Formation_Combined_Anti_Sub;
                 case Formation.前方陣形:

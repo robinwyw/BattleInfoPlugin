@@ -29,8 +29,8 @@ namespace BattleInfoPlugin.ViewModels
         public bool IsVisible => this._fleet.FleetCount > 0;
 
         public string FleetFormation => this._fleet.Formation != Formation.なし
-            ? Models.Localization.FormationLocalization.GetResource(this._fleet.Formation)
-            //? this._fleet.Formation.ToString()
+            //? Models.Localization.FormationLocalization.GetResource(this._fleet.Formation)
+            ? this._fleet.Formation.ToString()
             : "";
 
         public BattleFleetViewModel(BattleFleet fleets, string defaultName)
