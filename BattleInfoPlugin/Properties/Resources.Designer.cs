@@ -501,7 +501,18 @@ namespace BattleInfoPlugin.Properties {
                 return ResourceManager.GetString("Formation_Line_Ahead", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to 警戒陣.
+        /// </summary>
+        public static string Formation_Vanguard
+        {
+            get
+            {
+                return ResourceManager.GetString("Formation_Vanguard", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to なし.
         /// </summary>

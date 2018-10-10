@@ -35,7 +35,7 @@ namespace BattleInfoPlugin.Models
         {
             this.Plane = KanColleClient.Current.Master.SlotItems[squadron.api_mst_id];
             this.Count = squadron.api_count;
-            this.Max = this.Plane != null ? 12 : 0;
+            this.Max = this.Plane != null ? (this.Count > 4 ? 18 : 4) : 0;
         }
     }
 }

@@ -20,6 +20,8 @@ namespace BattleInfoPlugin.Models
         [EnumMember]
         単横陣 = 5,
         [EnumMember]
+        警戒陣 = 6,
+        [EnumMember]
         対潜陣形 = 11,
         [EnumMember]
         前方陣形 = 12,

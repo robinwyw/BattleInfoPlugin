@@ -4,7 +4,7 @@ using System.Linq;
 using BattleInfoPlugin.Models.Raw;
 using Grabacr07.KanColleWrapper;
 using Grabacr07.KanColleWrapper.Models.Raw;
-using Grabacr07.KanColleWrapper.Models.Translations;
+//using Grabacr07.KanColleWrapper.Models.Translations;
 using Livet;
 
 namespace BattleInfoPlugin.Models
@@ -737,7 +737,6 @@ namespace BattleInfoPlugin.Models
 
         public void UpdateBattleResult(kcsapi_combined_battle_battleresult data)
         {
-
             try
             {
                 this.DropShipName = KanColleClient.Current.Translations.Lookup(TranslationType.DropShip, data) ?? data.api_get_ship?.api_ship_name;
@@ -777,10 +776,10 @@ namespace BattleInfoPlugin.Models
                 if(data.api_get_exmap_useitem_id != 0)
                 {
                     string exname = KanColleClient.Current.Master.UseItems[data.api_get_exmap_useitem_id].Name;
-                    this.ItemDropName = (exname == "勲章" ? "Medal" : exname) + "/n";
+                    this.ItemDropName = exname + "\n";
                 }
                 string name = KanColleClient.Current.Master.UseItems[data.api_get_useitem.api_useitem_id].Name;
-                this.ItemDropName = ItemDropName + (name == "お米" ? "Rice" : (name == "梅干" ? "Umeboshi" : (name == "海苔" ? "Nori" : (name == "お茶" ? "Tea" : name))));
+                this.ItemDropName = ItemDropName + name;
             }
 
             this.FriendFleet.Fleets[1].UpdateMVP(data.api_mvp);
