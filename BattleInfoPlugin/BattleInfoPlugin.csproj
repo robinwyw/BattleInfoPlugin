@@ -375,19 +375,19 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\KanColleViewer\source\Analyzers\KanColleViewer.PluginAnalyzer\KanColleViewer.PluginAnalyzer.csproj">
+    <ProjectReference Include="..\..\..\Analyzers\KanColleViewer.PluginAnalyzer\KanColleViewer.PluginAnalyzer.csproj">
       <Project>{b84f1251-4042-4adc-955e-415469947538}</Project>
       <Name>KanColleViewer.PluginAnalyzer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\KanColleViewer\source\Grabacr07.KanColleViewer.Composition\KanColleViewer.Composition.csproj">
+    <ProjectReference Include="..\..\..\Grabacr07.KanColleViewer.Composition\KanColleViewer.Composition.csproj">
       <Project>{cc139e98-d847-41da-b20f-8aca4564f375}</Project>
       <Name>KanColleViewer.Composition</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\KanColleViewer\source\Grabacr07.KanColleViewer.Controls\KanColleViewer.Controls.csproj">
+    <ProjectReference Include="..\..\..\Grabacr07.KanColleViewer.Controls\KanColleViewer.Controls.csproj">
       <Project>{978239d0-3129-4c54-aac6-493f0de48bf5}</Project>
       <Name>KanColleViewer.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\KanColleViewer\source\Grabacr07.KanColleWrapper\KanColleWrapper.csproj">
+    <ProjectReference Include="..\..\..\Grabacr07.KanColleWrapper\KanColleWrapper.csproj">
       <Project>{0bc8cf79-76d9-46ad-867f-fec6c6ad4594}</Project>
       <Name>KanColleWrapper</Name>
     </ProjectReference>
