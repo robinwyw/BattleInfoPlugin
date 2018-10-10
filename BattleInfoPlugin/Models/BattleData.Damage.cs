@@ -51,11 +51,11 @@ namespace BattleInfoPlugin.Models
             this.CalcDamages(damages, true);
         }
 
-        private void Shelling(Hougeki shelling, int friendFleetIndex = 1, int enemyFleetIndex = 1)
+        private void Shelling(Hougeki shelling, int friendFleetIndex = 1, int enemyFleetIndex = 1, bool friendlySupport = false)
         {
             if (shelling == null) return;
 
-            var damages = shelling.GetDamages(friendFleetIndex, enemyFleetIndex);
+            var damages = shelling.GetDamages(friendFleetIndex, enemyFleetIndex, friendlySupport);
             this.CalcDamages(damages);
         }
 
@@ -101,19 +101,19 @@ namespace BattleInfoPlugin.Models
             var allTargets = new HashSet<ShipData>();
             foreach (var attack in attacks)
             {
-                var source = this.GetShip(attack.Source);
+                var source = this.GetShip(attack.Source, attack.isSupport);
                 if (source != null)
                 {
                     source.AttackDamage += attack.TotalDamage;
                 }
 
-                var targets = new HashSet<ShipData>();
+                //var targets = new HashSet<ShipData>();
                 foreach (var damage in attack.Damages)
                 {
-                    var target = this.GetShip(damage.Target);
+                    var target = this.GetShip(damage.Target, attack.isSupport);
                     if (target != null)
                     {
-                        targets.Add(target);
+                        //targets.Add(target);
                         allTargets.Add(target);
                         target.ReceiveDamage(damage.Value);
                     }
@@ -131,10 +131,16 @@ namespace BattleInfoPlugin.Models
             }
         }
 
-        private ShipData GetShip(int index)
+        private ShipData GetShip(int index, bool isSupport = false)
         {
             if (index == 0) return null;
 
+            if (isSupport)
+            {
+                return index > 0
+                ? this.FriendSupportFleet.GetShip(index)
+                : this.EnemyFleet.GetShip(-index);
+            }
             return index > 0
                 ? this.FriendFleet.GetShip(index)
                 : this.EnemyFleet.GetShip(-index);

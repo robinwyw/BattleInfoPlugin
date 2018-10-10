@@ -686,7 +686,7 @@ namespace BattleInfoPlugin.Models
                 var friendFleetIndex = data.api_active_deck[0];
                 var enemyFleetIndex = data.api_active_deck[1];
 
-                this.Shelling(data.api_friendly_battle?.api_hougeki, friendFleetIndex, enemyFleetIndex);
+                this.Shelling(data.api_friendly_battle?.api_hougeki, friendFleetIndex, enemyFleetIndex, true);
                 this.Shelling(data.api_hougeki, friendFleetIndex, enemyFleetIndex);
             }, "敵連合艦隊 - 夜戦");
         }
@@ -737,8 +737,14 @@ namespace BattleInfoPlugin.Models
 
         public void UpdateBattleResult(kcsapi_combined_battle_battleresult data)
         {
-            //this.DropShipName = KanColleClient.Current.Translations.Lookup(TranslationType.DropShip, data) ?? data.api_get_ship?.api_ship_name;
-            this.DropShipName = data.api_get_ship?.api_ship_name;
+            try
+            {
+                this.DropShipName = KanColleClient.Current.Translations.Lookup(TranslationType.DropShip, data) ?? data.api_get_ship?.api_ship_name;
+            }
+            catch
+            {
+                this.DropShipName = data.api_get_ship?.api_ship_name;
+            }
 
             switch (data.api_win_rank)
             {

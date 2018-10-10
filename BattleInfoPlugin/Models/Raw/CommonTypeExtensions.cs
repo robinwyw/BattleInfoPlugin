@@ -36,9 +36,9 @@ namespace BattleInfoPlugin.Models.Raw
 
         #region 砲撃
 
-        public static IEnumerable<Attack> GetDamages(this Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
+        public static IEnumerable<Attack> GetDamages(this Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex, bool friendlySupport)
         {
-            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex);
+            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex, friendlySupport);
         }
 
         public static IEnumerable<Attack> GetDamages(this Midnight_Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
@@ -86,7 +86,8 @@ namespace BattleInfoPlugin.Models.Raw
             object[] apiDfList,
             object[] apiClList,
             int friendFleetIndex,
-            int enemyFleetIndex)
+            int enemyFleetIndex,
+            bool friendlySupport = false)
         {
             var flags = apiAtFlags.GetData().ToArray();
             var sources = apiAtList.GetData().ToArray();
@@ -116,7 +117,7 @@ namespace BattleInfoPlugin.Models.Raw
                             new Damage(targetType == FleetType.Enemy ? -targets[i][index] - 1 : targets[i][index] + 1, damage, criticals[i][index] == 2))
                     .ToArray();
 
-                yield return new Attack(source, attackDamages);
+                yield return new Attack(source, attackDamages, friendlySupport);
             }
 
             //var sources = apiAtList.GetData().ToArray();
