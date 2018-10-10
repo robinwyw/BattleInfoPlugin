@@ -737,8 +737,17 @@ namespace BattleInfoPlugin.Models
 
         public void UpdateBattleResult(kcsapi_combined_battle_battleresult data)
         {
-            this.DropShipName = KanColleClient.Current.Translations.Lookup(TranslationType.DropShip, data) ?? data.api_get_ship?.api_ship_name;
-            //this.DropShipName = data.api_get_ship?.api_ship_name;
+
+            try
+            {
+                this.DropShipName = KanColleClient.Current.Translations.Lookup(TranslationType.DropShip, data) ?? data.api_get_ship?.api_ship_name;
+            }
+            catch
+            {
+                this.DropShipName = data.api_get_ship?.api_ship_name;
+            }
+
+
 
             switch (data.api_win_rank)
             {
