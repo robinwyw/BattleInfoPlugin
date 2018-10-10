@@ -19,15 +19,18 @@ namespace BattleInfoPlugin.Models
 
         public int TotalDamage => this.Damages.Sum(x => x.Value);
 
-        public Attack(int source, int target, int damage, bool isCritical)
-            : this(source, new[] { new Damage(target, damage, isCritical) })
+        public bool isSupport { get; private set; }
+
+        public Attack(int source, int target, int damage, bool isCritical, bool friendSupport = false)
+            : this(source, new[] { new Damage(target, damage, isCritical) }, friendSupport)
         {
         }
 
-        public Attack(int source, IEnumerable<Damage> damages)
+        public Attack(int source, IEnumerable<Damage> damages, bool friendSupport = false)
         {
             this.Source = source;
             this.Damages = damages.ToArray();
+            this.isSupport = isSupport;
         }
 
         public static readonly Attack Empty = new Attack(0, Enumerable.Empty<Damage>());
