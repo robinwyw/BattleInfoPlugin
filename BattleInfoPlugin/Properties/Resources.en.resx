@@ -300,4 +300,7 @@
   <data name="Cell_Type_Whirlpool" xml:space="preserve">
     <value>Whirlpool</value>
   </data>
+  <data name="Formation_Vanguard" xml:space="preserve">
+    <value>Vanguard</value>
+  </data>
 </root>

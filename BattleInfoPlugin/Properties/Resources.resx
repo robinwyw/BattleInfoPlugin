@@ -304,4 +304,7 @@
   <data name="Cell_Type_Whirlpool" xml:space="preserve">
     <value>渦潮</value>
   </data>
+  <data name="Formation_Vanguard" xml:space="preserve">
+    <value>警戒陣</value>
+  </data>
 </root>
