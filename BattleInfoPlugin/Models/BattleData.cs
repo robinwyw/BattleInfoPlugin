@@ -4,7 +4,7 @@ using System.Linq;
 using BattleInfoPlugin.Models.Raw;
 using Grabacr07.KanColleWrapper;
 using Grabacr07.KanColleWrapper.Models.Raw;
-//using Grabacr07.KanColleWrapper.Models.Translations;
+using Grabacr07.KanColleWrapper.Models.Translations;
 using Livet;
 
 namespace BattleInfoPlugin.Models
