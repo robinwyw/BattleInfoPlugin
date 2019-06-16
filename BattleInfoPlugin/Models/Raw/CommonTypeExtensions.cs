@@ -18,19 +18,30 @@ namespace BattleInfoPlugin.Models.Raw
 
         public static IEnumerable<Attack> GetDamages(this Api_Support_Hourai support, int supportType)
         {
-            // supportType = 2 -> isCritical = 1
-            // supportType = 3 -> isCritical = 2
-            var criticalFlag = supportType - 1;
-            return support.api_damage
-                .Select((damage, index) => new
-                {
-                    target = ToIndex(index, FleetType.Enemy) -1,
-                    damage = Convert.ToInt32(damage),
-                    critical = support.api_cl_list[index]
-                })
-                .GetData()
-                .Select((x, i) => new Attack(0, x.target, x.damage, x.critical == criticalFlag));
+            HashSet<Attack> output = new HashSet<Attack>();
+            for (int index = 0; index < support.api_damage.Length - 1; index++)
+            {
+                int target = ToIndex(index, FleetType.Enemy) - 1;
+                int damage = Convert.ToInt32(support.api_damage[index]);
+                bool isCritical = support.api_cl_list[index] > 0;
+                output.Add(new Attack(0, target, damage, isCritical));
+            }
+            return output.AsEnumerable<Attack>();
         }
+        //{
+        //    // supportType = 2 -> isCritical = 1
+        //    // supportType = 3 -> isCritical = 2
+        //    var criticalFlag = 2;
+        //    return support.api_damage
+        //        .Select((damage, index) => new
+        //        {
+        //            target = ToIndex(index, FleetType.Enemy) -1,
+        //            damage = Convert.ToInt32(damage),
+        //            critical = support.api_cl_list[index]
+        //        })
+        //        .GetData()
+        //        .Select((x, i) => new Attack(0, x.target, x.damage, x.critical == criticalFlag));
+        //}
 
         #endregion
 
