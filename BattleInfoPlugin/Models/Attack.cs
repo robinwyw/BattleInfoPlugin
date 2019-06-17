@@ -30,7 +30,7 @@ namespace BattleInfoPlugin.Models
         {
             this.Source = source;
             this.Damages = damages.ToArray();
-            this.isSupport = isSupport;
+            this.isSupport = friendSupport;
         }
 
         public static readonly Attack Empty = new Attack(0, Enumerable.Empty<Damage>());
