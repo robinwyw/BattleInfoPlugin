@@ -405,6 +405,9 @@ namespace BattleInfoPlugin.Models
             proxy.Observe<sortie_ld_airbattle>("/kcsapi/api_req_sortie/ld_airbattle")
                 .Subscribe(x => this.Update(x.Data));
 
+            proxy.Observe<sortie_ld_shooting>("kcsapi/api_req_sortie/ld_shooting")
+                .Subscribe(x => this.Update(x.Data));
+
             #endregion
 
             #region Friend Combined
@@ -425,6 +428,9 @@ namespace BattleInfoPlugin.Models
                 .Subscribe(x => this.Update(x.Data));
 
             proxy.Observe<combined_battle_ld_airbattle>("/kcsapi/api_req_combined_battle/ld_airbattle")
+                .Subscribe(x => this.Update(x.Data));
+
+            proxy.Observe<combined_battle_ld_shooting>("/kcsapi/api_req_combined_battle/ld_shooting")
                 .Subscribe(x => this.Update(x.Data));
 
             #endregion
@@ -741,6 +747,31 @@ namespace BattleInfoPlugin.Models
                 this.Shelling(data.api_hougeki3);
                 this.Torpedo(data.api_raigeki);
             }, "水上部隊 - 敵連合艦隊 - 昼戦");
+        }
+
+        private void Update(sortie_ld_shooting data)
+        {
+            this.Update(() =>
+            {
+                this.UpdateInfo(data);
+
+                this.InjectionAirCombat(data.api_injection_kouku);
+                this.AirBaseAttack(data.api_air_base_attack);
+
+                this.Shelling(data.api_hougeki1);
+            }, "通常 - 敵レーダー射撃");
+        }
+        private void Update(combined_battle_ld_shooting data)
+        {
+            this.Update(() =>
+            {
+                this.UpdateInfo(data);
+
+                this.InjectionAirCombat(data.api_injection_kouku);
+                this.AirBaseAttack(data.api_air_base_attack);
+
+                this.Shelling(data.api_hougeki1, 2, 1);
+            }, "通常 - 敵レーダー射撃");
         }
 
         #endregion
