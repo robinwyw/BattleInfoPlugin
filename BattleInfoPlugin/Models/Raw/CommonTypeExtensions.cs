@@ -47,14 +47,14 @@ namespace BattleInfoPlugin.Models.Raw
 
         #region 砲撃
 
-        public static IEnumerable<Attack> GetDamages(this Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex, bool friendlySupport)
-        {
-            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex, friendlySupport);
-        }
-
-        public static IEnumerable<Attack> GetDamages(this Midnight_Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
+        public static IEnumerable<Attack> GetDamages(this Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
         {
             return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex);
+        }
+
+        public static IEnumerable<Attack> GetDamages(this Midnight_Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex, bool friendlySupport)
+        {
+            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex, friendlySupport);
         }
 
         public static IEnumerable<Attack> GetDamages(this Enemy_Combined_Hougeki hougeki)

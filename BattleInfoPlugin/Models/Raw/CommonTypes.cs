@@ -19,7 +19,7 @@
     public class Friendly_Battle
     {
         public int[] api_flare_pos { get; set; }
-        public Hougeki api_hougeki { get; set; }
+        public Midnight_Hougeki api_hougeki { get; set; }
     }
 
     #endregion

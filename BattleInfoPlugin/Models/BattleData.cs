@@ -487,7 +487,14 @@ namespace BattleInfoPlugin.Models
         {
             this.Update(() =>
             {
+                if (data.api_friendly_info != null)
+                {
+                    this.UpdateFriendSupportFleet(data.api_friendly_info);
+                }
+
                 this.UpdateFleetsHPs(data);
+
+                this.Shelling(data.api_friendly_battle?.api_hougeki, 1, 1, true);
 
                 this.Shelling(data.api_hougeki);
             }, "通常 - 夜戦");
@@ -498,6 +505,7 @@ namespace BattleInfoPlugin.Models
             this.Update(() =>
             {
                 this.UpdateInfo(data);
+                this.Support(data.api_n_support_info, data.api_n_support_flag);
 
                 this.Shelling(data.api_hougeki);
             }, "通常 - 開幕夜戦");
@@ -678,7 +686,7 @@ namespace BattleInfoPlugin.Models
 
                 if (data.api_friendly_info != null)
                 {
-                    this.UpdateFriendSuportFleet(data.api_friendly_info);
+                    this.UpdateFriendSupportFleet(data.api_friendly_info);
                 }
 
                 this.UpdateFleetsHPsEc(data);
@@ -686,7 +694,9 @@ namespace BattleInfoPlugin.Models
                 var friendFleetIndex = data.api_active_deck[0];
                 var enemyFleetIndex = data.api_active_deck[1];
 
-                this.Shelling(data.api_friendly_battle?.api_hougeki, friendFleetIndex, enemyFleetIndex, true);
+                var friendlyFleetIndex = friendFleetIndex; 
+                this.Shelling(data.api_friendly_battle?.api_hougeki, friendlyFleetIndex, enemyFleetIndex, true);
+
                 this.Shelling(data.api_hougeki, friendFleetIndex, enemyFleetIndex);
             }, "敵連合艦隊 - 夜戦");
         }
@@ -819,7 +829,7 @@ namespace BattleInfoPlugin.Models
             this.EnemyFleet.Name = enemyName;
         }
 
-        private void UpdateFriendSuportFleet(Friendly_Info data)
+        private void UpdateFriendSupportFleet(Friendly_Info data)
         {
             this.FriendSupportFleet.Update(new FleetData(GetFriendSupportFleet(data)));
             this.FriendSupportFleet.Fleets[1].UpdateHPs(data.api_maxhps, data.api_nowhps);

@@ -18,6 +18,10 @@
         public int[] api_flare_pos { get; set; }
         public Midnight_Hougeki api_hougeki { get; set; }
 
+        //guess
+        public Friendly_Info api_friendly_info { get; set; }
+        public Friendly_Battle api_friendly_battle { get; set; }
+
         public int[] api_e_nowhps { get; set; }
         public int[] api_e_maxhps { get; set; }
         public int[] api_e_nowhps_combined { get; set; }
