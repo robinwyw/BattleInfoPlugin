@@ -41,11 +41,11 @@ namespace BattleInfoPlugin.Models
             {
                 type = CellType.航空戦;
             }
-            else if (data.api_event_kind == 6)
+            else if (data.api_event_kind == 6 && data.api_event_id != 6)
             {
                 type |= CellType.空襲戦;
             }
-            else if (data.api_event_id == 7 && data.api_event_kind == 0)
+            else if (data.api_event_kind == 0 && data.api_event_id == 7)
             {
                 type = CellType.航空偵察;
             }

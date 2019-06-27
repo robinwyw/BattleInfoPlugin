@@ -771,7 +771,7 @@ namespace BattleInfoPlugin.Models
                 this.AirBaseAttack(data.api_air_base_attack);
 
                 this.Shelling(data.api_hougeki1, 2, 1);
-            }, "通常 - 敵レーダー射撃");
+            }, "連合艦隊 - 敵レーダー射撃");
         }
 
         #endregion
