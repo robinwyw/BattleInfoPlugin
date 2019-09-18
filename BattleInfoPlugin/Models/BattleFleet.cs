@@ -110,7 +110,9 @@ namespace BattleInfoPlugin.Models
         public ShipData GetShip(int index)
         {
             index -= 1;
-            var fleetIndex = index / this.Fleets[1].Ships.Count + 1;
+            var fleetIndex = (this.FleetCount != 1) ?
+                            index / this.Fleets[1].Ships.Count + 1 :
+                            1;
             var shipIndex = index % this.Fleets[1].Ships.Count + 1;
             return this.Fleets[fleetIndex].Ships[shipIndex];
         }

@@ -19,7 +19,7 @@ namespace BattleInfoPlugin.Models.Raw
         public static IEnumerable<Attack> GetDamages(this Api_Support_Hourai support, int supportType)
         {
             HashSet<Attack> output = new HashSet<Attack>();
-            for (int index = 0; index < support.api_damage.Length - 1; index++)
+            for (int index = 0; index < support.api_damage.Length; index++)
             {
                 int target = ToIndex(index, FleetType.Enemy) - 1;
                 int damage = Convert.ToInt32(support.api_damage[index]);
