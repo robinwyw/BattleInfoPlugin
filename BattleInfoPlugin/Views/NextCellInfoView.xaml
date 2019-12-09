@@ -18,11 +18,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <StackPanel Orientation="Horizontal"
+    <WrapPanel Orientation="Horizontal"
                 Margin="11,0">
 
-        <StackPanel.Style>
-            <Style TargetType="StackPanel">
+        <WrapPanel.Style>
+            <Style TargetType="WrapPanel">
                 <Setter Property="Visibility"
                         Value="Collapsed" />
                 <Style.Triggers>
@@ -33,7 +33,7 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-        </StackPanel.Style>
+        </WrapPanel.Style>
 
         <TextBlock Style="{DynamicResource DefaultTextStyleKey}">
             <Run Text="Map:" />
@@ -93,5 +93,5 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         
-    </StackPanel>
+    </WrapPanel>
 </UserControl>

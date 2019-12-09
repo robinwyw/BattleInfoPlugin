@@ -47,7 +47,7 @@ namespace BattleInfoPlugin.Models.Repositories
 
         public async Task<bool> UpdateData()
         {
-            const string url = "https://raw.githubusercontent.com/Madmanmayson/BattleInfoPlugin/master/BattleInfoPlugin/Resources/mapcell.json";
+            const string url = "https://raw.githubusercontent.com/laserdark/BattleInfoPlugin/master/BattleInfoPlugin/Resources/mapcell.json";
 
             try
             {
