@@ -811,14 +811,16 @@ namespace BattleInfoPlugin.Models
                     break;
             }
 
-            if(data.api_get_useitem != null)
+            if (data.api_get_exmap_useitem_id != 0)
             {
-                ItemDropName = "";
-                if(data.api_get_exmap_useitem_id != 0)
-                {
-                    string exname = KanColleClient.Current.Master.UseItems[data.api_get_exmap_useitem_id].Name;
-                    this.ItemDropName = exname + "\n";
-                }
+                ItemDropName = ItemDropName ?? "";
+                string exname = KanColleClient.Current.Master.UseItems[data.api_get_exmap_useitem_id].Name;
+                this.ItemDropName = exname + "\n";
+            }
+            if (data.api_get_useitem != null)
+            {
+                ItemDropName = ItemDropName ?? "";
+
                 string name = KanColleClient.Current.Master.UseItems[data.api_get_useitem.api_useitem_id].Name;
                 this.ItemDropName = ItemDropName + name;
             }
