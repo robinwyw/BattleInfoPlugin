@@ -51,17 +51,6 @@
                        Style="{DynamicResource HeaderTextStyleKey}"
                        Margin="10,5" />
 
-            <Button Content="{Binding Resources.Enemy_Fleet_Button, Source={x:Static models:ResourceService.Current}, Mode=OneWay}"
-                    DockPanel.Dock="Right"
-                    HorizontalAlignment="Right"
-                    Margin="2">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <ei:CallMethodAction TargetObject="{Binding}"
-                                             MethodName="OpenEnemyWindow" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
             <Button Content="{Binding Resources.New_Window_Button, Source={x:Static models:ResourceService.Current}, Mode=OneWay}"
                     DockPanel.Dock="Right"
                     HorizontalAlignment="Right"
