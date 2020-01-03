@@ -589,6 +589,7 @@ namespace BattleInfoPlugin.Models
             this.Update(() =>
             {
                 this.UpdateInfo(data);
+                this.Support(data.api_n_support_info, data.api_n_support_flag);
 
                 this.Shelling(data.api_hougeki, 2, 1);
             }, "連合艦隊 - 開幕夜戦");
