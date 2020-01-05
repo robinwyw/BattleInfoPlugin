@@ -277,6 +277,15 @@ namespace BattleInfoPlugin.Properties {
         }
         
         /// <summary>
+        ///   查找类似 泊地 的本地化字符串。
+        /// </summary>
+        public static string Cell_Type_Anchorage {
+            get {
+                return ResourceManager.GetString("Cell_Type_Anchorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 戦闘 的本地化字符串。
         /// </summary>
         public static string Cell_Type_Battle {

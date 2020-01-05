@@ -303,4 +303,7 @@
   <data name="Formation_Vanguard" xml:space="preserve">
     <value>Vanguard</value>
   </data>
+  <data name="Cell_Type_Anchorage" xml:space="preserve">
+    <value>Anchorage</value>
+  </data>
 </root>

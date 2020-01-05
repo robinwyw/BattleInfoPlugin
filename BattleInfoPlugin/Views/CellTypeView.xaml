@@ -96,6 +96,16 @@
                                     <Setter Property="Background"
                                             Value="#20C020" />
                                 </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="泊地">
+                                    <Setter Property="Background"
+                                            Value="#0080C0" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CellType}"
+                                             Value="レーダー射撃">
+                                    <Setter Property="Background"
+                                            Value="OrangeRed" />
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </Border.Style>

@@ -34,6 +34,8 @@ namespace BattleInfoPlugin.Models.Localization
                     return Resources.Cell_Type_Branch;
                 case CellType.航空偵察:
                     return Resources.Cell_Type_Recon;
+                case CellType.泊地:
+                    return Resources.Cell_Type_Anchorage;
             }
             return "";
         }

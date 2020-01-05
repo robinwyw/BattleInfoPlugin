@@ -19,8 +19,11 @@ namespace BattleInfoPlugin.Models
         航空戦 = 1 << 7,
         母港 = 1 << 8,
         揚陸地点 = 1 << 9,
-        空襲戦 = 1 << 10,
+        泊地 = 1 << 10,
 
+        レーダー射撃 = 1 << 27,
+
+        空襲戦 = 1 << 28,
         航空偵察 = 1 << 29,
         能動分岐 = 1 << 30,
         夜戦 = 1 << 31,
@@ -38,6 +41,7 @@ namespace BattleInfoPlugin.Models
             return battleType.Contains("sp_midnight") ? CellType.夜戦
                 : battleType.Contains("ld_airbattle") ? CellType.空襲戦    //ColorNoからも分かるが、航空戦と誤認しないため
                 : battleType.Contains("airbattle") ? CellType.航空戦
+                : battleType.Contains("ld_shooting") ? CellType.レーダー射撃
                 : CellType.None;
         }
 
