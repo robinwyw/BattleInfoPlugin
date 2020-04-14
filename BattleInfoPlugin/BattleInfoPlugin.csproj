@@ -181,6 +181,7 @@
     <Compile Include="Models\Raw\combined_battle_ld_airbattle.cs" />
     <Compile Include="Models\Raw\ICommonBattleMembers.cs" />
     <Compile Include="Models\Raw\ICommonFirstBattleMembers.cs" />
+    <Compile Include="Models\Raw\map_anchorage_repair.cs" />
     <Compile Include="Models\Raw\member_mapinfo.cs" />
     <Compile Include="Models\Raw\member_practice_enemyinfo.cs" />
     <Compile Include="Models\Raw\combined_battle_ld_shooting.cs" />
