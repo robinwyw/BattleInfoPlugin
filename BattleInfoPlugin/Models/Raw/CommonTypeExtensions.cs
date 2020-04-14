@@ -47,47 +47,19 @@ namespace BattleInfoPlugin.Models.Raw
 
         #region 砲撃
 
-        public static IEnumerable<Attack> GetDamages(this Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex)
+        public static IEnumerable<Attack> GetDamages(this Hougeki hougeki)
         {
-            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex);
+            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list);
         }
 
-        public static IEnumerable<Attack> GetDamages(this Midnight_Hougeki hougeki, int friendFleetIndex, int enemyFleetIndex, bool friendlySupport)
+        public static IEnumerable<Attack> GetDamages(this Midnight_Hougeki hougeki, bool friendlySupport)
         {
-            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendFleetIndex, enemyFleetIndex, friendlySupport);
+            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list, friendlySupport);
         }
 
         public static IEnumerable<Attack> GetDamages(this Enemy_Combined_Hougeki hougeki)
         {
-            var flags = hougeki.api_at_eflag.GetData().ToArray();
-            var sources = hougeki.api_at_list.GetData().ToArray();
-            var targets = hougeki.api_df_list.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
-            var damages = hougeki.api_damage.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
-            var criticals = hougeki.api_cl_list.GetData().Cast<object[]>().Select(x => x.ToInt32Array()).ToArray();
-            for (var i = 0; i < flags.Length; i++)
-            {
-                FleetType sourceType, targetType;
-
-                // 0: f->e; 1: e->f
-                if (flags[i] == 0)
-                {
-                    sourceType = FleetType.Friend;
-                    targetType = FleetType.Enemy;
-                }
-                else
-                {
-                    sourceType = FleetType.Enemy;
-                    targetType = FleetType.Friend;
-                }
-
-                var source = sourceType == FleetType.Enemy ? -sources[i] - 1 : sources[i] + 1;
-                    //ToIndex(sources[i], sourceType);
-                var attackDamages = damages[i].Select((damage, index) =>
-                            new Damage(targetType == FleetType.Enemy ? -targets[i][index] -1 : targets[i][index] + 1, damage, criticals[i][index] == 2))
-                    .ToArray();
-
-                yield return new Attack(source, attackDamages);
-            }
+            return hougeki.api_damage.GetDamages(hougeki.api_at_eflag, hougeki.api_at_list, hougeki.api_df_list, hougeki.api_cl_list);
         }
 
         public static IEnumerable<Attack> GetDamages(
@@ -96,8 +68,6 @@ namespace BattleInfoPlugin.Models.Raw
             int[] apiAtList,
             object[] apiDfList,
             object[] apiClList,
-            int friendFleetIndex,
-            int enemyFleetIndex,
             bool friendlySupport = false)
         {
             var flags = apiAtFlags.GetData().ToArray();
@@ -258,14 +228,14 @@ namespace BattleInfoPlugin.Models.Raw
 
         #region 雷撃戦
 
-        public static IEnumerable<Attack> GetFriendDamages(this Raigeki raigeki, int friendFleetIndex, int enemyFleetIndex)
+        public static IEnumerable<Attack> GetFriendDamages(this Raigeki raigeki)
             => raigeki?.api_eydam?
-                   .GetDamages(raigeki.api_erai, raigeki.api_ecl, enemyFleetIndex, friendFleetIndex, FleetType.Enemy, FleetType.Friend)
+                   .GetDamages(raigeki.api_erai, raigeki.api_ecl, FleetType.Enemy, FleetType.Friend)
                ?? EmptyDamages;
 
-        public static IEnumerable<Attack> GetEnemyDamages(this Raigeki raigeki, int friendFleetIndex, int enemyFleetIndex)
+        public static IEnumerable<Attack> GetEnemyDamages(this Raigeki raigeki)
             => raigeki?.api_fydam?
-                   .GetDamages(raigeki.api_frai, raigeki.api_fcl, friendFleetIndex, enemyFleetIndex, FleetType.Friend, FleetType.Enemy)
+                   .GetDamages(raigeki.api_frai, raigeki.api_fcl, FleetType.Friend, FleetType.Enemy)
                ?? EmptyDamages;
 
         /// <summary>
@@ -283,8 +253,6 @@ namespace BattleInfoPlugin.Models.Raw
         this double[] damages,
         int[] targets,
         int[] criticals,
-        int sourceFleetIndex,
-        int targetFleetIndex,
         FleetType sourceFleetType,
         FleetType targetFleetType)
         {

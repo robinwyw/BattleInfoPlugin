@@ -51,20 +51,20 @@ namespace BattleInfoPlugin.Models
             this.CalcDamages(damages, true);
         }
 
-        private void Shelling(Hougeki shelling, int friendFleetIndex = 1, int enemyFleetIndex = 1)
+        private void Shelling(Hougeki shelling)
         {
             if (shelling == null) return;
 
-            var damages = shelling.GetDamages(friendFleetIndex, enemyFleetIndex);
+            var damages = shelling.GetDamages();
             this.CalcDamages(damages);
         }
 
-        private void Shelling(Midnight_Hougeki shelling, int friendFleetIndex = 1, int enemyFleetIndex = 1, bool friendlySupport = false)
+        private void Shelling(Midnight_Hougeki shelling, bool friendlySupport = false)
         {
             if (shelling == null) return;
             if (shelling.api_at_eflag == null) return;
 
-            var damages = shelling.GetDamages(friendFleetIndex, enemyFleetIndex, friendlySupport);
+            var damages = shelling.GetDamages(friendlySupport);
             this.CalcDamages(damages);
         }
 
@@ -76,12 +76,12 @@ namespace BattleInfoPlugin.Models
             this.CalcDamages(damages);
         }
 
-        private void Torpedo(Raigeki torpedo, int friendFleetIndex = 1, int enemyFleetIndex = 1)
+        private void Torpedo(Raigeki torpedo)
         {
             if (torpedo == null) return;
 
-            var friendDamages = torpedo.GetFriendDamages(friendFleetIndex, enemyFleetIndex);
-            var enemyDamages = torpedo.GetEnemyDamages(friendFleetIndex, enemyFleetIndex);
+            var friendDamages = torpedo.GetFriendDamages();
+            var enemyDamages = torpedo.GetEnemyDamages();
 
             this.CalcDamages(friendDamages, true);
             this.CalcDamages(enemyDamages, true);

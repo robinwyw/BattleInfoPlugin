@@ -375,6 +375,9 @@ namespace BattleInfoPlugin.Models
 
             #endregion
 
+            proxy.Observe<map_anchorage_repair>("/kcsapi/api_req_map/anchorage_repair")
+                .Subscribe(x => this.UpdateFleetsByAnchorageReapir(x.Data));
+
             #region Practice
 
             proxy.Observe<member_practice_enemyinfo>("/kcsapi/api_req_member/get_practice_enemyinfo")
@@ -500,7 +503,7 @@ namespace BattleInfoPlugin.Models
 
                 this.UpdateFleetsHPs(data);
 
-                this.Shelling(data.api_friendly_battle?.api_hougeki, 1, 1, true);
+                this.Shelling(data.api_friendly_battle?.api_hougeki , true);
 
                 this.Shelling(data.api_hougeki);
             }, "通常 - 夜戦");
@@ -544,12 +547,12 @@ namespace BattleInfoPlugin.Models
                 this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack, 2, 1);
+                this.Torpedo(data.api_opening_atack);
 
-                this.Shelling(data.api_hougeki1, 2, 1);
-                this.Torpedo(data.api_raigeki, 2, 1);
-                this.Shelling(data.api_hougeki2, 1, 1);
-                this.Shelling(data.api_hougeki3, 1, 1);
+                this.Shelling(data.api_hougeki1);
+                this.Torpedo(data.api_raigeki);
+                this.Shelling(data.api_hougeki2);
+                this.Shelling(data.api_hougeki3);
             }, "連合艦隊 - 機動部隊 - 昼戦");
         }
 
@@ -565,12 +568,12 @@ namespace BattleInfoPlugin.Models
                 this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack, 2, 1);
+                this.Torpedo(data.api_opening_atack);
 
-                this.Shelling(data.api_hougeki1, 1, 1);
-                this.Shelling(data.api_hougeki2, 1, 1);
-                this.Shelling(data.api_hougeki3, 2, 1);
-                this.Torpedo(data.api_raigeki, 2, 1);
+                this.Shelling(data.api_hougeki1);
+                this.Shelling(data.api_hougeki2);
+                this.Shelling(data.api_hougeki3);
+                this.Torpedo(data.api_raigeki);
             }, "連合艦隊 - 水上部隊 - 昼戦");
         }
 
@@ -580,7 +583,7 @@ namespace BattleInfoPlugin.Models
             {
                 this.UpdateFleetsHPs(data);
 
-                this.Shelling(data.api_hougeki, 2, 1);
+                this.Shelling(data.api_hougeki);
             }, "連合艦隊 - 夜戦");
         }
 
@@ -591,7 +594,7 @@ namespace BattleInfoPlugin.Models
                 this.UpdateInfo(data);
                 this.Support(data.api_n_support_info, data.api_n_support_flag);
 
-                this.Shelling(data.api_hougeki, 2, 1);
+                this.Shelling(data.api_hougeki);
             }, "連合艦隊 - 開幕夜戦");
         }
 
@@ -675,7 +678,6 @@ namespace BattleInfoPlugin.Models
                 this.AirCombat(data.api_kouku);
                 this.Support(data.api_support_info, data.api_support_flag);
 
-                // guess
                 this.Shelling(data.api_opening_taisen);
                 this.Torpedo(data.api_opening_atack);
 
@@ -702,9 +704,9 @@ namespace BattleInfoPlugin.Models
                 var enemyFleetIndex = data.api_active_deck[1];
 
                 var friendlyFleetIndex = friendFleetIndex; 
-                this.Shelling(data.api_friendly_battle?.api_hougeki, friendlyFleetIndex, enemyFleetIndex, true);
+                this.Shelling(data.api_friendly_battle?.api_hougeki, true);
 
-                this.Shelling(data.api_hougeki, friendFleetIndex, enemyFleetIndex);
+                this.Shelling(data.api_hougeki);
             }, "敵連合艦隊 - 夜戦");
         }
 
@@ -771,7 +773,7 @@ namespace BattleInfoPlugin.Models
                 this.InjectionAirCombat(data.api_injection_kouku);
                 this.AirBaseAttack(data.api_air_base_attack);
 
-                this.Shelling(data.api_hougeki1, 2, 1);
+                this.Shelling(data.api_hougeki1);
             }, "連合艦隊 - 敵レーダー射撃");
         }
 
@@ -827,7 +829,7 @@ namespace BattleInfoPlugin.Models
             }
 
             this.FriendFleet.Fleets[1].UpdateMVP(data.api_mvp);
-            this.FriendFleet.Fleets[2]?.UpdateMVP(data.api_mvp_combined);
+            this.FriendFleet.Fleets[2]?.UpdateMVP(data?.api_mvp_combined);
         }
 
         private void UpdateFleetsByStartNext(map_start_next startNext, string api_deck_id = null)
@@ -843,7 +845,9 @@ namespace BattleInfoPlugin.Models
 
             this.NextCell = new MapCellInfo(startNext);
         }
-
+        private void UpdateFleetsByAnchorageReapir(map_anchorage_repair anchorageRepair)
+        {
+        }
         private void UpdateFriendFleets(int deckId = -1)
         {
             if (deckId == -1) deckId = this.CurrentDeckId;
