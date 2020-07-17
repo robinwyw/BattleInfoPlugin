@@ -22,5 +22,15 @@ namespace BattleInfoPlugin.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://raw.githubusercontent.com/laserdark/KanColleToolsetResources/master/Battl" +
+            "eInfoPlugin/mapcell.json")]
+        public string MapCellSource {
+            get {
+                return ((string)(this["MapCellSource"]));
+            }
+        }
     }
 }
