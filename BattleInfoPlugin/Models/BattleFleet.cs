@@ -111,9 +111,9 @@ namespace BattleInfoPlugin.Models
         {
             index -= 1;
             var fleetIndex = (this.FleetCount != 1) ?
-                            index / this.Fleets[1].Ships.Count + 1 :
+                            index / 6 + 1 :
                             1;
-            var shipIndex = index % this.Fleets[1].Ships.Count + 1;
+            var shipIndex = index % 6 + 1;
             return this.Fleets[fleetIndex].Ships[shipIndex];
         }
 
