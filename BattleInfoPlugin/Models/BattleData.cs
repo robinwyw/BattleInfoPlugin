@@ -581,7 +581,14 @@ namespace BattleInfoPlugin.Models
         {
             this.Update(() =>
             {
+                if (data.api_friendly_info != null)
+                {
+                    this.UpdateFriendSupportFleet(data.api_friendly_info);
+                }
+
                 this.UpdateFleetsHPs(data);
+
+                this.Shelling(data.api_friendly_battle?.api_hougeki, true);
 
                 this.Shelling(data.api_hougeki);
             }, "連合艦隊 - 夜戦");
