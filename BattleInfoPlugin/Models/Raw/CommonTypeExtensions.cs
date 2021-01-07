@@ -7,7 +7,7 @@ namespace BattleInfoPlugin.Models.Raw
 {
     public static class CommonTypeExtensions
     {
-        private static readonly IEnumerable<Attack> EmptyDamages = new Attack[0];
+        private static readonly IEnumerable<Attack> EmptyDamages = new Attack[0];      
 
         #region 支援
 
@@ -163,7 +163,7 @@ namespace BattleInfoPlugin.Models.Raw
                 .Concat(selector(kouku.api_stage3_combined))
                 .Select((x, i) => new
                 {
-                    target = type == FleetType.Enemy ? ToIndex(i, type) -1  : ToIndex(i , type) + 1,
+                    target = type == FleetType.Enemy ? ToKoukuIndex(i, type) -1  : ToKoukuIndex(i , type) + 1,
                     happened = x.Item1 == 1 || x.Item2 == 1,
                     damage = x.Item3,
                     isCriticalHit = x.Item4 == 1
@@ -321,14 +321,17 @@ namespace BattleInfoPlugin.Models.Raw
 
         #endregion
 
-        private static int FleetOffset(int index, int fleetIndex, FleetType type)
+        private static int FleetOffset(int index, FleetType type)
         {
-            return type == FleetType.Friend ? ((fleetIndex - 1) * BattleData.Current.FriendFleet.Fleets[0].Ships.Count) + index : ((fleetIndex - 1) * BattleData.Current.FriendFleet.Fleets[0].Ships.Count) + index;
+            return type == FleetType.Friend ? (index + 1 > BattleData.Current.FriendFleet.Fleets[1].ShipCount ? To6BasedIndex(index, type) : index)
+                                            : (index + 1 > BattleData.Current.EnemyFleet.Fleets[1].ShipCount ? -To6BasedIndex(index, type) : -index);
+            //((fleetIndex - 1) * BattleData.Current.FriendFleet.Fleets[0].Ships.Count) + index : ((fleetIndex - 1) * BattleData.Current.FriendFleet.Fleets[0].Ships.Count) + index;
         }
 
-        private static int To6BasedIndex(this int index)
+        private static int To6BasedIndex(int index, FleetType type)
         {
-            return (index - 1) % 6 + 1;
+            return type == FleetType.Friend ? index - BattleData.Current.FriendFleet.Fleets[1].ShipCount + 6
+                                            : index - BattleData.Current.EnemyFleet.Fleets[1].ShipCount + 6;
         }
 
         private static int ToIndex(int fleetIndex, int shipIndex, FleetType type)
@@ -343,11 +346,17 @@ namespace BattleInfoPlugin.Models.Raw
             return type == FleetType.Friend ? index : -index;
         }
 
-        private static int ToHougekiIndex(int fleetIndex, int shipIndex)
+        //private static int ToHougekiIndex(int fleetIndex, int shipIndex)
+        //{
+        //    // 1 ~ 6: friend; 6 ~ 12 : enemy
+        //    var fleetType = shipIndex <= 6 ? FleetType.Friend : FleetType.Enemy;
+        //    return ToIndex(fleetIndex, shipIndex.To6BasedIndex(), fleetType);
+        //}
+
+        private static int ToKoukuIndex(int index, FleetType type)
         {
-            // 1 ~ 6: friend; 6 ~ 12 : enemy
-            var fleetType = shipIndex <= 6 ? FleetType.Friend : FleetType.Enemy;
-            return ToIndex(fleetIndex, shipIndex.To6BasedIndex(), fleetType);
+            index = Math.Abs(index);
+            return FleetOffset(index, type);
         }
 
         private static int[] ToInt32Array(this object objArr)
