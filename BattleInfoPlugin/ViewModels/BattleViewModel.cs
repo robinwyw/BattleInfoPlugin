@@ -300,23 +300,23 @@ namespace BattleInfoPlugin.ViewModels
             {
                 {
                     () => this.Battle.Name,
-                    (_, __) => this.RaisePropertyChanged(() => this.Name)
+                    (_, __) => this.RaisePropertyChanged(nameof(this.Name))
                 },
                 {
                     () => this.Battle.BattleResult,
-                    (_, __) => this.RaisePropertyChanged(() => this.BattleResultRank)
+                    (_, __) => this.RaisePropertyChanged(nameof(this.BattleResultRank))
                 },
                 {
                     () => this.Battle.UpdatedTime,
-                    (_, __) => this.RaisePropertyChanged(() => this.UpdatedTime)
+                    (_, __) => this.RaisePropertyChanged(nameof(this.UpdatedTime))
                 },
                 {
                     () => this.Battle.BattleSituation,
-                    (_, __) => this.RaisePropertyChanged(() => this.BattleSituation)
+                    (_, __) => this.RaisePropertyChanged(nameof(this.BattleSituation))
                 },
                 {
                     () => this.Battle.FriendAirSupremacy,
-                    (_, __) => this.RaisePropertyChanged(() => this.FriendAirSupremacy)
+                    (_, __) => this.RaisePropertyChanged(nameof(this.FriendAirSupremacy))
                 },
                 {
                     () => this.Battle.InjectionAirCombatResults,
