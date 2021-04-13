@@ -374,7 +374,7 @@
                         Content="{Binding FriendSupportFleet}"
                         ContentTemplate="{StaticResource FleetTemplate}" 
                         Margin="15,0,0,0"
-                        Visibility="{Binding FriendSupportFleet.IsVisible, Converter={StaticResource FalseToHiddenConverter}}"/>
+                        Visibility="{Binding FriendSupportFleet.IsVisible, Converter={StaticResource TrueToVisibleConverter}}"/>
 
         <ContentControl Grid.Row="2"
                         Grid.Column="3"
