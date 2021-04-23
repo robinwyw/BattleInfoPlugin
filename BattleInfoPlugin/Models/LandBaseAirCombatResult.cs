@@ -35,7 +35,12 @@ namespace BattleInfoPlugin.Models
         {
             this.Plane = KanColleClient.Current.Master.SlotItems[squadron.api_mst_id];
             this.Count = squadron.api_count;
-            this.Max = this.Plane != null ? (this.Count > 4 ? 18 : 4) : 0;
+            this.Max = this.Plane == null ? 0 :
+                            this.Plane.Type == SlotItemType.大型陸上機 ? 9 :
+                                this.Plane.Type == SlotItemType.水上偵察機 ||
+                                this.Plane.Type == SlotItemType.艦上偵察機 || this.Plane.Type == SlotItemType.艦上偵察機_II ||
+                                this.Plane.Type == SlotItemType.大型飛行艇 ||
+                                this.Plane.Type == SlotItemType.陸上偵察機 ? 4 : 18;
         }
     }
 }
