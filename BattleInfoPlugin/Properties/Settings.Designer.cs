@@ -25,8 +25,8 @@ namespace BattleInfoPlugin.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://raw.githubusercontent.com/laserdark/KanColleToolsetResources/master/Battl" +
-            "eInfoPlugin/mapcell.json")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://cdn.jsdelivr.net/gh/laserdark/KanColleToolsetResources@master/BattleInfoP" +
+            "lugin/mapcell.json")]
         public string MapCellSource {
             get {
                 return ((string)(this["MapCellSource"]));
