@@ -483,7 +483,7 @@ namespace BattleInfoPlugin.Models
                 this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack);
+                this.TorpedoOpen(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
                 this.Shelling(data.api_hougeki2);
@@ -547,7 +547,7 @@ namespace BattleInfoPlugin.Models
                 this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack);
+                this.TorpedoOpen(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
                 this.Torpedo(data.api_raigeki);
@@ -568,7 +568,7 @@ namespace BattleInfoPlugin.Models
                 this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack);
+                this.TorpedoOpen(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
                 this.Shelling(data.api_hougeki2);
@@ -616,7 +616,7 @@ namespace BattleInfoPlugin.Models
                 this.AirCombat(data.api_kouku);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack);
+                this.TorpedoOpen(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
                 this.Shelling(data.api_hougeki2);
@@ -686,7 +686,7 @@ namespace BattleInfoPlugin.Models
                 this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack);
+                this.TorpedoOpen(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
                 this.Torpedo(data.api_raigeki);
@@ -729,7 +729,7 @@ namespace BattleInfoPlugin.Models
                 this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack);
+                this.TorpedoOpen(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
                 this.Shelling(data.api_hougeki2);
@@ -750,7 +750,7 @@ namespace BattleInfoPlugin.Models
                 this.Support(data.api_support_info, data.api_support_flag);
 
                 this.Shelling(data.api_opening_taisen);
-                this.Torpedo(data.api_opening_atack);
+                this.TorpedoOpen(data.api_opening_atack);
 
                 this.Shelling(data.api_hougeki1);
                 this.Shelling(data.api_hougeki2);

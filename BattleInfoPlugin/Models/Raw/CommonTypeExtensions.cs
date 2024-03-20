@@ -7,7 +7,7 @@ namespace BattleInfoPlugin.Models.Raw
 {
     public static class CommonTypeExtensions
     {
-        private static readonly IEnumerable<Attack> EmptyDamages = new Attack[0];      
+        private static readonly IEnumerable<Attack> EmptyDamages = new Attack[0];
 
         #region 支援
 
@@ -135,7 +135,7 @@ namespace BattleInfoPlugin.Models.Raw
             //    });
 
             //    yield return new Attack(source, attackDamages);
-        //}
+            //}
         }
 
         #endregion
@@ -238,6 +238,17 @@ namespace BattleInfoPlugin.Models.Raw
                    .GetDamages(raigeki.api_frai, raigeki.api_fcl, FleetType.Friend, FleetType.Enemy)
                ?? EmptyDamages;
 
+
+        public static IEnumerable<Attack> GetFriendDamagesOpen(this Raigeki raigeki)
+    => raigeki?.api_eydam_list_items?
+           .GetDamagesOpen(raigeki.api_erai_list_items, raigeki.api_ecl_list_items, FleetType.Enemy, FleetType.Friend)
+       ?? EmptyDamages;
+
+        public static IEnumerable<Attack> GetEnemyDamagesOpen(this Raigeki raigeki)
+            => raigeki?.api_fydam_list_items?
+                   .GetDamagesOpen(raigeki.api_frai_list_items, raigeki.api_fcl_list_items, FleetType.Friend, FleetType.Enemy)
+               ?? EmptyDamages;
+
         /// <summary>
         /// 雷撃戦ダメージリスト算出
         /// </summary>
@@ -259,28 +270,52 @@ namespace BattleInfoPlugin.Models.Raw
             HashSet<Attack> output = new HashSet<Attack>();
             for (int index = 0; index < damages.Length; index++)
             {
-                if (targets[index] != -1)
+                    if (targets[index] != -1)
+                    {
+                        int source = sourceFleetType == FleetType.Friend ? index : -index;
+                        int target = sourceFleetType == FleetType.Enemy ? targets[index] + 1 : -targets[index] - 1;
+                        int damage = Convert.ToInt32(damages[index]);
+                        bool isCritical = criticals[index] > 0;
+                        output.Add(new Attack(source, target, damage, isCritical));
+                    }
+            }
+            return output.AsEnumerable<Attack>();
+        }
+
+        public static IEnumerable<Attack> GetDamagesOpen(this double[][] damages,
+            int[][] targets,
+            int[][] criticals,
+            FleetType sourceFleetType,
+            FleetType targetFleetType)
+        {
+            HashSet<Attack> output = new HashSet<Attack>();
+            for (int i = 0; i < damages.Length; i++)
+            {
+                for (int j = 0; j < damages.Length; ++j)
                 {
-                    int source = sourceFleetType == FleetType.Friend ? index : -index; 
-                    int target = sourceFleetType == FleetType.Enemy ? targets[index] + 1 : -targets[index] - 1;
-                    int damage = Convert.ToInt32(damages[index]);
-                    bool isCritical = criticals[index] > 0;
-                    output.Add(new Attack(source, target, damage, isCritical));
+                    if (targets[i][j] != -1)
+                    {
+                        int source = sourceFleetType == FleetType.Friend ? i : -i;
+                        int target = sourceFleetType == FleetType.Enemy ? targets[i][j] + 1 : -targets[i][j] - 1;
+                        int damage = Convert.ToInt32(damages[i][j]);
+                        bool isCritical = criticals[i][j] > 0;
+                        output.Add(new Attack(source, target, damage, isCritical));
+                    }
                 }
             }
             return output.AsEnumerable<Attack>();
         }
-    //=> targets
-    //    .Select((target, index) => new
-    //    {
-    //        source = ToIndex(sourceFleetIndex, index, sourceFleetType),
-    //        target = ToIndex(targetFleetIndex, target, targetFleetType),
-    //        damage = Convert.ToInt32(damages[index]),
-    //        isCritical = criticals[index] > 0
-    //    })
-    //    .GetData()
-    //    .Where(x => x.target != -1)
-    //    .Select(x => new Attack(x.source, x.target, x.damage, x.isCritical));
+        //=> targets
+        //    .Select((target, index) => new
+        //    {
+        //        source = ToIndex(sourceFleetIndex, index, sourceFleetType),
+        //        target = ToIndex(targetFleetIndex, target, targetFleetType),
+        //        damage = Convert.ToInt32(damages[index]),
+        //        isCritical = criticals[index] > 0
+        //    })
+        //    .GetData()
+        //    .Where(x => x.target != -1)
+        //    .Select(x => new Attack(x.source, x.target, x.damage, x.isCritical));
 
         #endregion
 

@@ -122,6 +122,15 @@
         public double[] api_eydam { get; set; }
         public int[] api_fcl { get; set; }
         public int[] api_ecl { get; set; }
+
+        public double[][] api_fydam_list_items { get; set; }
+        public double[][] api_eydam_list_items { get; set; }
+        public int[][] api_frai_list_items { get; set; }
+
+        public int[][] api_erai_list_items { get; set; }
+        public int[][] api_fcl_list_items { get; set; }
+        public int[][] api_ecl_list_items { get; set; }
+
     }
 
     #endregion

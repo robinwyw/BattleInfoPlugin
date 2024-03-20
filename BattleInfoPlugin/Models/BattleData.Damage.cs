@@ -87,6 +87,17 @@ namespace BattleInfoPlugin.Models
             this.CalcDamages(enemyDamages, true);
         }
 
+        private void TorpedoOpen(Raigeki torpedo)
+        {
+            if (torpedo == null) return;
+
+            var friendDamages = torpedo.GetFriendDamagesOpen();
+            var enemyDamages = torpedo.GetEnemyDamagesOpen();
+
+            this.CalcDamages(friendDamages, true);
+            this.CalcDamages(enemyDamages, true);
+        }
+
 
         private void CalcAirCombatDamages(Api_Kouku airCombat)
         {
