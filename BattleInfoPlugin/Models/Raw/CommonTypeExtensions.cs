@@ -291,7 +291,8 @@ namespace BattleInfoPlugin.Models.Raw
             HashSet<Attack> output = new HashSet<Attack>();
             for (int i = 0; i < damages.Length; i++)
             {
-                for (int j = 0; j < damages.Length; ++j)
+                if (damages[i] is null) continue;
+                for (int j = 0; j < damages[i].Length; ++j)
                 {
                     if (targets[i][j] != -1)
                     {
