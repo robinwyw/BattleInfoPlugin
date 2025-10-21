@@ -45,7 +45,7 @@ namespace BattleInfoPlugin.Models.Notifiers
             proxy.ApiSessionSource.Subscribe(_ => this.isConfirmPursuitNotified = false);
 
             proxy.ApiSessionSource
-                .Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_practice/battle")
+                .Where(x => new Uri(x.HttpClient.Request.Url).PathAndQuery == "/kcsapi/api_req_practice/battle")
                 .Subscribe(_ => this.isInCombat = true);
             proxy.api_req_map_start
                 .Subscribe(_ => this.isInCombat = true);

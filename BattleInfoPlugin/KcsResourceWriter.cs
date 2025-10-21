@@ -1,16 +1,16 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using BattleInfoPlugin.Models.Repositories;
 using BattleInfoPlugin.Models.Settings;
-using Nekoxy;
+using BattleInfoPlugin.Properties;
 using Grabacr07.KanColleWrapper;
 using Grabacr07.KanColleWrapper.Models.Raw;
-using System.Collections.Generic;
-using BattleInfoPlugin.Properties;
-using BattleInfoPlugin.Models.Repositories;
-using System.Collections.Concurrent;
-using System.Diagnostics;
+using Titanium.Web.Proxy.EventArguments;
 
 namespace BattleInfoPlugin
 {
@@ -26,17 +26,17 @@ namespace BattleInfoPlugin
                                     .ValueOrNew();
 
             var proxy = KanColleClient.Current.Proxy;
-            proxy.SessionSource
-                .Where(s => s.Request.PathAndQuery.StartsWith("/kcs/resources/swf/map"))
+            proxy.ApiSessionSource
+                .Where(s => new Uri(s.HttpClient.Request.Url).PathAndQuery.StartsWith("/kcs/resources/swf/map"))
                 .Subscribe(s => this.HttpGetMapResource(s));
             proxy.api_req_map_start
                 .TryParse<kcsapi_map_start>()
                 .Subscribe(x => this.ReqMapStart(x.Data));
         }
 
-        private void HttpGetMapResource(Session s)
+        private void HttpGetMapResource(SessionEventArgs s)
         {
-            var filePath = s.Request.PathAndQuery.Split('?').First();
+            var filePath = new Uri(s.HttpClient.Request.Url).PathAndQuery.Split('?').First();
             s.SaveResponseBody(PluginSettings.Paths.CacheDirPath + filePath);
 
             Debug.WriteLine($"{this.currentMapAreaId}-{this.currentMapInfoNo}:{filePath}");
@@ -58,13 +58,13 @@ namespace BattleInfoPlugin
     {
         private static readonly object lockObj = new object();
 
-        public static void SaveResponseBody(this Session session, string filePath)
+        public static void SaveResponseBody(this SessionEventArgs session, string filePath)
         {
             lock (lockObj)
             {
                 var dir = Directory.GetParent(filePath);
                 if (!dir.Exists) dir.Create();
-                File.WriteAllBytes(filePath, session.Response.Body);
+                File.WriteAllBytes(filePath, session.HttpClient.Response?.Body);
             }
         }
     }

@@ -55,7 +55,7 @@ namespace BattleInfoPlugin.Models.Notifiers
             proxy.api_req_combined_battle_battleresult
                 .Subscribe(_ => this.NotifyEndOfBattle());
 
-            proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_practice/battle_result")
+            proxy.ApiSessionSource.Where(x => new Uri(x.HttpClient.Request.Url).PathAndQuery == "/kcsapi/api_req_practice/battle_result")
                 .Subscribe(_ => this.NotifyEndOfBattle());
 
             proxy.api_req_sortie_battleresult
