@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BattleInfoPlugin.Models.Raw;
 using Grabacr07.KanColleWrapper;
 using Grabacr07.KanColleWrapper.Models.Raw;
 //using Grabacr07.KanColleWrapper.Models.Translations;
 using Livet;
+using Newtonsoft.Json;
 
 namespace BattleInfoPlugin.Models
 {
@@ -475,20 +477,27 @@ namespace BattleInfoPlugin.Models
         {
             this.Update(() =>
             {
-                this.UpdateInfo(data);
+                try
+                {
+                    this.UpdateInfo(data);
 
-                this.InjectionAirCombat(data.api_injection_kouku);
-                this.AirBaseAttack(data.api_air_base_attack);
-                this.AirCombat(data.api_kouku);
-                this.Support(data.api_support_info, data.api_support_flag);
+                    this.InjectionAirCombat(data.api_injection_kouku);
+                    this.AirBaseAttack(data.api_air_base_attack);
+                    this.AirCombat(data.api_kouku);
+                    this.Support(data.api_support_info, data.api_support_flag);
 
-                this.Shelling(data.api_opening_taisen);
-                this.TorpedoOpen(data.api_opening_atack);
+                    this.Shelling(data.api_opening_taisen);
+                    this.TorpedoOpen(data.api_opening_atack);
 
-                this.Shelling(data.api_hougeki1);
-                this.Shelling(data.api_hougeki2);
+                    this.Shelling(data.api_hougeki1);
+                    this.Shelling(data.api_hougeki2);
 
-                this.Torpedo(data.api_raigeki);
+                    this.Torpedo(data.api_raigeki);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error in BattleData.Update(sortie_battle):\n " + ExceptionHandler.FlattenException(ex));
+                }
             }, "通常 - 昼戦");
         }
 
@@ -788,56 +797,56 @@ namespace BattleInfoPlugin.Models
 
         public void UpdateBattleResult(kcsapi_combined_battle_battleresult data)
         {
-            //try
-            //{
-            //    this.DropShipName = KanColleClient.Current.Translations.Lookup(TranslationType.DropShip, data) ?? data.api_get_ship?.api_ship_name;
-            //}
-            //catch
-            //{
+                //try
+                //{
+                //    this.DropShipName = KanColleClient.Current.Translations.Lookup(TranslationType.DropShip, data) ?? data.api_get_ship?.api_ship_name;
+                //}
+                //catch
+                //{
                 this.DropShipName = data.api_get_ship?.api_ship_name;
-            //}
+                //}
 
-            switch (data.api_win_rank)
-            {
-                case "S":
-                    this.BattleResult = this.FriendFleetStatus.LostGauge > 0 
-                            ? BattleResultRank.勝利S
-                            : BattleResultRank.完全勝利S;
-                    break;
-                case "A":
-                    this.BattleResult = BattleResultRank.勝利A;
-                    break;
-                case "B":
-                    this.BattleResult = BattleResultRank.戦術的勝利B;
-                    break;
-                case "C":
-                    this.BattleResult = BattleResultRank.戦術的敗北C;
-                    break;
-                case "D":
-                    this.BattleResult = BattleResultRank.敗北D;
-                    break;
-                case "E":
-                    this.BattleResult = BattleResultRank.敗北E;
-                    break;
+                switch (data.api_win_rank)
+                {
+                    case "S":
+                        this.BattleResult = this.FriendFleetStatus.LostGauge > 0
+                                ? BattleResultRank.勝利S
+                                : BattleResultRank.完全勝利S;
+                        break;
+                    case "A":
+                        this.BattleResult = BattleResultRank.勝利A;
+                        break;
+                    case "B":
+                        this.BattleResult = BattleResultRank.戦術的勝利B;
+                        break;
+                    case "C":
+                        this.BattleResult = BattleResultRank.戦術的敗北C;
+                        break;
+                    case "D":
+                        this.BattleResult = BattleResultRank.敗北D;
+                        break;
+                    case "E":
+                        this.BattleResult = BattleResultRank.敗北E;
+                        break;
+                }
+
+                if (data.api_get_exmap_useitem_id != 0)
+                {
+                    ItemDropName = ItemDropName ?? "";
+                    string exname = KanColleClient.Current.Master.UseItems[data.api_get_exmap_useitem_id].Name;
+                    this.ItemDropName = exname + "\n";
+                }
+                if (data.api_get_useitem != null)
+                {
+                    ItemDropName = ItemDropName ?? "";
+
+                    string name = KanColleClient.Current.Master.UseItems[data.api_get_useitem.api_useitem_id].Name;
+                    this.ItemDropName = ItemDropName + name;
+                }
+
+                this.FriendFleet.Fleets[1].UpdateMVP(data.api_mvp);
+                this.FriendFleet.Fleets[2]?.UpdateMVP(data?.api_mvp_combined);
             }
-
-            if (data.api_get_exmap_useitem_id != 0)
-            {
-                ItemDropName = ItemDropName ?? "";
-                string exname = KanColleClient.Current.Master.UseItems[data.api_get_exmap_useitem_id].Name;
-                this.ItemDropName = exname + "\n";
-            }
-            if (data.api_get_useitem != null)
-            {
-                ItemDropName = ItemDropName ?? "";
-
-                string name = KanColleClient.Current.Master.UseItems[data.api_get_useitem.api_useitem_id].Name;
-                this.ItemDropName = ItemDropName + name;
-            }
-
-            this.FriendFleet.Fleets[1].UpdateMVP(data.api_mvp);
-            this.FriendFleet.Fleets[2]?.UpdateMVP(data?.api_mvp_combined);
-        }
 
         private void UpdateFleetsByStartNext(map_start_next startNext, string api_deck_id = null)
         {
@@ -898,7 +907,7 @@ namespace BattleInfoPlugin.Models
             this.IsInBattle = true;
             this.UpdatedTime = DateTimeOffset.Now;
 
-            updateAction();
+                updateAction();
 
             if (battleResultType == BattleResultType.Normal)
             {

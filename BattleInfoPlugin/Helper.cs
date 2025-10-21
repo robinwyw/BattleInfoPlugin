@@ -14,7 +14,7 @@ namespace BattleInfoPlugin
         public static IObservable<SvData<T>> Observe<T>(this KanColleProxy proxy, string path)
         {
             return proxy.ApiSessionSource
-                .Where(x => x.Request.PathAndQuery == path)
+                .Where(x => new Uri(x.HttpClient.Request.Url).PathAndQuery == path)
                 .TryParse<T>();
         }
     }

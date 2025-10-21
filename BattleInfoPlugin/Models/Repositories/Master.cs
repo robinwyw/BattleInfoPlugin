@@ -61,7 +61,7 @@ namespace BattleInfoPlugin.Models.Repositories
             proxy.Observe<mapinfo>("/kcsapi/api_get_member/mapinfo")
                 .Subscribe(x => this.UpdateMapRank(x.Data.api_map_info));
             proxy.ApiSessionSource
-                .Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_map/select_eventmap_rank")
+                .Where(x => new Uri(x.HttpClient.Request.Url).PathAndQuery == "/kcsapi/api_req_map/select_eventmap_rank")
                 .TryParse()
                 .Subscribe(x =>
                     this.UpdateMapRank(
