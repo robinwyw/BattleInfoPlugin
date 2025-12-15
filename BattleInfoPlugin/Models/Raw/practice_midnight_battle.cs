@@ -18,8 +18,8 @@
         public int[] api_flare_pos { get; set; }
         public Midnight_Hougeki api_hougeki { get; set; }
 
-        public int[] api_e_nowhps { get; set; }
-        public int[] api_e_maxhps { get; set; }
+        public object[] api_e_nowhps { get; set; }
+        public object[] api_e_maxhps { get; set; }
         public int[] api_e_nowhps_combined { get; set; }
         public int[] api_e_maxhps_combined { get; set; }
 

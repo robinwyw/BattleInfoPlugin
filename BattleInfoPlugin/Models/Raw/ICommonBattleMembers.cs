@@ -11,8 +11,8 @@ namespace BattleInfoPlugin.Models.Raw
         int[] api_ship_ke_combined { get; set; }
         int[] api_ship_lv { get; set; }
         int[] api_ship_lv_combined { get; set; }
-        int[] api_e_nowhps { get; set; }
-        int[] api_e_maxhps { get; set; }
+        object[] api_e_nowhps { get; set; }
+        object[] api_e_maxhps { get; set; }
         int[] api_f_nowhps { get; set; }
         int[] api_f_maxhps { get; set; }
         int[] api_f_nowhps_combined { get; set; }
@@ -51,8 +51,6 @@ namespace BattleInfoPlugin.Models.Raw
             return data.api_ship_ke
                 .ToMastersShipDataArray(
                     data.api_ship_lv.ToArray(),
-                    data.api_e_maxhps.GetEnemyData().ToArray(),
-                    data.api_e_nowhps.GetEnemyData().ToArray(),
                     data.api_eParam,
                     data.api_eSlot);
         }
@@ -62,8 +60,6 @@ namespace BattleInfoPlugin.Models.Raw
             return data.api_ship_ke_combined?.GetSection(0)
                 .ToMastersShipDataArray(
                     data.api_ship_lv_combined.GetSection(0).ToArray(),
-                    data.api_e_maxhps_combined.GetEnemyData().ToArray(),
-                    data.api_e_nowhps_combined.GetEnemyData().ToArray(),
                     data.api_eParam_combined,
                     data.api_eSlot_combined);
         }
@@ -71,8 +67,6 @@ namespace BattleInfoPlugin.Models.Raw
         public static MastersShipData[] ToMastersShipDataArray(
             this IEnumerable<int> ids,
             int[] lvs,
-            int[] maxHps,
-            int[] nowHps,
             int[][] param,
             int[][] slot)
         {

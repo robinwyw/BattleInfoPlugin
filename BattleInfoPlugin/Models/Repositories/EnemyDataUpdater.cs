@@ -86,6 +86,7 @@ namespace BattleInfoPlugin.Models.Repositories
 
         public void Update(ICommonFirstBattleMembers data)
         {
+            var eMaxHps= data.api_e_maxhps.Select(x => x is int ? (int)x : 1).ToArray();
             this.UpdateEnemyData(
                 data.api_ship_ke,
                 data.api_ship_ke_combined,
@@ -97,7 +98,7 @@ namespace BattleInfoPlugin.Models.Repositories
                 data.api_eParam_combined,
                 data.api_ship_lv,
                 data.api_ship_lv_combined,
-                data.api_e_maxhps,
+                eMaxHps,
                 data.api_e_maxhps_combined);
             this.UpdateBattleTypes(data);
         }

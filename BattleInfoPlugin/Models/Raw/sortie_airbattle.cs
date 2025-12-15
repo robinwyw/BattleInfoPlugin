@@ -30,8 +30,8 @@
         public int[] api_stage_flag2 { get; set; }
         public Api_Kouku api_kouku2 { get; set; }
 
-        public int[] api_e_nowhps { get; set; }
-        public int[] api_e_maxhps { get; set; }
+        public object[] api_e_nowhps { get; set; }
+        public object[] api_e_maxhps { get; set; }
         public int[] api_e_nowhps_combined { get; set; }
         public int[] api_e_maxhps_combined { get; set; }
 

@@ -183,6 +183,7 @@
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="ItemsCollection.cs" />
+    <Compile Include="JsonLogger.cs" />
     <Compile Include="KcsResourceWriter.cs" />
     <Compile Include="Models\AirCombatResult.cs" />
     <Compile Include="Models\AirSupremacy.cs" />
@@ -394,6 +395,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.en.resx">
       <DependentUpon>Resources.resx</DependentUpon>

@@ -25,8 +25,8 @@
         public int api_n_support_flag { get; set; }
         public Api_Support_Info api_n_support_info { get; set; }
 
-        public int[] api_e_nowhps { get; set; }
-        public int[] api_e_maxhps { get; set; }
+        public object[] api_e_nowhps { get; set; }
+        public object[] api_e_maxhps { get; set; }
         public int[] api_e_nowhps_combined { get; set; }
         public int[] api_e_maxhps_combined { get; set; }
 

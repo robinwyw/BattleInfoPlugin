@@ -23,8 +23,8 @@
         public Friendly_Info api_friendly_info { get; set; }
         public Friendly_Battle api_friendly_battle { get; set; }
 
-        public int[] api_e_nowhps { get; set; }
-        public int[] api_e_maxhps { get; set; }
+        public object[] api_e_nowhps { get; set; }
+        public object[] api_e_maxhps { get; set; }
         public int[] api_e_nowhps_combined { get; set; }
         public int[] api_e_maxhps_combined { get; set; }
 
