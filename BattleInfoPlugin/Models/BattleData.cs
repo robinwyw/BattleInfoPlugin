@@ -569,20 +569,27 @@ namespace BattleInfoPlugin.Models
         {
             this.Update(() =>
             {
-                this.UpdateInfo(data);
+                try
+                {
+                    this.UpdateInfo(data);
 
-                this.InjectionAirCombat(data.api_injection_kouku);
-                this.AirBaseAttack(data.api_air_base_attack);
-                this.AirCombat(data.api_kouku);
-                this.Support(data.api_support_info, data.api_support_flag);
+                    this.InjectionAirCombat(data.api_injection_kouku);
+                    this.AirBaseAttack(data.api_air_base_attack);
+                    this.AirCombat(data.api_kouku);
+                    this.Support(data.api_support_info, data.api_support_flag);
 
-                this.Shelling(data.api_opening_taisen);
-                this.TorpedoOpen(data.api_opening_atack);
+                    this.Shelling(data.api_opening_taisen);
+                    this.TorpedoOpen(data.api_opening_atack);
 
-                this.Shelling(data.api_hougeki1);
-                this.Shelling(data.api_hougeki2);
-                this.Shelling(data.api_hougeki3);
-                this.Torpedo(data.api_raigeki);
+                    this.Shelling(data.api_hougeki1);
+                    this.Shelling(data.api_hougeki2);
+                    this.Shelling(data.api_hougeki3);
+                    this.Torpedo(data.api_raigeki);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error in BattleData.Update(combined_battle_battle_water):\n " + ExceptionHandler.FlattenException(e));
+                }
             }, "連合艦隊 - 水上部隊 - 昼戦");
         }
 
@@ -895,8 +902,6 @@ namespace BattleInfoPlugin.Models
             return data.api_ship_id
                 .ToMastersShipDataArray(
                     data.api_ship_lv,
-                    data.api_maxhps,
-                    data.api_nowhps,
                     data.api_Param,
                     data.api_Slot);
         }
@@ -976,7 +981,9 @@ namespace BattleInfoPlugin.Models
         private void UpdateFleetsHPs(ICommonBattleMembers data)
         {
             this.FriendFleet.Fleets[1].UpdateHPs(data.api_f_maxhps.GetFriendData(), data.api_f_nowhps.GetFriendData());
-            this.EnemyFleet.Fleets[1].UpdateHPs(data.api_e_maxhps.GetEnemyData(), data.api_e_nowhps.GetEnemyData());
+            var maxhps = data.api_e_maxhps.Select(x => x is int ? (int)x : 1).ToArray();
+            var nowhps = data.api_e_nowhps.Select(x => x is int ? (int)x : 1).ToArray();
+            this.EnemyFleet.Fleets[1].UpdateHPs(maxhps, nowhps);
 
             if (this.FriendFleet.FleetCount > 1)
             {
@@ -991,7 +998,9 @@ namespace BattleInfoPlugin.Models
         private void UpdateFleetsHPsEc(ICommonBattleMembers data)
         {
             this.FriendFleet.Fleets[1].UpdateHPs(data.api_f_maxhps.GetFriendData(), data.api_f_nowhps.GetFriendData());
-            this.EnemyFleet.Fleets[1].UpdateHPs(data.api_e_maxhps.GetEnemyData(), data.api_e_nowhps.GetEnemyData());
+            var maxhps=data.api_e_maxhps.Select(x => x is int? (int)x :0).ToArray();
+            var nowhps=data.api_e_nowhps.Select(x => x is int? (int)x :0).ToArray();
+            this.EnemyFleet.Fleets[1].UpdateHPs(maxhps, nowhps);
 
             if (this.FriendFleet.FleetCount > 1)
             {

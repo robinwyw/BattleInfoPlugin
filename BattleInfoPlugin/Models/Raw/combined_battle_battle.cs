@@ -36,8 +36,8 @@
         public Hougeki api_hougeki2 { get; set; }
         public Hougeki api_hougeki3 { get; set; }
 
-        public int[] api_e_nowhps { get; set; }
-        public int[] api_e_maxhps { get; set; }
+        public object[] api_e_nowhps { get; set; }
+        public object[] api_e_maxhps { get; set; }
         public int[] api_e_nowhps_combined { get; set; }
         public int[] api_e_maxhps_combined { get; set; }
 
